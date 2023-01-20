@@ -160,12 +160,16 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import axios from "axios";
+import { mapActions} from "vuex";
 
 export default {
   name: "Register",
   components: {},
+  computed: {
+    countries () {
+      return this.$store.state.countries.countries
+    }
+  },
   data() {
     return {
       e1: 1,
@@ -179,7 +183,6 @@ export default {
             'Password confirmation does not match'
       },
       types: ["Listener", "Announcer"],
-      countries: [],
       defaultType: "Listener",
       form: {
         type: "Listener",
@@ -199,7 +202,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["Register", "RegisterAdditional"]),
+    ...mapActions(["Register", "RegisterAdditional", "GetCountries"]),
     async submit() {
       try {
         await this.Register(this.form);
@@ -219,8 +222,7 @@ export default {
     },
     async getCountries() {
       try {
-        const countries = await axios.get('/register');
-        this.countries = countries.data;
+        await this.GetCountries()
         this.showErrorCountry = false
       } catch (error) {
         this.showErrorCountry = true
