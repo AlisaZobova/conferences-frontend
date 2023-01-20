@@ -1,22 +1,34 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import Login from '../components/Login.vue'
-import Dashboard from '../components/AuthDashboard.vue'
+import VueRouter from 'vue-router'
+import Register from '../views/Register'
+import Login from '../views/Login'
+import Conferences from '../views/Conferences'
 
-Vue.use(Router)
+Vue.use(VueRouter)
+const routes = [
+  {
+    path: '/conferences',
+    name: "Conferences",
+    component: Conferences
+  },
+  {
+    path: '/register',
+    name: "Register",
+    component: Register,
+    meta: { guest: true },
+  },
+  {
+    path: '/login',
+    name: "Login",
+    component: Login,
+    meta: { guest: true },
+  },
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard,
-      props: {}
-    }
-  ]
+]
+const router = new VueRouter({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes
 })
+
+export default router
