@@ -55,7 +55,7 @@ import { mapActions } from "vuex";
 export default {
   name: "Login",
   components: {},
-  data() {
+  data () {
     return {
       form: {
         email: "",
@@ -71,7 +71,8 @@ export default {
       User.append("email", this.form.email);
       User.append("password", this.form.password);
       try {
-        this.LogIn(User).then(() => this.$router.push("/conferences"));
+        await this.LogIn(User)
+        await this.$router.push("/conferences").catch(() => {});
         this.showError = false
       } catch (error) {
         this.showError = true

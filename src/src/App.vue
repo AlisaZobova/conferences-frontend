@@ -37,6 +37,8 @@
 <script>
 
 
+import {mapActions} from "vuex";
+
 export default {
   name: 'App',
   computed: {
@@ -45,9 +47,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["LogOut"]),
     async logout() {
-      await this.$store.dispatch('LogOut')
-      await this.$router.push('/conferences')
+      await this.LogOut()
     }
   }
 }

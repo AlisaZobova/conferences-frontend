@@ -7,6 +7,20 @@ const state = {
 
 const getters = {
     isAuthenticated: state => !!state.user,
+    isAdmin: state => state.user.roles[0].name === 'Admin',
+    isAnnouncer: state => state.user.roles[0].name === 'Announcer',
+    isCreator: state => conferenceId => {
+        let conferencesList = state.user.conferences.filter(function (item) {
+            return item.id === conferenceId
+    })
+        return conferencesList.length > 0
+    },
+    isJoined: state => conferenceId => {
+        let conferencesList = state.user.joined_conferences.filter(function (item) {
+            return item.id === conferenceId
+        })
+        return conferencesList.length > 0
+    },
 };
 
 const getToken = async () => {
@@ -28,13 +42,25 @@ const actions = {
 
     async LogIn({commit}, User) {
         await getToken()
-        await axios.post('login', User)
-        await commit('setUser', User.get('email'))
+        let response = await axios.post('login', User)
+        await commit('setUser', response.data)
     },
     async LogOut({commit}){
         await getToken()
         commit('LogOut')
         await axios.post('logout')
+    },
+    async JoinConference({commit}, conferenceId) {
+        await getToken()
+        axios.post('conferences/' + conferenceId + '/join').then((response) => {
+            commit("setUser", response.data)
+        })
+    },
+    async CancelParticipation({commit}, conferenceId) {
+        await getToken()
+        axios.post('conferences/' + conferenceId + '/cancel').then((response) => {
+            commit("setUser", response.data)
+        })
     },
 };
 const mutations = {
@@ -46,6 +72,7 @@ const mutations = {
     },
     LogOut(state){
         state.user = null
+        state.userId = null
     },
 };
 export default {

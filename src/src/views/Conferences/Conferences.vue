@@ -7,7 +7,7 @@
         :options.sync="options"
         :server-items-length="totalConferences"
         :loading="loading"
-        :items-per-page="15"
+        :items-per-page="perPage"
         class="elevation-1"
     >
       <template v-slot:top>
@@ -21,8 +21,7 @@
               vertical
           ></v-divider>
           <v-spacer></v-spacer>
-          <v-dialog
-              v-model="dialog"
+          <v-dialog v-if="isAuthenticated && (isAdmin || isAnnouncer)"
               max-width="500px"
           >
             <template v-slot:activator="{ on, attrs }">
@@ -32,6 +31,7 @@
                   class="mb-2"
                   v-bind="attrs"
                   v-on="on"
+                  @click="createItem"
               >
                 New Conference
               </v-btn>
@@ -54,16 +54,17 @@
         <v-btn depressed color="success" class="mr-1" @click="showItem(item)">
           Details
         </v-btn>
-        <v-btn depressed color="primary" class="mr-1" @click="editItem(item)">
+        <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(item.id) && isAnnouncer))" depressed color="primary" class="mr-1" @click="editItem(item)">
           Edit
         </v-btn>
-        <v-btn depressed color="error" class="mr-1" @click="deleteItem(item)">
+        <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(item.id) && isAnnouncer))" depressed color="error" class="mr-1" @click="deleteItem(item)">
           Delete
         </v-btn>
-        <v-btn depressed class="mr-1" color="warning">
+        <v-btn v-if="isAuthenticated && !isConferenceJoined(item.id) && !isAdmin" depressed class="mr-1" color="warning" @click="joinConference(item.id)">
           Join
         </v-btn>
-        <v-btn depressed class="mr-1">
+        <div class="d-inline" v-if="isAuthenticated && isConferenceJoined(item.id) && !isAdmin">
+        <v-btn depressed class="mr-1" @click="cancelParticipation(item.id)">
           Cancel participation
         </v-btn>
         <v-btn depressed class="mr-1" outlined color="primary">
@@ -72,6 +73,7 @@
         <v-btn depressed outlined color="primary">
           FB
         </v-btn>
+        </div>
       </template>
       <template v-slot:no-data>
         <v-btn
@@ -87,7 +89,7 @@
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "Conferences",
@@ -97,12 +99,23 @@ export default {
     },
     totalConferences () {
       return this.$store.state.conferences.conferences.total
-    }
+    },
+    perPage () {
+      return this.$store.state.conferences.conferences.per_page
+    },
+    isAdmin () {
+      return this.$store.getters.isAdmin
+    },
+    isAnnouncer () {
+      return this.$store.getters.isAnnouncer
+    },
+    isAuthenticated () {
+      return this.$store.getters.isAuthenticated
+    },
   },
   data () {
     return {
       selectedItem: null,
-      dialog: false,
       dialogDelete: false,
       loading: true,
       options: {},
@@ -125,15 +138,14 @@ export default {
       },
       deep: true,
     },
-    dialog (val) {
-      val || this.close()
-    },
     dialogDelete (val) {
       val || this.closeDelete()
     },
   },
   methods: {
-    ...mapActions(["GetConferences", "DeleteConference"]),
+    ...mapActions(["GetConferences", "DeleteConference",
+      "JoinConference", "CancelParticipation"]),
+    ...mapGetters(['isCreator', 'isJoined']),
     getConferences () {
       this.loading = true
       const {page} = this.options
@@ -141,13 +153,14 @@ export default {
         this.loading = false
       })
     },
+    createItem () {
+      this.$router.push('/conferences/create').catch(() => {});
+    },
     editItem (item) {
-      this.editedIndex = this.conferences.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
+      this.$router.push('/conferences/' + item.id + '/edit').catch(() => {});
     },
     showItem (item) {
-      this.$router.push('/conferences/' + item.id)
+      this.$router.push('/conferences/' + item.id).catch(() => {});
     },
     deleteItem (item) {
       this.selectedItem = item
@@ -163,9 +176,20 @@ export default {
       this.selectedItem = null
       this.dialogDelete = false
     },
-    close () {
-      this.dialog = false
-      }
+    joinConference (conferenceId) {
+      this.JoinConference(conferenceId)
+      this.$router.push('/conferences').catch(() => {});
+    },
+    cancelParticipation (conferenceId) {
+      this.CancelParticipation(conferenceId)
+      this.$router.push('/conferences').catch(() => {});
+    },
+    isConferenceCreator (conferenceId) {
+      return this.$store.getters.isCreator(conferenceId)
+    },
+    isConferenceJoined (conferenceId) {
+      return this.$store.getters.isJoined(conferenceId)
+    },
   },
 }
 </script>

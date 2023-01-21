@@ -104,6 +104,34 @@
                             label="Lastname"
                         ></v-text-field>
 
+                        <v-menu
+                            ref="menu1"
+                            v-model="menu1"
+                            :close-on-content-click="false"
+                            transition="scale-transition"
+                            offset-y
+                            max-width="290px"
+                            min-width="auto"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                                v-model="formAd.birthdate"
+                                label="Birthdate"
+                                persistent-hint
+                                prepend-icon="mdi-calendar"
+                                v-bind="attrs"
+                                v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                              v-model="formAd.birthdate"
+                              no-title
+                              @input="menu1 = false"
+                          ></v-date-picker>
+                        </v-menu>
+
+                        <vue-phone-number-input v-model="formAd.phone" default-country-code="UA" name="phone"/>
+
                         <v-select
                             v-model="formAd.country"
                             :items="countries"
@@ -114,29 +142,14 @@
 
                         <p class="text-center" v-if="showErrorCountry">Failed to get list of countries</p>
 
-                        <v-text-field
-                            v-model="formAd.birthdate"
-                            type="date"
-                            name="birthdate"
-                            label="Birthdate"
-                        ></v-text-field>
 
-                        <v-text-field
-                            v-model="formAd.phone"
-                            id="phone"
-                            type="tel"
-                            name="phone"
-                            label="Phone"
-                        >
-                        </v-text-field>
-
-                    <v-btn
-                        color="grey lighten-1"
-                        @click="e1 = 1"
-                        class="mr-4"
-                    >
-                      Back
-                    </v-btn>
+<!--                    <v-btn-->
+<!--                        color="grey lighten-1"-->
+<!--                        @click="e1 = 1"-->
+<!--                        class="mr-4"-->
+<!--                    >-->
+<!--                      Back-->
+<!--                    </v-btn>-->
                     <v-btn
                         type="submit"
                         color="primary"
@@ -164,17 +177,17 @@ import { mapActions} from "vuex";
 
 export default {
   name: "Register",
-  components: {},
   computed: {
     countries () {
       return this.$store.state.countries.countries
-    }
+    },
   },
   data() {
     return {
       e1: 1,
       show1: false,
       show2: false,
+      menu1: false,
       isFormValid: false,
       rules: {
         required: value => !!value || 'Required.',
@@ -214,7 +227,7 @@ export default {
     async submitAd() {
       try {
         await this.RegisterAdditional(this.formAd);
-        await this.$router.push("/conferences");
+        await this.$router.push("/conferences").catch(() => {});
         this.showError = false
       } catch (error) {
         this.showError = true
