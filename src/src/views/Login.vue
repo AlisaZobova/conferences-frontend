@@ -71,8 +71,7 @@ export default {
       User.append("email", this.form.email);
       User.append("password", this.form.password);
       try {
-        await this.LogIn(User);
-        await this.$router.push("/conferences");
+        this.LogIn(User).then(() => this.$router.push("/conferences"));
         this.showError = false
       } catch (error) {
         this.showError = true
@@ -82,7 +81,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #error {
   color: red;
 }

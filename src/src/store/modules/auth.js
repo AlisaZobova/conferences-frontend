@@ -2,11 +2,11 @@ import axios from 'axios';
 
 const state = {
     user: null,
+    userId: null
 };
 
 const getters = {
     isAuthenticated: state => !!state.user,
-    StateUser: state => state.user,
 };
 
 const getToken = async () => {
@@ -17,11 +17,13 @@ const actions = {
     async Register({commit}, form) {
         await getToken()
         let response = await axios.post('register', form)
-        await commit("setUser", response.data)
+        await commit("setUserId", response.data.id)
     },
-    async RegisterAdditional({state}, form) {
+    async RegisterAdditional({state, commit}, form) {
         await getToken()
-        await axios.post('register/' + encodeURIComponent(state.user), form)
+        let response = await axios.post('register/' + encodeURIComponent(state.userId), form)
+        await commit("setUser", response.data)
+        await commit("setUserId", null)
     },
 
     async LogIn({commit}, User) {
@@ -38,6 +40,9 @@ const actions = {
 const mutations = {
     setUser(state, user){
         state.user = user
+    },
+    setUserId(state, userId){
+        state.userId = userId
     },
     LogOut(state){
         state.user = null
