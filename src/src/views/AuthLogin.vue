@@ -53,7 +53,7 @@
 import { mapActions } from "vuex";
 
 export default {
-  name: "Login",
+  name: "AuthLogin",
   components: {},
   data () {
     return {

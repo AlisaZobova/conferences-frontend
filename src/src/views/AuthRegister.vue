@@ -176,7 +176,7 @@
 import { mapActions} from "vuex";
 
 export default {
-  name: "Register",
+  name: "AuthRegister",
   computed: {
     countries () {
       return this.$store.state.countries.countries

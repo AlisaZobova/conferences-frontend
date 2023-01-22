@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from "@/store";
-import Register from '../views/Register'
-import Login from '../views/Login'
-import Conferences from '../views/Conferences/Conferences'
+import AuthRegister from '../views/AuthRegister'
+import AuthLogin from '../views/AuthLogin'
+import ConferencesIndex from '../views/Conferences/ConferencesIndex'
 import ShowConference from "../views/Conferences/ShowConference";
 import EditConference from "../views/Conferences/EditConference";
 import CreateConference from "@/views/Conferences/CreateConference";
@@ -12,9 +12,14 @@ import ForbiddenError from "@/views/ForbiddenError";
 Vue.use(VueRouter)
 const routes = [
   {
+    path: '/',
+    name: "Home",
+    component: ConferencesIndex
+  },
+  {
     path: '/conferences',
     name: "Conferences",
-    component: Conferences
+    component: ConferencesIndex
   },
   {
     path: '/conferences/create',
@@ -37,13 +42,13 @@ const routes = [
   {
     path: '/register',
     name: "Register",
-    component: Register,
+    component: AuthRegister,
     meta: { guest: true },
   },
   {
     path: '/login',
     name: "Login",
-    component: Login,
+    component: AuthLogin,
     meta: { guest: true },
   },
   {

@@ -92,7 +92,7 @@
 import {mapActions, mapGetters} from "vuex";
 
 export default {
-  name: "Conferences",
+  name: "ConferencesIndex",
   computed: {
     conferences () {
       return this.$store.state.conferences.conferences.data
