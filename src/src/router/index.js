@@ -7,7 +7,6 @@ import ConferencesIndex from '../views/Conferences/ConferencesIndex'
 import ShowConference from "../views/Conferences/ShowConference";
 import EditConference from "../views/Conferences/EditConference";
 import CreateConference from "@/views/Conferences/CreateConference";
-import ForbiddenError from "@/views/ForbiddenError";
 
 Vue.use(VueRouter)
 const routes = [
@@ -50,12 +49,6 @@ const routes = [
     name: "Login",
     component: AuthLogin,
     meta: { guest: true },
-  },
-  {
-    path: '/403',
-    name: 'Forbidden',
-    component: ForbiddenError,
-    meta: { noAccess: true },
   }
 ]
 const router = new VueRouter({
@@ -83,18 +76,6 @@ router.beforeEach((to, from, next) => {
       return;
     }
     next();
-  } else {
-    next();
-  }
-});
-
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresCreatePermissions)) {
-    if (store.getters.isAuthenticated && (store.getters.isAdmin || store.getters.isAnnouncer)) {
-      next();
-      return
-    }
-    next('/403');
   } else {
     next();
   }

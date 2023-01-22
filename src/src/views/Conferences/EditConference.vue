@@ -5,7 +5,7 @@
         Loading...
       </div>
       <div v-else>
-        <template>
+        <template v-if="isAuthenticated && (isAdmin || (isConferenceCreator(conference.id) && isAnnouncer))">
           <validation-observer
               ref="observer"
               v-slot="{ invalid }"
@@ -117,6 +117,9 @@
             </form>
           </validation-observer>
         </template>
+        <template v-else>
+          <ForbiddenError></ForbiddenError>
+        </template>
       </div>
     </v-main>
   </v-app>
@@ -125,7 +128,8 @@
 <script>
 import {required, max, regex, min, between} from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
+import ForbiddenError from "@/views/ForbiddenError";
 
 setInteractionMode('eager')
 
@@ -157,6 +161,7 @@ extend('regex', {
 export default {
   name: "CreateConference",
   components: {
+    ForbiddenError,
     ValidationProvider,
     ValidationObserver,
   },
@@ -167,6 +172,15 @@ export default {
     conference () {
       return this.$store.state.conferences.conference
     },
+    isAdmin () {
+      return this.$store.getters.isAdmin
+    },
+    isAnnouncer () {
+      return this.$store.getters.isAnnouncer
+    },
+    isAuthenticated () {
+      return this.$store.getters.isAuthenticated
+    },
   },
   data: () => ({
     menu1: false,
@@ -176,6 +190,7 @@ export default {
 
   methods: {
     ...mapActions(["UpdateConference", "GetCountries", "GetConference"]),
+    ...mapGetters(['isCreator']),
     async submit () {
       this.$refs.observer.validate()
       await this.UpdateConference({form: this.conference, conferenceId: this.conference.id})
@@ -194,14 +209,21 @@ export default {
       if (lng) {
         this.conference.longitude = parseFloat(lng);
       }
-    }
+    },
+    isConferenceCreator (conferenceId) {
+      return this.$store.getters.isCreator(conferenceId)
+    },
   },
   created () {
     this.GetCountries()
+    if (this.isAuthenticated) {
     this.GetConference(this.$route.params.id).then(() => {
       this.loading = false;
     });
-
+    }
+    else {
+      this.loading = false
+    }
   },
 }
 

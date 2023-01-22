@@ -5,7 +5,7 @@
       Loading...
     </div>
     <div v-else>
-    <template>
+    <template v-if="isAuthenticated && (isAdmin || isAnnouncer)">
       <validation-observer
           ref="observer"
           v-slot="{ invalid }"
@@ -86,13 +86,14 @@
             ></v-text-field>
           </validation-provider>
           <GmapMap
-              v-if="form.latitude && form.longitude"
-              :center="{lat:form.latitude, lng:form.longitude}"
+              :center="getCenter()"
               :zoom="10"
               map-type-id="terrain"
               style="width: 100%; height: 500px"
+              @click="setLatLng($event.latLng)"
           >
             <GmapMarker
+                v-if="form.latitude && form.longitude"
                 :position="{lat:form.latitude, lng:form.longitude}"
                 :clickable="true"
                 :draggable="true"
@@ -117,6 +118,9 @@
         </form>
       </validation-observer>
     </template>
+      <template v-else>
+        <ForbiddenError></ForbiddenError>
+      </template>
     </div>
   </v-main>
 </v-app>
@@ -126,6 +130,7 @@
 import {required, max, regex, min, between, numeric} from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 import {mapActions} from "vuex";
+import ForbiddenError from "@/views/ForbiddenError";
 
 setInteractionMode('eager')
 
@@ -162,12 +167,22 @@ extend('regex', {
 export default {
   name: "CreateConference",
   components: {
+    ForbiddenError,
     ValidationProvider,
     ValidationObserver,
   },
   computed: {
     countries () {
       return this.$store.state.countries.countries
+    },
+    isAdmin () {
+      return this.$store.getters.isAdmin
+    },
+    isAnnouncer () {
+      return this.$store.getters.isAnnouncer
+    },
+    isAuthenticated () {
+      return this.$store.getters.isAuthenticated
     },
   },
   data: () => ({
@@ -201,6 +216,13 @@ export default {
     setLng (lng) {
       if (lng) {
         this.form.longitude = parseFloat(lng);
+      }
+    },
+    getCenter () {
+      if (this.form.latitude && this.form.longitude) {
+      return {lat:parseFloat(this.form.latitude), lng:parseFloat(this.form.longitude)}
+    } else {
+        return {lat:50, lng:30}
       }
     }
   },
