@@ -66,6 +66,19 @@
         </template>
 
       </v-simple-table>
+        <GmapMap
+            v-if="conference.latitude && conference.longitude"
+            :center="{lat:conference.latitude, lng:conference.longitude}"
+            :zoom="10"
+            map-type-id="terrain"
+            style="width: 100%; height: 500px"
+        >
+          <GmapMarker
+              :position="{lat:conference.latitude, lng:conference.longitude}"
+              :clickable="false"
+              :draggable="false"
+          />
+        </GmapMap>
       </div>
     </v-main>
   </v-app>

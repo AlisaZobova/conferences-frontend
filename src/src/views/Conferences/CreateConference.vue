@@ -64,25 +64,41 @@
           <validation-provider
               v-slot="{ errors }"
               name="Latitude"
-              rules="numeric|between:-90,90"
+              rules="between:-90,90"
           >
             <v-text-field
                 v-model="form.latitude"
                 :error-messages="errors"
                 label="Latitude"
+                @input="setLat"
             ></v-text-field>
           </validation-provider>
           <validation-provider
               v-slot="{ errors }"
               name="Longitude"
-              rules="numeric|between:-90,90"
+              rules="between:-90,90"
           >
             <v-text-field
                 v-model="form.longitude"
                 :error-messages="errors"
                 label="Longitude"
+                @input="setLng"
             ></v-text-field>
           </validation-provider>
+          <GmapMap
+              v-if="form.latitude && form.longitude"
+              :center="{lat:form.latitude, lng:form.longitude}"
+              :zoom="10"
+              map-type-id="terrain"
+              style="width: 100%; height: 500px"
+          >
+            <GmapMarker
+                :position="{lat:form.latitude, lng:form.longitude}"
+                :clickable="true"
+                :draggable="true"
+                @drag="setLatLng($event.latLng)"
+            />
+          </GmapMap>
           <v-select
               v-model="form.country"
               :items="countries"
@@ -173,6 +189,20 @@ export default {
       this.$refs.observer.validate()
       await this.CreateConference(this.form).catch(() => {})
     },
+    setLatLng (location) {
+      this.form.latitude = parseFloat(location.lat().toFixed(3));
+      this.form.longitude = parseFloat(location.lng().toFixed(3));
+    },
+    setLat (lat) {
+      if (lat) {
+        this.form.latitude = parseFloat(lat);
+      }
+    },
+    setLng (lng) {
+      if (lng) {
+        this.form.longitude = parseFloat(lng);
+      }
+    }
   },
   created () {
     this.GetCountries().then(() => {

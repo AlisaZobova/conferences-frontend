@@ -64,25 +64,41 @@
               <validation-provider
                   v-slot="{ errors }"
                   name="Latitude"
-                  rules="numeric|between:-90,90"
+                  rules="between:-90,90"
               >
                 <v-text-field
                     v-model="conference.latitude"
                     :error-messages="errors"
                     label="Latitude"
+                    @input="setLat"
                 ></v-text-field>
               </validation-provider>
               <validation-provider
                   v-slot="{ errors }"
                   name="Longitude"
-                  rules="numeric|between:-90,90"
+                  rules="between:-90,90"
               >
                 <v-text-field
                     v-model="conference.longitude"
                     :error-messages="errors"
                     label="Longitude"
+                    @input="setLng"
                 ></v-text-field>
               </validation-provider>
+              <GmapMap
+                  v-if="conference.latitude && conference.longitude"
+                  :center="{lat:conference.latitude, lng:conference.longitude}"
+                  :zoom="10"
+                  map-type-id="terrain"
+                  style="width: 100%; height: 500px"
+              >
+                <GmapMarker
+                    :position="{lat:conference.latitude, lng:conference.longitude}"
+                    :clickable="true"
+                    :draggable="true"
+                    @drag="setLatLng($event.latLng)"
+                />
+              </GmapMap>
               <v-select
                   v-model="conference.country_id"
                   :items="countries"
@@ -107,16 +123,11 @@
 </template>
 
 <script>
-import {required, max, regex, min, between, numeric} from 'vee-validate/dist/rules'
+import {required, max, regex, min, between} from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 import {mapActions} from "vuex";
 
 setInteractionMode('eager')
-
-extend('numeric', {
-  ...numeric,
-  message: '{_field_} needs to be numeric',
-})
 
 extend('between', {
   ...between,
@@ -170,6 +181,20 @@ export default {
       await this.UpdateConference({form: this.conference, conferenceId: this.conference.id})
       await this.$router.push("/conferences").catch(() => {});
     },
+    setLatLng (location) {
+      this.conference.latitude = parseFloat(location.lat().toFixed(3));
+      this.conference.longitude = parseFloat(location.lng().toFixed(3));
+    },
+    setLat (lat) {
+      if (lat) {
+        this.conference.latitude = parseFloat(lat);
+      }
+    },
+    setLng (lng) {
+      if (lng) {
+        this.conference.longitude = parseFloat(lng);
+      }
+    }
   },
   created () {
     this.GetCountries()
