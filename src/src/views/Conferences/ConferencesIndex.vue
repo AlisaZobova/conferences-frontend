@@ -67,10 +67,10 @@
         <v-btn depressed class="mr-1" @click="cancelParticipation(item.id)">
           Cancel participation
         </v-btn>
-        <v-btn depressed class="mr-1" outlined color="primary">
+        <v-btn depressed class="mr-1" outlined color="primary" :href="'https://twitter.com/intent/tweet?text=' + getShareText() + '&url=' + getPath(item.id) ">
           TW
         </v-btn>
-        <v-btn depressed outlined color="primary">
+        <v-btn depressed outlined color="primary" :href="'https://www.facebook.com/share.php?u=' + getPath(item.id)">
           FB
         </v-btn>
         </div>
@@ -90,6 +90,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import {share} from "../../../share.config";
 
 export default {
   name: "ConferencesIndex",
@@ -190,6 +191,15 @@ export default {
     isConferenceJoined (conferenceId) {
       return this.$store.getters.isJoined(conferenceId)
     },
+    getPath(conferenceId) {
+      return process.env.VUE_APP_AXIOS_BASE_URL + this.$router.resolve({
+        name: share.pathName,
+        params: { id: conferenceId },
+      }).href;
+    },
+    getShareText () {
+      return share.text
+    }
   },
 }
 </script>
