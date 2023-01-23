@@ -15,7 +15,7 @@
             <th class="text-left">
               Date
             </th>
-            <th class="text-left">
+            <th v-if="conference.country" class="text-left">
               Country
             </th>
             <th class="text-left">
@@ -27,7 +27,7 @@
           <tr>
             <td>{{ conference.title }}</td>
             <td>{{ conference.conf_date }}</td>
-            <td>{{ country }}</td>
+            <td v-if="conference.country">{{ conference.country.name }}</td>
             <td>
               <v-dialog v-model="dialogDelete" max-width="500px">
                 <v-card>
@@ -108,16 +108,6 @@ export default {
   computed: {
     conference () {
       return this.$store.state.conferences.conference
-    },
-    country () {
-      let searchId = this.conference.country_id
-      if (searchId) {
-        let countryItem = this.$store.state.countries.countries.filter(function (item) {
-          return item.id === searchId
-        })
-        return countryItem[0].name
-      }
-      return null
     },
     isAdmin () {
       return this.$store.getters.isAdmin

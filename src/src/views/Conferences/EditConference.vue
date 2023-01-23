@@ -46,7 +46,6 @@
                   <v-text-field
                       v-model="conference.conf_date"
                       label="Date"
-                      :error="!!errors"
                       :error-messages="errors"
                       persistent-hint
                       prepend-icon="mdi-calendar"
@@ -94,13 +93,14 @@
                 ></v-text-field>
               </validation-provider>
               <GmapMap
-                  v-if="conference.latitude && conference.longitude"
-                  :center="{lat:conference.latitude, lng:conference.longitude}"
+                  :center="getCenter()"
                   :zoom="10"
                   map-type-id="terrain"
                   style="width: 100%; height: 500px"
+                  @click="setLatLng($event.latLng)"
               >
                 <GmapMarker
+                    v-if="conference.latitude && conference.longitude"
                     :position="{lat:conference.latitude, lng:conference.longitude}"
                     :clickable="true"
                     :draggable="true"
@@ -248,6 +248,13 @@ export default {
     },
     goBack () {
       this.$router.go(-1)
+    },
+    getCenter () {
+      if (this.conference.latitude && this.conference.longitude) {
+        return {lat:parseFloat(this.conference.latitude), lng:parseFloat(this.conference.longitude)}
+      } else {
+        return {lat:50, lng:30}
+      }
     }
   },
   created () {
