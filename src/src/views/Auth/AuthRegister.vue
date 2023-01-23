@@ -247,6 +247,22 @@ export default {
 
 <style scoped>
 
+:deep(.input-tel__input[data-v-e59be3b4]) {
+  font: inherit;
+  border: none;
+}
+
+:deep(.country-selector__input[data-v-46e105de]) {
+  font: inherit;
+  border: none;
+}
+
+:deep([data-v-19351537], [data-v-19351537]:after, [data-v-19351537]:before) {
+  font: inherit;
+  border: none;
+  border-bottom: 1px rgb(133, 133, 133) solid;
+}
+
 #error {
   color: red;
 }

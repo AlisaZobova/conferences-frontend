@@ -50,15 +50,17 @@ const actions = {
         commit('LogOut')
         await axios.post('logout')
     },
-    async JoinConference({commit}, conferenceId) {
+    async JoinConference({commit, state}, conferenceId) {
         await getToken()
-        axios.post('conferences/' + conferenceId + '/join').then((response) => {
+        await axios.post('conferences/' + conferenceId + '/join')
+        axios.get('user/' + state.user.id).then((response) => {
             commit("setUser", response.data)
         })
     },
-    async CancelParticipation({commit}, conferenceId) {
+    async CancelParticipation({commit, state}, conferenceId) {
         await getToken()
-        axios.post('conferences/' + conferenceId + '/cancel').then((response) => {
+        await axios.post('conferences/' + conferenceId + '/cancel')
+        axios.get('user/' + state.user.id).then((response) => {
             commit("setUser", response.data)
         })
     },

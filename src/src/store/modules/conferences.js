@@ -19,20 +19,26 @@ const actions = {
         let response = await axios.get('conferences/' + conferenceId)
         await commit("setConference", response.data)
     },
-    async DeleteConference({commit}, conferenceId) {
+    async DeleteConference({commit, rootState}, conferenceId) {
         await getToken()
         await axios.delete('conferences/' + conferenceId)
         await commit("setConference", null)
+        axios.get('user/' + rootState.auth.user.id).then((response) => {
+            commit('setUser', response.data, { root: true })
+        })
     },
     async UpdateConference({commit}, {form, conferenceId}) {
         await getToken()
         let response = await axios.patch('conferences/' + conferenceId, form)
         await commit("setConference", response.data)
     },
-    async CreateConference({commit}, form) {
+    async CreateConference({commit, rootState}, form) {
         await getToken()
         let response = await axios.post('conferences/', form)
         await commit("setConference", response.data)
+        axios.get('user/' + rootState.auth.user.id).then((response) => {
+            commit('setUser', response.data, { root: true })
+        })
     },
 };
 const mutations = {

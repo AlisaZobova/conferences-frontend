@@ -154,7 +154,8 @@ setInteractionMode('eager')
 
 extend('numeric', {
   ...numeric,
-  message: '{_field_} needs to be numeric',
+  message: '{_field_} needs to be a number',
+  validate: value => { return typeof value === 'number'}
 })
 
 extend('between', {
