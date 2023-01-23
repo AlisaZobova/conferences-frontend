@@ -8,6 +8,7 @@
         :server-items-length="totalConferences"
         :loading="loading"
         :items-per-page="perPage"
+        hide-default-footer
         class="elevation-1"
     >
       <template v-slot:top>
@@ -87,6 +88,13 @@
         </v-btn>
       </template>
     </v-data-table>
+    <div class="text-center pt-2">
+      <v-pagination
+          v-model="page"
+          :length="pageCount"
+          @input="getConferences"
+      ></v-pagination>
+    </div>
   </v-main>
   </v-app>
 </template>
@@ -116,12 +124,16 @@ export default {
     isAuthenticated () {
       return this.$store.getters.isAuthenticated
     },
+    pageCount () {
+      return this.$store.state.conferences.conferences.last_page
+    }
   },
   data () {
     return {
       selectedItem: null,
       dialogDelete: false,
       loading: true,
+      page: 1,
       options: {},
       headers: [
         {
@@ -152,8 +164,7 @@ export default {
     ...mapGetters(['isCreator', 'isJoined']),
     getConferences () {
       this.loading = true
-      const {page} = this.options
-      this.GetConferences(page).then(() => {
+      this.GetConferences(this.page).then(() => {
         this.loading = false
       })
     },

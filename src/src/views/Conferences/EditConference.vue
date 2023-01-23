@@ -128,7 +128,9 @@
                 Save
               </v-btn>
               <v-btn
-                  class="mr-4"
+                  class="mr-1 white--text"
+                  depressed
+                  color="grey"
                   @click="goBack"
               >
                 Back
