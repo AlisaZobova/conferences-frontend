@@ -63,6 +63,9 @@
         <v-btn v-if="isAuthenticated && !isConferenceJoined(item.id) && !isAdmin" depressed class="mr-1" color="warning" @click="joinConference(item.id)">
           Join
         </v-btn>
+        <v-btn v-if="!isAuthenticated " depressed class="mr-1" color="warning" :to="'/login'">
+          Join
+        </v-btn>
         <div class="d-inline" v-if="isAuthenticated && isConferenceJoined(item.id) && !isAdmin">
         <v-btn depressed class="mr-1" @click="cancelParticipation(item.id)">
           Cancel participation
@@ -168,9 +171,8 @@ export default {
       this.dialogDelete = true
     },
 
-    deleteItemConfirm () {
-      this.DeleteConference(this.selectedItem.id)
-      this.closeDelete()
+    async deleteItemConfirm () {
+      this.DeleteConference(this.selectedItem.id).then(() => this.closeDelete()).then(() => this.$router.go(0))
     },
 
     closeDelete () {

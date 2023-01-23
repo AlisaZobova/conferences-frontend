@@ -28,30 +28,37 @@
                 required
             ></v-text-field>
           </validation-provider>
-            <v-menu
-                ref="menu1"
-                v-model="menu1"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
+          <v-menu
+              ref="menu1"
+              v-model="menu1"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <validation-provider
+                  v-slot="{ errors }"
+                  name="Date"
+                  rules="required|min_date_value"
+              >
                 <v-text-field
                     v-model="form.conf_date"
                     label="Date"
+                    :error-messages="errors"
                     persistent-hint
                     prepend-icon="mdi-calendar"
                     v-bind="attrs"
                     v-on="on"
                 ></v-text-field>
-              </template>
-              <validation-provider
-                  v-slot="{ errors }"
-                  name="Date"
-                  rules="required"
-              >
+              </validation-provider>
+            </template>
+            <validation-provider
+                v-slot="{ errors }"
+                name="Date"
+                rules="required|min_date_value"
+            >
               <v-date-picker
                   v-model="form.conf_date"
                   :min='nowDate'
@@ -59,12 +66,12 @@
                   no-title
                   @input="menu1 = false"
               ></v-date-picker>
-              </validation-provider>
-            </v-menu>
+            </validation-provider>
+          </v-menu>
           <validation-provider
               v-slot="{ errors }"
               name="Latitude"
-              rules="between:-90,90"
+              rules="numeric|between:-90,90"
           >
             <v-text-field
                 v-model="form.latitude"
@@ -76,7 +83,7 @@
           <validation-provider
               v-slot="{ errors }"
               name="Longitude"
-              rules="between:-90,90"
+              rules="numeric|between:-90,90"
           >
             <v-text-field
                 v-model="form.longitude"
@@ -100,6 +107,10 @@
                 @drag="setLatLng($event.latLng)"
             />
           </GmapMap>
+          <validation-provider
+              name="Country"
+              v-slot="{}"
+          >
           <v-select
               v-model="form.country"
               :items="countries"
@@ -107,6 +118,7 @@
               item-value="id"
               label="Country"
           ></v-select>
+          </validation-provider>
 
           <v-btn
               class="mr-4"
@@ -127,7 +139,7 @@
 </template>
 
 <script>
-import {required, max, regex, min, between, numeric} from 'vee-validate/dist/rules'
+import {required, max, regex, min, between, min_value, numeric} from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 import {mapActions} from "vuex";
 import ForbiddenError from "@/views/ForbiddenError";
@@ -137,6 +149,12 @@ setInteractionMode('eager')
 extend('numeric', {
   ...numeric,
   message: '{_field_} needs to be numeric',
+})
+
+extend('min_date_value', {
+  ...min_value,
+  message: 'Date must be greater than today',
+  validate: value => { return value > new Date().toISOString().slice(0,10)}
 })
 
 extend('between', {

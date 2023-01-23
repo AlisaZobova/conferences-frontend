@@ -38,19 +38,27 @@
                   min-width="auto"
               >
                 <template v-slot:activator="{ on, attrs }">
+                  <validation-provider
+                      v-slot="{ errors }"
+                      name="Date"
+                      rules="required|min_date_value"
+                  >
                   <v-text-field
                       v-model="conference.conf_date"
                       label="Date"
+                      :error="!!errors"
+                      :error-messages="errors"
                       persistent-hint
                       prepend-icon="mdi-calendar"
                       v-bind="attrs"
                       v-on="on"
                   ></v-text-field>
+                  </validation-provider>
                 </template>
                 <validation-provider
                     v-slot="{ errors }"
                     name="Date"
-                    rules="required"
+                    rules="required|min_date_value"
                 >
                   <v-date-picker
                       v-model="conference.conf_date"
@@ -64,7 +72,7 @@
               <validation-provider
                   v-slot="{ errors }"
                   name="Latitude"
-                  rules="between:-90,90"
+                  rules="numeric|between:-90,90"
               >
                 <v-text-field
                     v-model="conference.latitude"
@@ -76,7 +84,7 @@
               <validation-provider
                   v-slot="{ errors }"
                   name="Longitude"
-                  rules="between:-90,90"
+                  rules="numeric|between:-90,90"
               >
                 <v-text-field
                     v-model="conference.longitude"
@@ -99,6 +107,10 @@
                     @drag="setLatLng($event.latLng)"
                 />
               </GmapMap>
+              <validation-provider
+                  name="Country"
+                  v-slot="{}"
+              >
               <v-select
                   v-model="conference.country_id"
                   :items="countries"
@@ -106,6 +118,7 @@
                   item-value="id"
                   label="Country"
               ></v-select>
+              </validation-provider>
 
               <v-btn
                   class="mr-4"
@@ -113,6 +126,12 @@
                   :disabled="invalid"
               >
                 Save
+              </v-btn>
+              <v-btn
+                  class="mr-4"
+                  @click="goBack"
+              >
+                Back
               </v-btn>
             </form>
           </validation-observer>
@@ -126,16 +145,27 @@
 </template>
 
 <script>
-import {required, max, regex, min, between} from 'vee-validate/dist/rules'
+import {required, max, regex, min, between, min_value, numeric} from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 import {mapActions, mapGetters} from "vuex";
 import ForbiddenError from "@/views/ForbiddenError";
 
 setInteractionMode('eager')
 
+extend('numeric', {
+  ...numeric,
+  message: '{_field_} needs to be numeric',
+})
+
 extend('between', {
   ...between,
   message: '{_field_} needs to be between {min} and {max}',
+})
+
+extend('min_date_value', {
+  ...min_value,
+  message: 'Date must be greater than today',
+  validate: value => { return value > new Date().toISOString().slice(0,10)}
 })
 
 extend('required', {
@@ -213,6 +243,9 @@ export default {
     isConferenceCreator (conferenceId) {
       return this.$store.getters.isCreator(conferenceId)
     },
+    goBack () {
+      this.$router.go(-1)
+    }
   },
   created () {
     this.GetCountries()

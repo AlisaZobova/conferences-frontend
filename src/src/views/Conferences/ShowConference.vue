@@ -40,6 +40,12 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+              <v-btn
+                  class="mr-4"
+                  @click="goBack"
+              >
+                Back
+              </v-btn>
               <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(conference.id) && isAnnouncer))" depressed color="primary" class="mr-1" @click="editItem(conference)">
                 Edit
               </v-btn>
@@ -127,7 +133,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["GetConference", "JoinConference", "CancelParticipation"]),
+    ...mapActions(["GetConference", "JoinConference", "CancelParticipation", "DeleteConference"]),
     editItem () {
       this.$router.push('/conferences/' + this.conference.id + '/edit').catch(() => {});
     },
@@ -135,10 +141,9 @@ export default {
       this.dialogDelete = true
     },
 
-    deleteItemConfirm () {
-      this.DeleteConference(this.conference.id)
-      this.closeDelete()
-      this.$router.push('/conferences/').catch(() => {});
+    async deleteItemConfirm () {
+      this.loading = true
+      this.DeleteConference(this.conference.id).then(() => this.$router.push('/conferences/')).catch(() => {})
     },
     closeDelete () {
       this.dialogDelete = false
@@ -165,6 +170,9 @@ export default {
     },
     getShareText () {
       return share.text
+    },
+    goBack () {
+      this.$router.go(-1)
     }
   },
 
