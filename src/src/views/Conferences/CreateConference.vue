@@ -5,7 +5,7 @@
       Loading...
     </div>
     <div v-else>
-    <template v-if="isAuthenticated && (isAdmin || isAnnouncer)">
+    <template>
       <validation-observer
           ref="observer"
           v-slot="{ invalid }"
@@ -130,9 +130,6 @@
         </form>
       </validation-observer>
     </template>
-      <template v-else>
-        <ForbiddenError></ForbiddenError>
-      </template>
     </div>
   </v-main>
 </v-app>
@@ -142,7 +139,6 @@
 import {required, max, regex, min, between, min_value, numeric} from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 import {mapActions} from "vuex";
-import ForbiddenError from "@/views/ForbiddenError";
 
 setInteractionMode('eager')
 
@@ -186,7 +182,6 @@ extend('regex', {
 export default {
   name: "CreateConference",
   components: {
-    ForbiddenError,
     ValidationProvider,
     ValidationObserver,
   },

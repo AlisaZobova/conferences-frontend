@@ -52,29 +52,29 @@
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn depressed color="success" class="mr-1" @click="showItem(item)">
+        <v-btn depressed color="success" class="mr-1 mb-1 mt-1" @click="showItem(item)">
           Details
         </v-btn>
-        <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(item.id) && isAnnouncer))" depressed color="primary" class="mr-1" @click="editItem(item)">
+        <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(item.id) && isAnnouncer))" depressed color="primary" class="mr-1 mb-1 mt-1" @click="editItem(item)">
           Edit
         </v-btn>
-        <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(item.id) && isAnnouncer))" depressed color="error" class="mr-1" @click="deleteItem(item)">
+        <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(item.id) && isAnnouncer))" depressed color="error" class="mr-1 mb-1 mt-1" @click="deleteItem(item)">
           Delete
         </v-btn>
-        <v-btn v-if="isAuthenticated && !isConferenceJoined(item.id) && !isAdmin" depressed class="mr-1" color="warning" @click="joinConference(item.id)">
+        <v-btn v-if="isAuthenticated && !isConferenceJoined(item.id) && !isAdmin" depressed class="mr-1 mb-1 mt-1" color="warning" @click="joinConference(item.id)">
           Join
         </v-btn>
-        <v-btn v-if="!isAuthenticated " depressed class="mr-1" color="warning" :to="'/login'">
+        <v-btn v-if="!isAuthenticated " depressed class="mr-1 mb-1 mt-1" color="warning" :to="'/login'">
           Join
         </v-btn>
         <div class="d-inline" v-if="isAuthenticated && isConferenceJoined(item.id) && !isAdmin">
-        <v-btn depressed class="mr-1" @click="cancelParticipation(item.id)">
+        <v-btn depressed class="mr-1 mb-1 mt-1" @click="cancelParticipation(item.id)">
           Cancel participation
         </v-btn>
-        <v-btn depressed class="mr-1" outlined color="primary" :href="'https://twitter.com/intent/tweet?text=' + getShareText() + '&url=' + getPath(item.id) ">
+        <v-btn depressed class="mr-1 mb-1 mt-1" outlined color="primary" :href="'https://twitter.com/intent/tweet?text=' + getShareText() + '&url=' + getPath() ">
           TW
         </v-btn>
-        <v-btn depressed outlined color="primary" :href="'https://www.facebook.com/share.php?u=' + getPath(item.id)">
+        <v-btn depressed outlined color="primary" :href="'https://www.facebook.com/share.php?u=' + getPath()" class="mb-1 mt-1">
           FB
         </v-btn>
         </div>
@@ -204,11 +204,9 @@ export default {
     isConferenceJoined (conferenceId) {
       return this.$store.getters.isJoined(conferenceId)
     },
-    getPath(conferenceId) {
+    getPath() {
       return process.env.VUE_APP_AXIOS_BASE_URL + this.$router.resolve({
-        name: share.pathName,
-        params: { id: conferenceId },
-      }).href;
+        name: share.pathName}).href;
     },
     getShareText () {
       return share.text

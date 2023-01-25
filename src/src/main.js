@@ -4,6 +4,7 @@ import vuetify from './plugins/vuetify'
 import router from './router'
 import store from './store'
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 import 'vue-phone-number-input/dist/vue-phone-number-input.css';
 import VuePhoneNumberInput from 'vue-phone-number-input';
@@ -23,14 +24,30 @@ axios.defaults.baseURL = process.env.VUE_APP_AXIOS_BASE_URL;
 axios.defaults.headers.common['Accept'] =`application/json`;
 
 axios.interceptors.response.use(undefined, function (error) {
-  if (error) {
-    const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      store.dispatch('LogOut')
+    if (error) {
+        if (error.response.status === 401) {
+            store.dispatch('LogOut').then(() => router.push('/login'))
+        }
     }
-  }
 })
+
+const onRequest = (config) => {
+  if ((
+          config.method === 'post' ||
+          config.method === 'put' ||
+          config.method === 'delete'
+      ) &&
+      !Cookies.get('XSRF-TOKEN')) {
+    return setCSRFToken().then(() => { return config });
+  }
+  return config;
+}
+
+const setCSRFToken = () => {
+  return axios.get('/sanctum/csrf-cookie');
+}
+
+axios.interceptors.request.use(onRequest, null);
 
 Vue.config.productionTip = false
 
