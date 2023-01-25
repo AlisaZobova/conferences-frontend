@@ -8,6 +8,7 @@
         :server-items-length="totalConferences"
         :loading="loading"
         :items-per-page="perPage"
+        @click:row="showItem"
         hide-default-footer
         class="elevation-1"
     >
