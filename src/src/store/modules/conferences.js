@@ -34,7 +34,7 @@ const actions = {
     },
     async CreateConference({commit, rootState}, form) {
         await getToken()
-        let response = await axios.post('conferences/', form)
+        let response = await axios.post('conferences', form)
         await commit("setConference", response.data)
         axios.get('user/' + rootState.auth.user.id).then((response) => {
             commit('setUser', response.data, { root: true })
