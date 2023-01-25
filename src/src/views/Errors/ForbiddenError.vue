@@ -3,7 +3,7 @@
   <v-main>
       <h1 class="text-center">Forbidden! You do not have rights to this action.</h1>
       <p class="text-center">
-        <a href="/">Go to the main page?</a>
+        <a href="/src/public">Go to the main page?</a>
       </p>
   </v-main>
 </v-app>
