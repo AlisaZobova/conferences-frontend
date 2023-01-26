@@ -23,13 +23,21 @@ axios.defaults.withCredentials = true
 axios.defaults.baseURL = process.env.VUE_APP_AXIOS_BASE_URL;
 axios.defaults.headers.common['Accept'] =`application/json`;
 
-axios.interceptors.response.use(undefined, function (error) {
-    if (error) {
+axios.interceptors.response.use(function (response) {
+    return response
+}, async function (error) {
+    if (error.response) {
         if (error.response.status === 401) {
-            store.dispatch('LogOut').then(() => router.push('/login'))
-        }
+            setCSRFToken();
+            store.state.auth.user = null;
+            return router.push('/login');
+        }}
+    if (error.response.status === 404) {
+        return router.push('/404').catch(() => {});
     }
+    return Promise.reject(error)
 })
+
 
 const onRequest = (config) => {
   if ((

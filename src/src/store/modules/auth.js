@@ -31,7 +31,7 @@ const actions = {
         await commit("setUserId", response.data.id)
     },
     async RegisterAdditional({state, commit}, form) {
-        let response = await axios.post('register/' + encodeURIComponent(state.userId), form)
+        let response = await axios.post('register/' + state.userId, form)
         await commit("setUser", response.data)
         await commit("setUserId", null)
     },
