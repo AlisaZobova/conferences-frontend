@@ -130,7 +130,7 @@
                           ></v-date-picker>
                         </v-menu>
 
-                        <vue-phone-number-input v-model="formAd.phone" default-country-code="UA" name="phone"/>
+                        <vue-phone-number-input v-model="phone" @update="setNumber" default-country-code="UA" name="phone"/>
 
                         <v-select
                             v-model="formAd.country"
@@ -151,6 +151,7 @@
 <!--                      Back-->
 <!--                    </v-btn>-->
                     <v-btn
+                        :disabled="!isFormValid"
                         type="submit"
                         color="primary"
                     >
@@ -188,6 +189,7 @@ export default {
       show1: false,
       show2: false,
       menu1: false,
+      phone: null,
       isFormValid: false,
       rules: {
         required: value => !!value || 'Required.',
@@ -241,6 +243,15 @@ export default {
         this.showErrorCountry = true
       }
     },
+    async setNumber(data) {
+      if (data.formattedNumber && data.isValid) {
+        this.formAd.phone = data.formattedNumber
+        this.isFormValid = true
+      }
+      if (!data.isValid) {
+        this.isFormValid = false
+      }
+    }
   },
 };
 </script>
