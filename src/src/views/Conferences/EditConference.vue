@@ -74,22 +74,22 @@
                   rules="numeric|between:-90,90"
               >
                 <v-text-field
+                    ref="lat"
                     v-model="conference.latitude"
                     :error-messages="errors"
                     label="Latitude"
-                    @input="setLat"
                 ></v-text-field>
               </validation-provider>
               <validation-provider
                   v-slot="{ errors }"
                   name="Longitude"
-                  rules="numeric|between:-90,90"
+                  rules="numeric|between:-180,180"
               >
                 <v-text-field
+                    ref="lng"
                     v-model="conference.longitude"
                     :error-messages="errors"
                     label="Longitude"
-                    @input="setLng"
                 ></v-text-field>
               </validation-provider>
               <GmapMap
@@ -100,8 +100,8 @@
                   @click="setLatLng($event.latLng)"
               >
                 <GmapMarker
-                    v-if="conference.latitude && conference.longitude"
-                    :position="{lat:conference.latitude, lng:conference.longitude}"
+                    v-if="parseFloat(conference.latitude) && parseFloat(conference.longitude)"
+                    :position="{lat:parseFloat(conference.latitude), lng:parseFloat(conference.longitude)}"
                     :clickable="true"
                     :draggable="true"
                     @drag="setLatLng($event.latLng)"
@@ -152,8 +152,8 @@ setInteractionMode('eager')
 
 extend('numeric', {
   ...numeric,
-  message: '{_field_} needs to be a number',
-  validate: value => { return typeof value === 'number'}
+  message: '{_field_} needs to be numeric',
+  validate: value => { return !!Number(value)}
 })
 
 extend('between', {
@@ -228,16 +228,6 @@ export default {
       this.conference.latitude = parseFloat(location.lat().toFixed(3));
       this.conference.longitude = parseFloat(location.lng().toFixed(3));
     },
-    setLat (lat) {
-      if (lat) {
-        this.conference.latitude = parseFloat(lat);
-      }
-    },
-    setLng (lng) {
-      if (lng) {
-        this.conference.longitude = parseFloat(lng);
-      }
-    },
     isConferenceCreator (conferenceId) {
       return this.$store.getters.isCreator(conferenceId)
     },
@@ -245,8 +235,10 @@ export default {
       this.$router.go(-1)
     },
     getCenter () {
-      if (this.conference.latitude && this.conference.longitude) {
-        return {lat:parseFloat(this.conference.latitude), lng:parseFloat(this.conference.longitude)}
+      let lat = parseFloat(this.conference.latitude)
+      let lng = parseFloat(this.conference.longitude)
+      if (lat && lng && this.$refs.lat.validate() && this.$refs.lng.validate()) {
+        return {lat:lat, lng:lng}
       } else {
         return {lat:50, lng:30}
       }

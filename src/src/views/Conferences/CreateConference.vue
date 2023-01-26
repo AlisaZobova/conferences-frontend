@@ -74,22 +74,22 @@
               rules="numeric|between:-90,90"
           >
             <v-text-field
+                ref="lat"
                 v-model="form.latitude"
                 :error-messages="errors"
                 label="Latitude"
-                @input="setLat"
             ></v-text-field>
           </validation-provider>
           <validation-provider
               v-slot="{ errors }"
               name="Longitude"
-              rules="numeric|between:-90,90"
+              rules="numeric|between:-180,180"
           >
             <v-text-field
+                ref="lng"
                 v-model="form.longitude"
                 :error-messages="errors"
                 label="Longitude"
-                @input="setLng"
             ></v-text-field>
           </validation-provider>
           <GmapMap
@@ -100,8 +100,8 @@
               @click="setLatLng($event.latLng)"
           >
             <GmapMarker
-                v-if="form.latitude && form.longitude"
-                :position="{lat:form.latitude, lng:form.longitude}"
+                v-if="parseFloat(form.latitude) && parseFloat(form.longitude)"
+                :position="{lat:parseFloat(form.latitude), lng:parseFloat(form.longitude)}"
                 :clickable="true"
                 :draggable="true"
                 @drag="setLatLng($event.latLng)"
@@ -145,7 +145,7 @@ setInteractionMode('eager')
 extend('numeric', {
   ...numeric,
   message: '{_field_} needs to be numeric',
-  validate: value => { return typeof value === 'number'}
+  validate: value => { return !!Number(value)}
 })
 
 extend('min_date_value', {
@@ -223,19 +223,11 @@ export default {
       this.form.latitude = parseFloat(location.lat().toFixed(3));
       this.form.longitude = parseFloat(location.lng().toFixed(3));
     },
-    setLat (lat) {
-      if (lat) {
-        this.form.latitude = parseFloat(lat);
-      }
-    },
-    setLng (lng) {
-      if (lng) {
-        this.form.longitude = parseFloat(lng);
-      }
-    },
     getCenter () {
-      if (this.form.latitude && this.form.longitude) {
-      return {lat:parseFloat(this.form.latitude), lng:parseFloat(this.form.longitude)}
+      let lat = parseFloat(this.form.latitude)
+      let lng = parseFloat(this.form.longitude)
+      if (lat && lng && this.$refs.lat.validate() && this.$refs.lng.validate()) {
+      return {lat:lat, lng:lng}
     } else {
         return {lat:50, lng:30}
       }
