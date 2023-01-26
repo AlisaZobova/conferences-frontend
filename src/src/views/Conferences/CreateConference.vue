@@ -1,8 +1,11 @@
 <template>
 <v-app>
   <v-main>
-    <div v-if="loading">
-      Loading...
+    <div v-if="loading" class="text-center">
+      <v-progress-circular
+          indeterminate
+          color="primary"
+      ></v-progress-circular>
     </div>
     <div v-else>
     <template>
