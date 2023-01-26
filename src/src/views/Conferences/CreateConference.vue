@@ -100,7 +100,7 @@
               @click="setLatLng($event.latLng)"
           >
             <GmapMarker
-                v-if="parseFloat(form.latitude) && parseFloat(form.longitude)"
+                v-if="Number(form.latitude) && Number(form.longitude)"
                 :position="{lat:parseFloat(form.latitude), lng:parseFloat(form.longitude)}"
                 :clickable="true"
                 :draggable="true"
