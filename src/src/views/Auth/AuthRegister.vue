@@ -130,7 +130,7 @@
                           ></v-date-picker>
                         </v-menu>
 
-                        <vue-phone-number-input v-model="phone" @update="setNumber" default-country-code="UA" name="phone"/>
+                        <vue-phone-number-input :border-radius=0 v-model="phone" @update="setNumber" default-country-code="UA" name="phone"/>
 
                         <v-select
                             v-model="formAd.country"
@@ -244,9 +244,10 @@ export default {
       }
     },
     async setNumber(data) {
-      if (data.formattedNumber && data.isValid) {
+      if ((data.formattedNumber && data.isValid) || !data.phoneNumber) {
         this.formAd.phone = data.formattedNumber
         this.isFormValid = true
+        data.isValid = true
       }
       if (!data.isValid) {
         this.isFormValid = false
@@ -272,6 +273,17 @@ export default {
   font: inherit;
   border: none;
   border-bottom: 1px rgb(133, 133, 133) solid;
+}
+
+:deep(#MazPhoneNumberInput) {
+  box-shadow: none;
+  border: none;
+  outline: none;
+  padding: 0 2px;
+}
+
+.theme--light.v-text-field:not(.v-input--has-state):hover > .v-input__control > .v-input__slot:before {
+  border-color: rgb(133, 133, 133);
 }
 
 #error {
