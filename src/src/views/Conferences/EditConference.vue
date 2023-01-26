@@ -11,7 +11,6 @@
         <template>
           <validation-observer
               ref="observer"
-              v-slot="{ invalid }"
           >
             <form @submit.prevent="submit">
               <validation-provider
@@ -122,11 +121,9 @@
                   label="Country"
               ></v-select>
               </validation-provider>
-
               <v-btn
                   class="mr-4"
                   type="submit"
-                  :disabled="invalid"
               >
                 Save
               </v-btn>
