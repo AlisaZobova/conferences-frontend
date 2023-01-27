@@ -124,6 +124,7 @@
                             ></v-text-field>
                           </template>
                           <v-date-picker
+                              :max='nowDate'
                               v-model="formAd.birthdate"
                               no-title
                               @input="menu1 = false"
@@ -190,6 +191,7 @@ export default {
       show2: false,
       menu1: false,
       phone: null,
+      nowDate: new Date().toISOString().slice(0,10),
       isFormValid: false,
       rules: {
         required: value => !!value || 'Required.',
