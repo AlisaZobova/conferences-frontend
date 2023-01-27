@@ -134,8 +134,8 @@ export default {
           sortable: false,
           value: 'title',
         },
-        { text: 'Date', value: 'conf_date' },
-        { text: 'Actions', value: 'actions' }
+        { text: 'Date', value: 'conf_date', sortable: false },
+        { text: 'Actions', value: 'actions', sortable: false }
       ],
     }
   },
