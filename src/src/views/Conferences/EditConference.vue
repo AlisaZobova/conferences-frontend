@@ -161,12 +161,6 @@ export default {
     conference () {
       return this.$store.state.conferences.conference
     },
-    isAdmin () {
-      return this.$store.getters.isAdmin
-    },
-    isAnnouncer () {
-      return this.$store.getters.isAnnouncer
-    },
     isAuthenticated () {
       return this.$store.getters.isAuthenticated
     },

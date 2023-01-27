@@ -170,9 +170,12 @@ export default {
   methods: {
     ...mapActions(["CreateConference", "GetCountries"]),
     async submit () {
-      this.$refs.observer.validate()
-      await this.CreateConference(this.form).catch(() => {})
-      this.$router.push('/conferences').catch(() => {});
+      this.$refs.observer.validate().then((result) => {
+        if (result) {
+          this.CreateConference(this.form).catch(() => {})
+          this.$router.push('/conferences').catch(() => {});
+        }
+      })
     },
     setLatLng (location) {
       this.form.latitude = parseFloat(location.lat().toFixed(3));
