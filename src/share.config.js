@@ -1,5 +1,5 @@
 let share = {
-    'pathName':'Register',
+    'pathName': process.env.VUE_APP_URL + '/register',
     'text': 'Check out this Meetup with SoCal AngularJS!'
 }
 

@@ -35,8 +35,7 @@ export const buttonActionsMixin = {
             return this.$store.getters.isJoined(conferenceId)
         },
         getPath() {
-            return process.env.VUE_APP_URL + this.$router.resolve({
-                name: share.pathName}).href;
+            return share.pathName;
         },
         getShareText () {
             return share.text
