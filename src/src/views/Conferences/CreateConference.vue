@@ -153,8 +153,8 @@ extend('numeric', {
 
 extend('min_date_value', {
   ...min_value,
-  message: 'Date must be greater than today',
-  validate: value => { return value > new Date().toISOString().slice(0,10)}
+  message: 'Date must be greater or equal today',
+  validate: value => { return value >= new Date().toISOString().slice(0,10)}
 })
 
 extend('between', {

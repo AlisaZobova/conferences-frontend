@@ -45,15 +45,15 @@
                       name="Date"
                       rules="required|min_date_value"
                   >
-                  <v-text-field
-                      v-model="conference.conf_date"
-                      label="Date"
-                      :error-messages="errors"
-                      persistent-hint
-                      prepend-icon="mdi-calendar"
-                      v-bind="attrs"
-                      v-on="on"
-                  ></v-text-field>
+                    <v-text-field
+                        v-model="conference.conf_date"
+                        label="Date"
+                        :error-messages="errors"
+                        persistent-hint
+                        prepend-icon="mdi-calendar"
+                        v-bind="attrs"
+                        v-on="on"
+                    ></v-text-field>
                   </validation-provider>
                 </template>
                 <validation-provider
@@ -113,13 +113,13 @@
                   name="Country"
                   v-slot="{}"
               >
-              <v-select
-                  v-model="conference.country_id"
-                  :items="countries"
-                  item-text="name"
-                  item-value="id"
-                  label="Country"
-              ></v-select>
+                <v-select
+                    v-model="conference.country_id"
+                    :items="countries"
+                    item-text="name"
+                    item-value="id"
+                    label="Country"
+                ></v-select>
               </validation-provider>
               <v-btn
                   class="mr-4"
@@ -163,8 +163,8 @@ extend('between', {
 
 extend('min_date_value', {
   ...min_value,
-  message: 'Date must be greater than today',
-  validate: value => { return value > new Date().toISOString().slice(0,10)}
+  message: 'Date must be greater or equal today',
+  validate: value => { return value >= new Date().toISOString().slice(0,10)}
 })
 
 extend('required', {
@@ -220,9 +220,12 @@ export default {
     ...mapActions(["UpdateConference", "GetCountries", "GetConference"]),
     ...mapGetters(['isCreator']),
     async submit () {
-      this.$refs.observer.validate()
-      await this.UpdateConference({form: this.conference, conferenceId: this.conference.id})
-      await this.$router.push("/conferences").catch(() => {});
+      this.$refs.observer.validate().then((result) => {
+        if (result){
+          this.UpdateConference({form: this.conference, conferenceId: this.conference.id})
+          this.$router.push("/conferences").catch(() => {});
+        }
+      })
     },
     setLatLng (location) {
       this.conference.latitude = parseFloat(location.lat().toFixed(3));
@@ -247,9 +250,9 @@ export default {
   created () {
     this.GetCountries()
     if (this.isAuthenticated) {
-    this.GetConference(this.$route.params.id).then(() => {
-      this.loading = false;
-    });
+      this.GetConference(this.$route.params.id).then(() => {
+        this.loading = false;
+      });
     }
     else {
       this.loading = false
