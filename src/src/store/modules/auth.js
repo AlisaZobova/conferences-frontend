@@ -13,7 +13,7 @@ const getters = {
         conferenceId = parseInt(conferenceId)
         let conferencesList = state.user.conferences.filter(function (item) {
             return item.id === conferenceId
-    })
+        })
         return conferencesList.length > 0
     },
     isJoined: state => conferenceId => {

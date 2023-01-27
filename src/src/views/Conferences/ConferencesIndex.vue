@@ -101,11 +101,12 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
-import {share} from "../../../share.config";
+import {mapActions} from "vuex";
+import { buttonActionsMixin } from "@/mixins/buttonActionsMixin";
 
 export default {
   name: "ConferencesIndex",
+  mixins: [buttonActionsMixin],
   computed: {
     conferences () {
       return this.$store.state.conferences.conferences.data
@@ -115,15 +116,6 @@ export default {
     },
     perPage () {
       return this.$store.state.conferences.conferences.per_page
-    },
-    isAdmin () {
-      return this.$store.getters.isAdmin
-    },
-    isAnnouncer () {
-      return this.$store.getters.isAnnouncer
-    },
-    isAuthenticated () {
-      return this.$store.getters.isAuthenticated
     },
     pageCount () {
       return this.$store.state.conferences.conferences.last_page
@@ -160,9 +152,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["GetConferences", "DeleteConference",
-      "JoinConference", "CancelParticipation"]),
-    ...mapGetters(['isCreator', 'isJoined']),
+    ...mapActions(["GetConferences", "DeleteConference"]),
     getConferences () {
       this.loading = true
       this.GetConferences(this.page).then(() => {
@@ -172,9 +162,6 @@ export default {
     createItem () {
       this.$router.push('/conferences/create').catch(() => {});
     },
-    editItem (item) {
-      this.$router.push('/conferences/' + item.id + '/edit').catch(() => {});
-    },
     showItem (item) {
       this.$router.push('/conferences/' + item.id).catch(() => {});
     },
@@ -182,36 +169,13 @@ export default {
       this.selectedItem = item
       this.dialogDelete = true
     },
-
     async deleteItemConfirm () {
       this.DeleteConference(this.selectedItem.id).then(() => this.closeDelete()).then(() => this.$router.go(0))
     },
-
     closeDelete () {
       this.selectedItem = null
       this.dialogDelete = false
     },
-    joinConference (conferenceId) {
-      this.JoinConference(conferenceId)
-      this.$router.push('/conferences').catch(() => {});
-    },
-    cancelParticipation (conferenceId) {
-      this.CancelParticipation(conferenceId)
-      this.$router.push('/conferences').catch(() => {});
-    },
-    isConferenceCreator (conferenceId) {
-      return this.$store.getters.isCreator(conferenceId)
-    },
-    isConferenceJoined (conferenceId) {
-      return this.$store.getters.isJoined(conferenceId)
-    },
-    getPath() {
-      return process.env.VUE_APP_AXIOS_BASE_URL + this.$router.resolve({
-        name: share.pathName}).href;
-    },
-    getShareText () {
-      return share.text
-    }
   },
 }
 </script>

@@ -97,11 +97,12 @@
 
 <script>
 import {mapActions} from "vuex";
+import { buttonActionsMixin } from "@/mixins/buttonActionsMixin";
 
-import { share } from "../../../share.config"
 
 export default {
   name: "ShowConference",
+  mixins: [buttonActionsMixin],
   data () {
     return {
       loading: true,
@@ -112,15 +113,6 @@ export default {
     conference () {
       return this.$store.state.conferences.conference
     },
-    isAdmin () {
-      return this.$store.getters.isAdmin
-    },
-    isAnnouncer () {
-      return this.$store.getters.isAnnouncer
-    },
-    isAuthenticated () {
-      return this.$store.getters.isAuthenticated
-    },
   },
   watch: {
     dialogDelete (val) {
@@ -128,41 +120,16 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["GetConference", "JoinConference", "CancelParticipation", "DeleteConference"]),
-    editItem () {
-      this.$router.push('/conferences/' + this.conference.id + '/edit').catch(() => {});
-    },
+    ...mapActions(["GetConference", "DeleteConference"]),
     deleteItem () {
       this.dialogDelete = true
     },
-
     async deleteItemConfirm () {
       this.loading = true
       this.DeleteConference(this.conference.id).then(() => this.$router.push('/conferences/')).catch(() => {})
     },
     closeDelete () {
       this.dialogDelete = false
-    },
-    joinConference (conferenceId) {
-      this.JoinConference(conferenceId)
-      this.$router.push('/conferences').catch(() => {});
-    },
-    cancelParticipation (conferenceId) {
-      this.CancelParticipation(conferenceId)
-      this.$router.push('/conferences').catch(() => {});
-    },
-    isConferenceCreator (conferenceId) {
-      return this.$store.getters.isCreator(conferenceId)
-    },
-    isConferenceJoined (conferenceId) {
-      return this.$store.getters.isJoined(conferenceId)
-    },
-    getPath() {
-      return process.env.VUE_APP_AXIOS_BASE_URL + this.$router.resolve({
-        name: share.pathName}).href;
-    },
-    getShareText () {
-      return share.text
     },
     goBack () {
       this.$router.go(-1)
