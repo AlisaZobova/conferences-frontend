@@ -287,6 +287,10 @@ export default {
   padding-left: 0;
 }
 
+:deep(b, strong) {
+    font-weight: 400;
+}
+
 :deep(.v-application ul, .v-application ol) {
   padding-left: 0;
   width: 100%;
