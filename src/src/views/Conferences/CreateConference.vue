@@ -126,9 +126,18 @@
           <v-btn
               class="mr-4"
               type="submit"
+              color="primary"
               :disabled="invalid"
           >
             Save
+          </v-btn>
+          <v-btn
+              class="mr-1 white--text"
+              depressed
+              color="grey"
+              @click="goBack"
+          >
+            Back
           </v-btn>
         </form>
       </validation-observer>
@@ -189,7 +198,10 @@ export default {
     } else {
         return {lat:50, lng:30}
       }
-    }
+    },
+    goBack () {
+      this.$router.go(-1)
+    },
   },
   created () {
     this.GetCountries().then(() => {

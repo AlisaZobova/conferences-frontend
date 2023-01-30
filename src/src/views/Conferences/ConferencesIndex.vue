@@ -53,10 +53,10 @@
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn depressed color="success" class="mr-1 mb-1 mt-1" @click="showItem(item)">
+        <v-btn depressed color="light-green" class="white--text mr-1 mb-1 mt-1" @click="showItem(item)">
           Details
         </v-btn>
-        <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(item.id) && isAnnouncer))" depressed color="primary" class="mr-1 mb-1 mt-1" @click="editItem(item)">
+        <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(item.id) && isAnnouncer))" depressed color="cyan darken-1" class="white--text mr-1 mb-1 mt-1" @click="editItem(item)">
           Edit
         </v-btn>
         <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(item.id) && isAnnouncer))" depressed color="error" class="mr-1 mb-1 mt-1" @click="deleteItem(item)">
@@ -69,15 +69,15 @@
           Join
         </v-btn>
         <div class="d-inline" v-if="isAuthenticated && isConferenceJoined(item.id) && !isAdmin">
-        <v-btn depressed class="mr-1 mb-1 mt-1" @click="cancelParticipation(item.id)">
-          Cancel participation
-        </v-btn>
-        <v-btn depressed class="mr-1 mb-1 mt-1" outlined color="primary" :href="'https://twitter.com/intent/tweet?text=' + getShareText() + '&url=' + getPath() ">
-          TW
-        </v-btn>
-        <v-btn depressed outlined color="primary" :href="'https://www.facebook.com/share.php?u=' + getPath()" class="mb-1 mt-1">
-          FB
-        </v-btn>
+          <v-btn depressed class="mr-1 mb-1 mt-1" outlined color="cyan darken-1" :href="'https://twitter.com/intent/tweet?text=' + getShareText() + '&url=' + getPath() ">
+            TW
+          </v-btn>
+          <v-btn depressed outlined color="cyan darken-1" :href="'https://www.facebook.com/share.php?u=' + getPath()" class="mb-1 mt-1 mr-1">
+            FB
+          </v-btn>
+          <v-btn depressed color="red lighten-2" class="mr-1 mb-1 mt-1 white--text" @click="cancelParticipation(item.id)">
+            Cancel participation
+          </v-btn>
         </div>
       </template>
       <template v-slot:no-data>

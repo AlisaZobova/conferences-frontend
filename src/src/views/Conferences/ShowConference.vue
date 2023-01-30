@@ -67,7 +67,7 @@
           >
             Back
           </v-btn>
-          <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(conference.id) && isAnnouncer))" depressed color="primary" class="mr-1 mb-1 mt-1" @click="editItem(conference)">
+          <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(conference.id) && isAnnouncer))" depressed color="cyan darken-1" class="white--text mr-1 mb-1 mt-1" @click="editItem(conference)">
             Edit
           </v-btn>
           <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(conference.id) && isAnnouncer))" depressed color="error" class="mr-1 mb-1 mt-1" @click="deleteItem(conference)">
@@ -77,14 +77,14 @@
             Join
           </v-btn>
           <div class="d-inline" v-if="isAuthenticated && isConferenceJoined(conference.id) && !isAdmin">
-            <v-btn depressed class="mr-1 mb-1 mt-1" @click="cancelParticipation(conference.id)">
-              Cancel participation
-            </v-btn>
-            <v-btn depressed class="mr-1 mb-1 mt-1" outlined color="primary" :href="'https://twitter.com/intent/tweet?text=' + getShareText() + '&url=' + getPath() ">
+            <v-btn depressed class="mr-1 mb-1 mt-1" outlined color="cyan darken-1" :href="'https://twitter.com/intent/tweet?text=' + getShareText() + '&url=' + getPath() ">
               TW
             </v-btn>
-            <v-btn depressed outlined color="primary" :href="'https://www.facebook.com/share.php?u=' + getPath()" class="mb-1 mt-1">
+            <v-btn depressed outlined color="cyan darken-1" :href="'https://www.facebook.com/share.php?u=' + getPath()" class="mb-1 mt-1 mr-1">
               FB
+            </v-btn>
+            <v-btn depressed color="red lighten-2" class="mr-1 mb-1 mt-1 white--text" @click="cancelParticipation(conference.id)">
+              Cancel participation
             </v-btn>
           </div>
         </div>

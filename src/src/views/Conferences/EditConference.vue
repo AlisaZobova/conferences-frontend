@@ -124,6 +124,7 @@
               <v-btn
                   class="mr-4"
                   type="submit"
+                  color="primary"
               >
                 Save
               </v-btn>
