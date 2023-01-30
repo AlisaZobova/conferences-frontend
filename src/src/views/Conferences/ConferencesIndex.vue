@@ -5,6 +5,7 @@
         :headers="headers"
         :items="conferences"
         :options.sync="options"
+        :page="page"
         :server-items-length="totalConferences"
         :loading="loading"
         :items-per-page="perPage"
@@ -92,7 +93,6 @@
       <v-pagination
           v-model="page"
           :length="pageCount"
-          @input="getConferences"
       ></v-pagination>
     </div>
   </v-main>
