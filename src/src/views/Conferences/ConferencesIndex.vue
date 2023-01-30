@@ -176,6 +176,9 @@ export default {
       this.dialogDelete = false
     },
   },
+  created () {
+    this.getConferences()
+  },
 }
 </script>
 
