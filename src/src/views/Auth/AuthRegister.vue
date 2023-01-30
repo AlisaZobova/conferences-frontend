@@ -74,7 +74,6 @@
                     <v-btn
                         :disabled="!isFormValid"
                         color="primary"
-                        @click="getCountries()"
                         type="submit"
                     >
                       Continue
@@ -229,7 +228,7 @@ export default {
   methods: {
     ...mapActions(["Register", "RegisterAdditional", "GetCountries"]),
     async submit() {
-        this.Register(this.form).then(() => this.e1 = 2).catch (() => {
+        this.Register(this.form).then(() => {this.e1 = 2; this.getCountries()}).catch (() => {
         this.showError = true
       })
     },
