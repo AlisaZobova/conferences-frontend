@@ -73,7 +73,7 @@
                     <v-btn
                         :disabled="!isFormValid"
                         color="primary"
-                        @click="e1 = 2; getCountries()"
+                        @click="e1 = 2; getCountries(); isFormValid=false"
                         type="submit"
                     >
                       Continue
@@ -88,19 +88,21 @@
                   <v-stepper-content step="2">
                     <v-card>
 
-                      <v-form @submit.prevent="submitAd">
+                      <v-form @submit.prevent="submitAd" v-model="isFormValid">
 
                         <v-text-field
                             v-model="formAd.firstname"
                             name="firstname"
                             label="Firstname"
                             class="mt-0"
+                            :rules="[rules.required]"
                         ></v-text-field>
 
                         <v-text-field
                             v-model="formAd.lastname"
                             name="lastname"
                             label="Lastname"
+                            :rules="[rules.required]"
                         ></v-text-field>
 
                         <v-menu
@@ -120,6 +122,7 @@
                                 prepend-icon="mdi-calendar"
                                 v-bind="attrs"
                                 v-on="on"
+                                :rules="[rules.required]"
                             ></v-text-field>
                           </template>
                           <v-date-picker
@@ -129,14 +132,16 @@
                               @input="menu1 = false"
                           ></v-date-picker>
                         </v-menu>
-
-                        <vue-tel-input :validCharactersOnly=true mode="international" v-model="phone" @validate="setNumber"></vue-tel-input>
+                        <vue-tel-input :validCharactersOnly=true mode="international" v-model="phone" @validate="phoneValidate" @input="setNumber"></vue-tel-input>
+                        <v-text-field class="phone-input" flat solo v-model="formAd.phone" :rules="[rules.required, rules.phone]" hidden></v-text-field>
                         <v-select
+                            class="country-select"
                             v-model="formAd.country"
                             :items="countries"
                             item-text="name"
                             item-value="id"
                             label="Country"
+                            :rules="[rules.required]"
                         ></v-select>
 
                         <p class="text-center" v-if="showErrorCountry">Failed to get list of countries</p>
@@ -190,11 +195,13 @@ export default {
       phone: null,
       nowDate: new Date().toISOString().slice(0,10),
       isFormValid: false,
+      isPhoneValid: false,
       rules: {
         required: value => !!value || 'Required.',
         min: v => v.length >= 8 || 'Min 8 characters',
         match: () => (this.form.password === this.form.password_confirmation) ||
-            'Password confirmation does not match'
+            'Password confirmation does not match',
+        phone: () => (this.isPhoneValid) || 'Invalid phone number'
       },
       types: ["Listener", "Announcer"],
       defaultType: "Listener",
@@ -242,14 +249,12 @@ export default {
         this.showErrorCountry = true
       }
     },
-    async setNumber(data) {
-      if (data.valid) {
-        this.formAd.phone = data.number
-        this.isFormValid = true
-      }
-      if (!data.valid) {
-        this.formAd.phone = null
-        this.isFormValid = false
+    async phoneValidate(data) {
+        this.isPhoneValid = data.valid
+    },
+    async setNumber() {
+      if (this.phone) {
+        this.formAd.phone = this.phone
       }
     }
   },
@@ -257,10 +262,6 @@ export default {
 </script>
 
 <style scoped>
-
-.theme--light.v-text-field:not(.v-input--has-state):hover > .v-input__control > .v-input__slot:before {
-  border-color: rgb(133, 133, 133);
-}
 
 #error {
   color: red;
@@ -270,11 +271,27 @@ export default {
   display: flex;
   border: none;
   border-bottom: 1px rgb(133, 133, 133) solid;
+  border-radius: 0;
   text-align: left;
+  padding-top: 12px;
 }
 :deep(.vue-tel-input:focus-within) {
   box-shadow: none;
   border-bottom-width: 2px;
   border-color: #1976D2;
 }
+
+.phone-input:deep(.v-input__slot) {
+  min-height: 0;
+}
+
+.phone-input:deep(.v-input__control) {
+  min-height: 0;
+}
+
+.phone-input:deep(.v-text-field__details) {
+  min-height: 0;
+  margin: 0;
+}
+
 </style>
