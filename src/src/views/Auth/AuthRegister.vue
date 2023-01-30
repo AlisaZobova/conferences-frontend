@@ -130,7 +130,7 @@
                           ></v-date-picker>
                         </v-menu>
 
-                        <vue-tel-input :required=true :validCharactersOnly=true mode="international" v-model="phone" @validate="setNumber"></vue-tel-input>
+                        <vue-tel-input :validCharactersOnly=true mode="international" v-model="phone" @validate="setNumber"></vue-tel-input>
                         <v-select
                             v-model="formAd.country"
                             :items="countries"
@@ -264,5 +264,17 @@ export default {
 
 #error {
   color: red;
+}
+
+:deep(.vue-tel-input) {
+  display: flex;
+  border: none;
+  border-bottom: 1px rgb(133, 133, 133) solid;
+  text-align: left;
+}
+:deep(.vue-tel-input:focus-within) {
+  box-shadow: none;
+  border-bottom-width: 2px;
+  border-color: #1976D2;
 }
 </style>
