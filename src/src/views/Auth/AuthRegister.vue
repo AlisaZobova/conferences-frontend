@@ -282,9 +282,17 @@ export default {
   border-color: #1976D2;
 }
 
+:deep(.vti__dropdown) {
+  position: inherit;
+}
+
 :deep(.vti__dropdown-list) {
-  max-height: 90px;
+  max-height: 200px;
   padding-left: 0;
+}
+
+:deep(ul.vti__dropdown-list.below) {
+  width: 100% !important;
 }
 
 :deep(strong) {
