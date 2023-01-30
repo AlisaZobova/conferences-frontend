@@ -135,7 +135,7 @@ export default {
           value: 'title',
         },
         { text: 'Date', value: 'conf_date', sortable: false },
-        { text: 'Actions', value: 'actions', sortable: false }
+        { text: 'Actions', value: 'actions', sortable: false, width: '50%' }
       ],
     }
   },
