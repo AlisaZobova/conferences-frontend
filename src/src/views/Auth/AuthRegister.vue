@@ -287,7 +287,7 @@ export default {
   padding-left: 0;
 }
 
-:deep(b, strong) {
+:deep(strong) {
     font-weight: 400;
 }
 
