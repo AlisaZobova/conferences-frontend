@@ -38,7 +38,10 @@
                               name="email"
                               label="Email"
                               :rules="[rules.required]"
+                              @input="showError=false"
                           ></v-text-field>
+
+                          <p class="text-left" v-if="showError" id="error">Email already exists</p>
 
                           <v-text-field
                               v-model="form.password"
@@ -60,15 +63,13 @@
                               :rules="[rules.required, rules.min, rules.match]"
                               :type="show2 ? 'text' : 'password'"
                               hint="At least 8 characters"
-                              class="input-group--focused"
+                              class="input-group--focused mb-1"
                               @click:append="show2 = !show2"
                               name="password_confirmation"
                               id="password_confirmation"
                               label="Confirm password"
                               required
                           ></v-text-field>
-
-                          <p class="text-center" v-if="showError" id="error">Email already exists</p>
 
                     <v-btn
                         :disabled="!isFormValid"
@@ -78,9 +79,11 @@
                     >
                       Continue
                     </v-btn>
-                    <a class="ml-4">
-                      <router-link to="/login">Already have an account? Login</router-link>
-                    </a>
+                    <div class="mt-3">
+                      <a>
+                        <router-link to="/login">Already have an account? Login</router-link>
+                      </a>
+                    </div>
                         </v-form>
                     </v-card>
                   </v-stepper-content>
