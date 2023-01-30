@@ -149,7 +149,7 @@ import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import {mapActions, mapGetters} from "vuex";
 
 export default {
-  name: "CreateConference",
+  name: "EditConference",
   components: {
     ValidationProvider,
     ValidationObserver,

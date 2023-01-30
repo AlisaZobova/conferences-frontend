@@ -42,7 +42,11 @@ const actions = {
     },
     async LogOut({commit}){
         commit('LogOut')
-        await axios.post('logout')
+        await axios.post('logout').then(() => {
+            if (![process.env.VUE_APP_URL, process.env.VUE_APP_URL + '/conferences'].includes(window.location.href)) {
+                window.location.href = process.env.VUE_APP_URL + '/login'
+            }
+        })
     },
     async JoinConference({commit, state}, conferenceId) {
         await axios.post('conferences/' + conferenceId + '/join')
