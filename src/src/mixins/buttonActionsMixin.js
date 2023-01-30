@@ -22,11 +22,9 @@ export const buttonActionsMixin = {
         },
         joinConference (conferenceId) {
             this.JoinConference(conferenceId)
-            this.$router.push('/conferences').catch(() => {});
         },
         cancelParticipation (conferenceId) {
             this.CancelParticipation(conferenceId)
-            this.$router.push('/conferences').catch(() => {});
         },
         isConferenceCreator (conferenceId) {
             return this.$store.getters.isCreator(conferenceId)
