@@ -279,6 +279,16 @@ export default {
   border-color: #1976D2;
 }
 
+:deep(.vti__dropdown-list) {
+  max-height: 90px;
+  padding-left: 0;
+}
+
+:deep(.v-application ul, .v-application ol) {
+  padding-left: 0;
+  width: 100%;
+}
+
 .phone-input:deep(.v-input__slot) {
   min-height: 0;
 }
