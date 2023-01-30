@@ -130,8 +130,7 @@
                           ></v-date-picker>
                         </v-menu>
 
-                        <vue-phone-number-input :border-radius=0 v-model="phone" @update="setNumber" default-country-code="UA" name="phone"/>
-
+                        <vue-tel-input :required=true :validCharactersOnly=true mode="international" v-model="phone" @validate="setNumber"></vue-tel-input>
                         <v-select
                             v-model="formAd.country"
                             :items="countries"
@@ -244,12 +243,12 @@ export default {
       }
     },
     async setNumber(data) {
-      if ((data.formattedNumber && data.isValid) || !data.phoneNumber) {
-        this.formAd.phone = data.formattedNumber
+      if (data.valid) {
+        this.formAd.phone = data.number
         this.isFormValid = true
-        data.isValid = true
       }
-      if (!data.isValid) {
+      if (!data.valid) {
+        this.formAd.phone = null
         this.isFormValid = false
       }
     }
@@ -258,29 +257,6 @@ export default {
 </script>
 
 <style scoped>
-
-:deep(.input-tel__input[data-v-e59be3b4]) {
-  font: inherit;
-  border: none;
-}
-
-:deep(.country-selector__input[data-v-46e105de]) {
-  font: inherit;
-  border: none;
-}
-
-:deep([data-v-19351537], [data-v-19351537]:after, [data-v-19351537]:before) {
-  font: inherit;
-  border: none;
-  border-bottom: 1px rgb(133, 133, 133) solid;
-}
-
-:deep(#MazPhoneNumberInput) {
-  box-shadow: none;
-  border: none;
-  outline: none;
-  padding: 0 2px;
-}
 
 .theme--light.v-text-field:not(.v-input--has-state):hover > .v-input__control > .v-input__slot:before {
   border-color: rgb(133, 133, 133);

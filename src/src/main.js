@@ -6,12 +6,12 @@ import store from './store'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-import 'vue-phone-number-input/dist/vue-phone-number-input.css';
-import VuePhoneNumberInput from 'vue-phone-number-input';
+import VueTelInput from 'vue-tel-input'
+import 'vue-tel-input/dist/vue-tel-input.css';
+
+Vue.use(VueTelInput)
 
 import * as VueGoogleMaps from 'vue2-google-maps'
-
-Vue.component('vue-phone-number-input', VuePhoneNumberInput);
 
 Vue.use(VueGoogleMaps, {
   load: {
