@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Cookies from "js-cookie";
 
 const state = {
     user: null,
@@ -26,31 +25,18 @@ const getters = {
     },
 };
 
-const getToken = async () => {
-    await axios.get('/sanctum/csrf-cookie');
-}
-
 const actions = {
     async Register({commit}, form) {
-        if (!Cookies.get('XSRF-TOKEN')) {
-            await getToken()
-        }
         let response = await axios.post('register', form)
         await commit("setUserId", response.data.id)
     },
     async RegisterAdditional({state, commit}, form) {
-        if (!Cookies.get('XSRF-TOKEN')) {
-            await getToken()
-        }
         let response = await axios.post('register/' + state.userId, form)
         await commit("setUser", response.data)
         await commit("setUserId", null)
     },
 
     async LogIn({commit}, User) {
-        if (!Cookies.get('XSRF-TOKEN')) {
-            await getToken()
-        }
         let response = await axios.post('login', User)
         await commit('setUser', response.data)
     },
