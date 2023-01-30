@@ -191,10 +191,10 @@ export default {
       this.$router.go(-1)
     },
     getCenter () {
-      let lat = parseFloat(this.conference.latitude)
-      let lng = parseFloat(this.conference.longitude)
-      if (lat && lng && this.$refs.lat.validate() && this.$refs.lng.validate()) {
-        return {lat:lat, lng:lng}
+      let lat = this.conference.latitude
+      let lng = this.conference.longitude
+      if (lat && lng && Number(lat) && Number(lng) && lat <= 90 && lat >= -90 && lng <= 180 && lng >= -180) {
+        return {lat:parseFloat(lat), lng:parseFloat(lng)}
       } else {
         return {lat:50, lng:30}
       }

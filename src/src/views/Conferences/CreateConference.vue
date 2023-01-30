@@ -191,11 +191,11 @@ export default {
       this.form.longitude = parseFloat(location.lng().toFixed(3));
     },
     getCenter () {
-      let lat = parseFloat(this.form.latitude)
-      let lng = parseFloat(this.form.longitude)
-      if (lat && lng && this.$refs.lat.validate() && this.$refs.lng.validate()) {
-      return {lat:lat, lng:lng}
-    } else {
+      let lat = this.form.latitude
+      let lng = this.form.longitude
+      if (lat && lng && Number(lat) && Number(lng) && lat <= 90 && lat >= -90 && lng <= 180 && lng >= -180) {
+        return {lat:parseFloat(lat), lng:parseFloat(lng)}
+      } else {
         return {lat:50, lng:30}
       }
     },
