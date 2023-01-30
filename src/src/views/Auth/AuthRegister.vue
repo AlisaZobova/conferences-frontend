@@ -73,7 +73,7 @@
                     <v-btn
                         :disabled="!isFormValid"
                         color="primary"
-                        @click="e1 = 2; getCountries(); isFormValid=false"
+                        @click="e1 = 2; getCountries()"
                         type="submit"
                     >
                       Continue
@@ -88,7 +88,7 @@
                   <v-stepper-content step="2">
                     <v-card>
 
-                      <v-form @submit.prevent="submitAd" v-model="isFormValid">
+                      <v-form @submit.prevent="submitAd" v-model="isFormAdValid">
 
                         <v-text-field
                             v-model="formAd.firstname"
@@ -155,7 +155,7 @@
 <!--                      Back-->
 <!--                    </v-btn>-->
                     <v-btn
-                        :disabled="!isFormValid"
+                        :disabled="!isFormAdValid"
                         type="submit"
                         color="primary"
                     >
@@ -195,6 +195,7 @@ export default {
       phone: null,
       nowDate: new Date().toISOString().slice(0,10),
       isFormValid: false,
+      isFormAdValid: false,
       isPhoneValid: false,
       rules: {
         required: value => !!value || 'Required.',
