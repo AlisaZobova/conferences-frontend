@@ -44,12 +44,14 @@
         </v-card-actions>
 
       </v-card>
+      <ReportComments></ReportComments>
     </div>
   </v-main>
 </template>
 
 <script>
 import {mapActions} from "vuex";
+import ReportComments from "@/views/Comments/ReportComments";
 
 export default {
   name: "ShowReport",
@@ -61,6 +63,7 @@ export default {
       return this.$store.state.reports.report.user.id === this.$store.state.auth.user.id
     },
   },
+  components: {ReportComments},
   data: () => ({
     show: [],
     loading: true,
