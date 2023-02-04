@@ -1,4 +1,4 @@
-import {required, max, regex, min, between, min_value, numeric} from 'vee-validate/dist/rules'
+import {required, max, regex, min, between, min_value, numeric, ext, size} from 'vee-validate/dist/rules'
 import { extend, setInteractionMode } from 'vee-validate'
 
 setInteractionMode('eager')
@@ -38,4 +38,19 @@ extend('min', {
 extend('regex', {
     ...regex,
     message: '{_field_} {_value_} is not valid',
+})
+
+extend('ext', {
+    ...ext,
+    message: 'Not valid file extension.',
+    validate: (value, extensions) => { return extensions.includes(value.split('.').pop())}
+})
+
+extend('size', {
+    ...size,
+    message: 'Maximum allowable file size - {size} KB.',
+    validate: (value, params) => {
+        const input = document.getElementById('presentation');
+        return input.files[0].size <= params.size * 1024
+    }
 })
