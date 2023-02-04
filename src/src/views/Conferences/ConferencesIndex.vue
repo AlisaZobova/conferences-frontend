@@ -62,10 +62,10 @@
         <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(item.id) && isAnnouncer))" depressed color="error" class="mr-1 mb-1 mt-1" @click="deleteItem(item)">
           Delete
         </v-btn>
-        <v-btn v-if="isAuthenticated && !isConferenceJoined(item.id) && !isAdmin" depressed class="mr-1 mb-1 mt-1" color="warning" @click="joinConference(item.id)">
+        <v-btn v-if="isAuthenticated && !isConferenceJoined(item.id) && !isAdmin && (!isAnnouncer || item.available)" depressed class="mr-1 mb-1 mt-1" color="warning" @click="joinConference(item.id)">
           Join
         </v-btn>
-        <v-btn v-if="!isAuthenticated " depressed class="mr-1 mb-1 mt-1" color="warning" :to="'/login'">
+        <v-btn v-if="!isAuthenticated" depressed class="mr-1 mb-1 mt-1" color="warning" :to="'/login'">
           Join
         </v-btn>
         <div class="d-inline" v-if="isAuthenticated && isConferenceJoined(item.id) && !isAdmin">
@@ -75,7 +75,7 @@
           <v-btn depressed outlined color="cyan darken-1" :href="'https://www.facebook.com/share.php?u=' + getPath()" class="mb-1 mt-1 mr-1">
             FB
           </v-btn>
-          <v-btn depressed color="red lighten-2" class="mr-1 mb-1 mt-1 white--text" @click="cancelParticipation(item.id)">
+          <v-btn depressed color="red lighten-2" class="mr-1 mb-1 mt-1 white--text" @click="cancelParticipation(item)">
             Cancel participation
           </v-btn>
         </div>
@@ -126,7 +126,6 @@ export default {
       dialogDelete: false,
       loading: true,
       page: 1,
-      options: {},
       headers: [
         {
           text: 'Title',
@@ -151,7 +150,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["GetConferences", "DeleteConference"]),
+    ...mapActions(["GetConferences", "DeleteConference", 'DeleteReport']),
     getConferences () {
       this.loading = true
       this.GetConferences(this.page).then(() => {
@@ -174,6 +173,13 @@ export default {
     closeDelete () {
       this.selectedItem = null
       this.dialogDelete = false
+    },
+    cancelParticipation (item) {
+      if (this.isAnnouncer) {
+        const report = item.reports.filter(report => report.conference_id === item.id)[0];
+        this.DeleteReport(report.id)
+      }
+      this.CancelParticipation(item.id)
     },
   },
   created () {

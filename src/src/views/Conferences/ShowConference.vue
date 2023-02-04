@@ -73,7 +73,7 @@
           <v-btn v-if="isAuthenticated && (isAdmin || (isConferenceCreator(conference.id) && isAnnouncer))" depressed color="error" class="mr-1 mb-1 mt-1" @click="deleteItem(conference)">
             Delete
           </v-btn>
-          <v-btn v-if="isAuthenticated && !isConferenceJoined(conference.id) && !isAdmin" depressed class="mr-1 mb-1 mt-1" color="warning" @click="joinConference(conference.id)">
+          <v-btn v-if="isAuthenticated && !isConferenceJoined(conference.id) && !isAdmin && (!isAnnouncer || conference.available)" depressed class="mr-1 mb-1 mt-1" color="warning" @click="joinConference(conference.id)">
             Join
           </v-btn>
           <div class="d-inline" v-if="isAuthenticated && isConferenceJoined(conference.id) && !isAdmin">
@@ -83,7 +83,7 @@
             <v-btn depressed outlined color="cyan darken-1" :href="'https://www.facebook.com/share.php?u=' + getPath()" class="mb-1 mt-1 mr-1">
               FB
             </v-btn>
-            <v-btn depressed color="red lighten-2" class="mr-1 mb-1 mt-1 white--text" @click="cancelParticipation(conference.id)">
+            <v-btn depressed color="red lighten-2" class="mr-1 mb-1 mt-1 white--text" @click="cancelParticipation()">
               Cancel participation
             </v-btn>
           </div>
@@ -118,7 +118,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["GetConference", "DeleteConference"]),
+    ...mapActions(["GetConference", "DeleteConference", 'DeleteReport']),
     deleteItem () {
       this.dialogDelete = true
     },
@@ -131,13 +131,20 @@ export default {
     },
     goBack () {
       this.$router.go(-1)
+    },
+    cancelParticipation () {
+      if (this.isAnnouncer) {
+        const report = this.conference.reports.filter(report => report.conference_id === this.conference.id)[0];
+        this.DeleteReport(report.id)
+      }
+      this.CancelParticipation(this.conference.id)
     }
   },
 
   created () {
-    this.GetConference(this.$route.params.id).then(() => {
-      this.loading = false;
-    });
+    this.GetConference(this.$route.params.id).then(() =>
+          this.loading = false
+    )
   },
 }
 
