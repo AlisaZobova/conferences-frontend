@@ -22,12 +22,13 @@
                 required: true,
                 min:2,
                 max:255,
-                regex:'^[A-Z][a-z]*(\\s(([A-Z][a-z]*)|([a-z]+))|(\\s[0-9]+)*)*$'
+                regex:'^[A-Z].*$'
               }"
                 >
                   <v-text-field
                       v-model="form.title"
                       :error-messages="errors"
+                      :hint="titleInfoMsg"
                       label="Title"
                       required
                   ></v-text-field>
@@ -171,9 +172,10 @@ export default {
       conf_date: null,
       latitude: null,
       longitude: null,
-      country: "",
+      country: ""
     },
     menu1: false,
+    titleInfoMsg: 'Title must start with a capital letter',
     nowDate: new Date().toISOString().slice(0, 10),
     loading: true,
   }),

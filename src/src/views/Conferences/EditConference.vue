@@ -21,12 +21,13 @@
                 required: true,
                 min:2,
                 max:255,
-                regex:'^[A-Z][a-z]*(\\s(([A-Z][a-z]*)|([a-z]+))|(\\s[0-9]+)*)*$'
+                regex:'^[A-Z].*$'
               }"
                 >
                   <v-text-field
                       v-model="conference.title"
                       :error-messages="errors"
+                      :hint="titleInfoMsg"
                       label="Title"
                       required
                   ></v-text-field>
@@ -172,6 +173,7 @@ export default {
     menu1: false,
     nowDate: new Date().toISOString().slice(0, 10),
     loading: true,
+    titleInfoMsg: 'Title must start with a capital letter',
   }),
 
   methods: {
