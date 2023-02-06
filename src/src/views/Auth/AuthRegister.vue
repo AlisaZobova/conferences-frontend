@@ -4,10 +4,10 @@
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4>
 
-            <v-stepper v-model="e1">
+            <v-stepper v-model="step">
               <v-stepper-header>
                 <v-stepper-step
-                    :complete="e1 > 1"
+                    :complete="step > 1"
                     step="1"
                 >
                 </v-stepper-step>
@@ -15,7 +15,7 @@
                 <v-divider></v-divider>
 
                 <v-stepper-step
-                    :complete="e1 > 2"
+                    :complete="step > 2"
                     step="2"
                 >
                 </v-stepper-step>
@@ -133,7 +133,7 @@
                               @input="menu1 = false"
                           ></v-date-picker>
                         </v-menu>
-                        <vue-tel-input :validCharactersOnly=true mode="international" v-model="phone" @validate="phoneValidate" @input="setNumber"></vue-tel-input>
+                        <vue-tel-input valid-characters-only mode="international" v-model="phone" @validate="phoneValidate" @input="setNumber"></vue-tel-input>
                         <v-text-field class="phone-input" flat solo v-model="formAd.phone" :rules="[rules.required, rules.phone]" hidden></v-text-field>
                         <v-select
                             class="country-select"
@@ -150,7 +150,7 @@
 
 <!--                    <v-btn-->
 <!--                        color="grey lighten-1"-->
-<!--                        @click="e1 = 1"-->
+<!--                        @click="step = 1"-->
 <!--                        class="mr-4"-->
 <!--                    >-->
 <!--                      Back-->
@@ -189,7 +189,7 @@ export default {
   },
   data() {
     return {
-      e1: 1,
+      step: 1,
       show1: false,
       show2: false,
       menu1: false,
@@ -228,7 +228,7 @@ export default {
   methods: {
     ...mapActions(["Register", "RegisterAdditional", "GetCountries"]),
     async submit() {
-        this.Register(this.form).then(() => {this.e1 = 2; this.getCountries()}).catch (() => {
+        this.Register(this.form).then(() => {this.step = 2; this.getCountries()}).catch (() => {
         this.showError = true
         this.emailError = 'Email already exists'
       })
