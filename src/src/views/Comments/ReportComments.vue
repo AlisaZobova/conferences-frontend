@@ -51,7 +51,7 @@
           v-model="content"
           :extensions="extensions"
       />
-      <v-btn @click="sendComment" width="100%" color="grey lighten-4" class="rounded-t-0 grey--text text--darken-2">
+      <v-btn @click="sendComment" width="100%" color="grey lighten-4" class="rounded-t-0 teal--text">
         Send
       </v-btn>
     </v-card>
@@ -166,8 +166,7 @@ export default {
 </script>
 
 <style scoped>
-/*:deep(.tiptap-vuetify-editor.v-card.v-sheet) {*/
-/*  box-shadow: none;*/
-/*  !*border-radius: 0;*!*/
-/*}*/
+:deep(.tiptap-vuetify-editor .v-card.v-sheet) {
+  box-shadow: none;
+}
 </style>
