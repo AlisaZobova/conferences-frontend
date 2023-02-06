@@ -1,43 +1,51 @@
-import {mapActions} from "vuex";
-import {share} from "../../share.config";
+import { mapActions } from 'vuex'
+import { share } from '../../share.config'
 
 export const buttonActionsMixin = {
     computed: {
-        isAdmin () {
+        isAdmin() {
             return this.$store.getters.isAdmin
         },
-        isAnnouncer () {
+        isAnnouncer() {
             return this.$store.getters.isAnnouncer
         },
-        isAuthenticated () {
+        isAuthenticated() {
             return this.$store.getters.isAuthenticated
-        }
+        },
     },
     methods: {
-        ...mapActions(["DeleteConference",
-            "JoinConference", "CancelParticipation"]),
-        editItem (item) {
-            this.$router.push({name: 'EditConference', params: {id: item.id}});
+        ...mapActions([
+            'DeleteConference',
+            'JoinConference',
+            'CancelParticipation',
+        ]),
+        editItem(item) {
+            this.$router.push({
+                name: 'EditConference',
+                params: { id: item.id },
+            })
         },
-        joinConference (conferenceId) {
+        joinConference(conferenceId) {
             if (this.isAnnouncer) {
-                this.$router.push({name: 'CreateReport', params: {id: conferenceId}});
-            }
-            else {
+                this.$router.push({
+                    name: 'CreateReport',
+                    params: { id: conferenceId },
+                })
+            } else {
                 this.JoinConference(conferenceId)
             }
         },
-        isConferenceCreator (conferenceId) {
+        isConferenceCreator(conferenceId) {
             return this.$store.getters.isCreator(conferenceId)
         },
-        isConferenceJoined (conferenceId) {
+        isConferenceJoined(conferenceId) {
             return this.$store.getters.isJoined(conferenceId)
         },
         getPath() {
-            return share.pathName;
+            return share.pathName
         },
-        getShareText () {
+        getShareText() {
             return share.text
-        }
+        },
     },
 }

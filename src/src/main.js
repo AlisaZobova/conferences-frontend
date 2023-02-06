@@ -6,14 +6,14 @@ import store from './store'
 import './js/ApiClient'
 
 import VueTelInput from 'vue-tel-input'
-import 'vue-tel-input/dist/vue-tel-input.css';
+import 'vue-tel-input/dist/vue-tel-input.css'
 
-import {TiptapVuetifyPlugin} from 'tiptap-vuetify'
+import { TiptapVuetifyPlugin } from 'tiptap-vuetify'
 import 'tiptap-vuetify/dist/main.css'
 
 Vue.use(TiptapVuetifyPlugin, {
     vuetify,
-    iconsGroup: 'mdi'
+    iconsGroup: 'mdi',
 })
 
 Vue.use(VueTelInput)
@@ -32,5 +32,5 @@ new Vue({
     vuetify,
     router,
     store,
-    render: h => h(App)
+    render: (h) => h(App),
 }).$mount('#app')

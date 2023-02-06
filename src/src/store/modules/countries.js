@@ -1,22 +1,22 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const state = {
-    countries: []
-};
+    countries: [],
+}
 
 const actions = {
-    async GetCountries({commit}) {
+    async GetCountries({ commit }) {
         let response = await axios.get('countries')
-        commit("setCountries", response.data)
+        commit('setCountries', response.data)
     },
-};
+}
 const mutations = {
-    setCountries(state, countries){
+    setCountries(state, countries) {
         state.countries = countries
     },
-};
+}
 export default {
     state,
     actions,
-    mutations
-};
+    mutations,
+}
