@@ -225,17 +225,31 @@ export default {
                     const input = document.getElementById('presentation')
                     if (input.files[0]) {
                         this.report.presentation = input.files[0]
+                    } else {
+                      this.report.presentation = ''
                     }
-                    this.UpdateReport({
-                        form: this.report,
-                        reportId: this.report.id,
-                    })
-                        .then(() => this.$router.push({ name: 'Reports' }))
-                        .catch(
-                            (error) =>
-                                (this.apiErrors = error.response.data.errors)
-                        )
-                }
+
+                  const fd = new FormData();
+                  fd.append('id', this.report.id);
+                  fd.append('presentation', this.report.presentation);
+                  fd.append('topic', this.report.topic);
+                  fd.append('start_time', this.report.start_time);
+                  fd.append('end_time', this.report.end_time);
+                  fd.append('description', this.report.description);
+                  fd.append('user_id', this.report.user_id);
+                  fd.append('conference_id', this.report.conference_id);
+                  fd.append('_method', 'PATCH');
+
+                  this.UpdateReport({
+                      form: fd,
+                      reportId: this.report.id,
+                  })
+                      .then(() => this.$router.push({ name: 'Reports' }))
+                      .catch(
+                          (error) =>
+                              (this.apiErrors = error.response.data.errors)
+                      )
+              }
             })
         },
         goBack() {

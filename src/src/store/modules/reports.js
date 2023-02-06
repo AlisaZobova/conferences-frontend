@@ -21,7 +21,11 @@ const actions = {
         commit('setReport', null)
     },
     async UpdateReport({ commit }, { form, reportId }) {
-        let response = await axios.patch('reports/' + reportId, form)
+        let response = await axios.post('reports/' + reportId, form, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+        })
         commit('setReport', response.data)
     },
     async CreateReport({ commit }, form) {
