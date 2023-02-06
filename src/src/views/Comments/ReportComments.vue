@@ -13,37 +13,51 @@
           dense
       >
         <template v-for="(comment, index) in comments">
-
-          <v-list-item
-              :key="index"
-              color="primary"
-              class="mb-3"
-              small
+          <v-responsive
+              class="overflow-y-auto"
+              max-height="400"
+              :key="`${index}-responsive`"
           >
-            <div>
-              <div class="font-weight-normal grey--text text--darken-2">
-                <strong class="d-inline-block">@{{ comment.user.firstname }} {{ comment.user.lastname }}</strong> &nbsp;
-                <p class="d-inline-block fill-height mb-0" v-html="comment.content"></p>
-              </div>
-              <div class="d-inline-block blue-grey--text text-caption">
-                {{ comment.publication_date }}
-              </div>
-              <v-btn
-                  text
-                  small
-                  class="d-inline-block blue-grey--text text-caption text-decoration-underline text-capitalize ml-1"
-                  @click="updateComment(comment)"
-                  v-if="tenMinCheck(comment) && user.id === comment.user_id"
-              >
-                Edit
-              </v-btn>
-            </div>
-          </v-list-item>
-          <v-divider
-              v-if="index < comments.length - 1"
-              :key="`${index}-divider`"
-              class="mb-2"
-          ></v-divider>
+            <v-lazy
+                v-model="comment.isActive"
+                :options="{threshold: .5}"
+                min-height="70"
+                transition="fade-transition">
+              <transition-group>
+                <v-list-item
+                    :key="index"
+                    color="primary"
+                    class="mb-3"
+                    small
+                >
+                  <div>
+                    <div class="font-weight-normal grey--text text--darken-2">
+                      <strong class="d-inline-block">@{{ comment.user.firstname }} {{ comment.user.lastname }}</strong>
+                      &nbsp;
+                      <p class="d-inline-block fill-height mb-0" v-html="comment.content"></p>
+                    </div>
+                    <div class="d-inline-block blue-grey--text text-caption">
+                      {{ comment.publication_date }}
+                    </div>
+                    <v-btn
+                        text
+                        small
+                        class="d-inline-block blue-grey--text text-caption text-decoration-underline text-capitalize ml-1"
+                        @click="updateComment(comment)"
+                        v-if="tenMinCheck(comment) && user.id === comment.user_id"
+                    >
+                      Edit
+                    </v-btn>
+                  </div>
+                </v-list-item>
+                <v-divider
+                    v-if="index < comments.length - 1"
+                    :key="`${index}-divider`"
+                    class="mb-2"
+                ></v-divider>
+              </transition-group>
+            </v-lazy>
+          </v-responsive>
         </template>
       </v-list>
       <tiptap-vuetify
