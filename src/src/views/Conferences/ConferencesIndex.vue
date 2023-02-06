@@ -68,7 +68,7 @@
         <v-btn v-if="!isAuthenticated" depressed class="mr-1 mb-1 mt-1" color="warning" :to="'/login'">
           Join
         </v-btn>
-        <div class="d-inline red--text" v-if="isAnnouncer && !item.available">
+        <div class="d-inline red--text" v-if="isAuthenticated && isAnnouncer && !item.available">
           Registration is not possible
         </div>
         <div class="d-inline" v-if="isAuthenticated && isConferenceJoined(item.id) && !isAdmin">
