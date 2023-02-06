@@ -1,4 +1,4 @@
-import {mapActions, mapGetters} from "vuex";
+import {mapActions} from "vuex";
 import {share} from "../../share.config";
 
 export const buttonActionsMixin = {
@@ -16,7 +16,6 @@ export const buttonActionsMixin = {
     methods: {
         ...mapActions(["DeleteConference",
             "JoinConference", "CancelParticipation"]),
-        ...mapGetters(['isCreator', 'isJoined']),
         editItem (item) {
             this.$router.push({name: 'EditConference', params: {id: item.id}}).catch(() => {});
         },

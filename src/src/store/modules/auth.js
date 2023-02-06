@@ -11,17 +11,17 @@ const getters = {
     isAnnouncer: state => state.user.roles[0].name === 'Announcer',
     isCreator: state => conferenceId => {
         conferenceId = parseInt(conferenceId)
-        let conferencesList = state.user.conferences.filter(function (item) {
-            return item.id === conferenceId
-        })
-        return conferencesList.length > 0
+        function isInConf(element) {
+            return element.id === conferenceId
+        }
+        return state.user.conferences.findIndex(isInConf) !== -1
     },
     isJoined: state => conferenceId => {
         conferenceId = parseInt(conferenceId)
-        let conferencesList = state.user.joined_conferences.filter(function (item) {
-            return item.id === conferenceId
-        })
-        return conferencesList.length > 0
+        function isInJoined(element) {
+            return element.id === conferenceId
+        }
+        return state.user.joined_conferences.findIndex(isInJoined) !== -1
     },
 };
 
