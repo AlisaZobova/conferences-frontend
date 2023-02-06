@@ -16,12 +16,17 @@
                     <b>Date:</b> {{ report.start_time.slice(0, 10)
                     }}<br /><br />
                     <b>From:</b> {{ report.start_time.slice(10, 16) }}<br />
-                    <b>To:</b> {{ report.end_time.slice(10, 16) }}<br /><br />
-                    <b>Description:</b> {{ report.description }}<br />
+                    <b>To:</b> {{ report.end_time.slice(10, 16) }}
+                </v-card-subtitle>
+
+                <v-card-subtitle class="pt-0 pb-o" v-if="report.description">
+                  <br />
+                  <b>Description:</b> {{ report.description }}<br />
                 </v-card-subtitle>
 
                 <v-card-subtitle v-if="report.presentation">
                     <b>Presentation:</b>
+                    &nbsp;
                     <a
                         class="text-decoration-underline"
                         @click="downloadFile()"

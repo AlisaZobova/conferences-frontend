@@ -133,10 +133,10 @@
                                     :error-messages="errors"
                                     label="Presentation"
                                     id="presentation"
-                                    @change="validate"
+                                    @change="validate; presentation=true"
                                 ></v-file-input>
                             </validation-provider>
-                            <div v-if="report.presentation" class="mb-6">
+                            <div v-if="!presentation" class="mb-6">
                                 <a
                                     class="text-decoration-underline"
                                     @click="downloadFile()"
@@ -196,15 +196,15 @@ export default {
         },
         report() {
             return this.$store.state.reports.report
-        },
+        }
     },
     data: () => ({
         menu1: false,
         menu2: false,
         timeStart: '',
         timeEnd: '',
+        presentation: false,
         loading: true,
-        presentation: null,
         apiErrors: {},
     }),
 
@@ -235,7 +235,7 @@ export default {
                   fd.append('topic', this.report.topic);
                   fd.append('start_time', this.report.start_time);
                   fd.append('end_time', this.report.end_time);
-                  fd.append('description', this.report.description);
+                  fd.append('description', this.report.description ? this.report.description : '');
                   fd.append('user_id', this.report.user_id);
                   fd.append('conference_id', this.report.conference_id);
                   fd.append('_method', 'PATCH');
