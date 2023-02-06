@@ -98,7 +98,7 @@ export default {
   methods: {
     ...mapActions(['GetReports']),
     getReport(reportId) {
-      this.$router.push('/reports/' + reportId).catch(() => {
+      this.$router.push({name: 'ShowReport', params: {id: reportId}}).catch(() => {
       });
     },
     showMore(reportId) {

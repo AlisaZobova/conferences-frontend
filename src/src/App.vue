@@ -35,8 +35,6 @@
 
       </v-menu>
 
-      <v-toolbar-title></v-toolbar-title>
-
     </v-app-bar>
 
     <v-main>

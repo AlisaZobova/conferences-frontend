@@ -127,7 +127,7 @@ export default {
     },
     async deleteItemConfirm () {
       this.loading = true
-      this.DeleteConference(this.conference.id).then(() => this.$router.push('/conferences/')).catch(() => {})
+      this.DeleteConference(this.conference.id).then(() => this.$router.push({name: 'Conferences'})).catch(() => {})
     },
     closeDelete () {
       this.dialogDelete = false

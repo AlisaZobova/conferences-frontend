@@ -210,7 +210,7 @@ export default {
             this.report.presentation = input.files[0]
           }
           this.UpdateReport({form: this.report, reportId: this.report.id}).then(() =>
-              this.$router.push('/reports')).catch((error) =>
+              this.$router.push({name: 'Reports'})).catch((error) =>
               this.apiErrors = error.response.data.errors
           );
         }
@@ -234,7 +234,7 @@ export default {
       })
       this.CancelParticipation(this.report.conference.id).catch(() => {
       })
-      this.$router.push('/conferences').catch(() => {
+      this.$router.push({name: 'Conferences'}).catch(() => {
       })
     },
   },

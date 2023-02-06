@@ -162,10 +162,10 @@ export default {
       })
     },
     createItem () {
-      this.$router.push('/conferences/create').catch(() => {});
+      this.$router.push({name: 'CreateConference'}).catch(() => {});
     },
     showItem (item) {
-      this.$router.push('/conferences/' + item.id).catch(() => {});
+      this.$router.push({name: 'ShowConference', params: {id: item.id}}).catch(() => {});
     },
     deleteItem (item) {
       this.selectedItem = item

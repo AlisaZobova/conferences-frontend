@@ -185,7 +185,7 @@ export default {
         if (result) {
           this.CreateConference(this.form).catch(() => {
           })
-          this.$router.push('/conferences').catch(() => {
+          this.$router.push({name: 'Conferences'}).catch(() => {
           });
         }
       })

@@ -28,7 +28,7 @@
                   <p class="text-center" v-if="showError" id="error">Email or Password is incorrect</p>
                 <v-container class="text-right">
                   <a class="mr-4">
-                    <router-link to="/register">Register</router-link>
+                    <router-link :to="{name: 'Register'}">Register</router-link>
                   </a>
                   <v-btn
                       type="submit"

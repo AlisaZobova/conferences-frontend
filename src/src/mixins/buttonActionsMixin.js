@@ -18,11 +18,11 @@ export const buttonActionsMixin = {
             "JoinConference", "CancelParticipation"]),
         ...mapGetters(['isCreator', 'isJoined']),
         editItem (item) {
-            this.$router.push('/conferences/' + item.id + '/edit').catch(() => {});
+            this.$router.push({name: 'EditConference', params: {id: item.id}}).catch(() => {});
         },
         joinConference (conferenceId) {
             if (this.isAnnouncer) {
-                this.$router.push('/conferences/' + conferenceId + '/reports/create').catch(() => {});
+                this.$router.push({name: 'CreateReport', params: {id: conferenceId}}).catch(() => {});
             }
             else {
                 this.JoinConference(conferenceId)

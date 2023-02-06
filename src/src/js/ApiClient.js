@@ -14,11 +14,11 @@ axios.interceptors.response.use(function (response) {
         if (error.response.status === 401 || error.response.status === 403) {
             setCSRFToken();
             store.state.auth.user = null;
-            return router.push('/login');
+            return router.push({name: 'Login'});
         }
     }
     if (error.response.status === 404) {
-        return router.push('/404').catch(() => {
+        return router.push({name: 'Not Found'}).catch(() => {
         });
     }
     return Promise.reject(error)

@@ -75,7 +75,7 @@ export default {
       this.GetReport(this.$route.params.id).then(() => this.loading = false)
     },
     editReport(reportId) {
-      this.$router.push('/reports/' + reportId + '/edit').catch(() => {
+      this.$router.push({name: 'EditReport', params: {id: reportId}}).catch(() => {
       })
     },
     deleteReport(reportId) {
@@ -83,7 +83,7 @@ export default {
       })
       this.CancelParticipation(this.report.conference.id).catch(() => {
       })
-      this.$router.push('/conferences').catch(() => {
+      this.$router.push({name: 'Conferences'}).catch(() => {
       })
     },
     downloadFile() {

@@ -79,7 +79,7 @@
                     </v-btn>
                     <div class="mt-3">
                       <a>
-                        <router-link to="/login">Already have an account? Login</router-link>
+                        <router-link :to="{name: 'Login'}">Already have an account? Login</router-link>
                       </a>
                     </div>
                         </v-form>
@@ -263,10 +263,6 @@ export default {
 </script>
 
 <style scoped>
-
-#error {
-  color: red;
-}
 
 :deep(.vue-tel-input) {
   display: flex;
