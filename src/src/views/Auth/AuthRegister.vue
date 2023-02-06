@@ -37,11 +37,10 @@
                               type="email"
                               name="email"
                               label="Email"
+                              :error-messages="emailError"
                               :rules="[rules.required]"
-                              @input="showError=false"
+                              @input="showError=false; emailError=''"
                           ></v-text-field>
-
-                          <p class="text-left" v-if="showError" id="error">Email already exists</p>
 
                           <v-text-field
                               v-model="form.password"
@@ -222,6 +221,7 @@ export default {
         country: null
       },
       showError: false,
+      emailError: '',
       showErrorCountry: false
     };
   },
@@ -230,6 +230,7 @@ export default {
     async submit() {
         this.Register(this.form).then(() => {this.e1 = 2; this.getCountries()}).catch (() => {
         this.showError = true
+        this.emailError = 'Email already exists'
       })
     },
     async submitAd() {
