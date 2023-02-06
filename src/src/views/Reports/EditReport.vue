@@ -46,6 +46,9 @@
                                             :error-messages="
                                                 apiErrors.start_time
                                             "
+                                            @change="
+                                                apiErrors.start_time = ''
+                                            "
                                             persistent-hint
                                             prepend-icon="mdi-timer"
                                             v-bind="attrs"
@@ -88,6 +91,9 @@
                                             label="End time *"
                                             :disabled="!timeStart"
                                             :error-messages="apiErrors.end_time"
+                                            @change="
+                                                apiErrors.end_time = ''
+                                            "
                                             persistent-hint
                                             prepend-icon="mdi-timer"
                                             v-bind="attrs"
