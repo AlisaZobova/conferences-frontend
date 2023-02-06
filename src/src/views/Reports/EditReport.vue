@@ -12,152 +12,154 @@
             ref="observer"
             v-slot="{ invalid }"
         >
-          <form @submit.prevent="submit">
-            <validation-provider
-                v-slot="{ errors }"
-                name="Topic"
-                :rules="{
+          <v-layout align-center justify-center>
+            <form @submit.prevent="submit">
+              <validation-provider
+                  v-slot="{ errors }"
+                  name="Topic"
+                  :rules="{
                 required: true,
                 min:2,
                 max:255
               }"
-            >
-              <v-text-field
-                  v-model="report.topic"
-                  :error-messages="errors"
-                  label="Topic *"
-              ></v-text-field>
-            </validation-provider>
-            <v-menu
-                ref="menu1"
-                v-model="menu1"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
+              >
+                <v-text-field
+                    v-model="report.topic"
+                    :error-messages="errors"
+                    label="Topic *"
+                ></v-text-field>
+              </validation-provider>
+              <v-menu
+                  ref="menu1"
+                  v-model="menu1"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <validation-provider
+                      name="Start time"
+                      rules="required"
+                  >
+                    <v-text-field
+                        v-model="timeStart"
+                        label="Start time *"
+                        :error-messages="apiErrors.start_time"
+                        persistent-hint
+                        prepend-icon="mdi-timer"
+                        v-bind="attrs"
+                        v-on="on"
+                    ></v-text-field>
+                  </validation-provider>
+                </template>
                 <validation-provider
+                    v-slot="{ errors }"
                     name="Start time"
                     rules="required"
                 >
-                  <v-text-field
+                  <v-time-picker
                       v-model="timeStart"
-                      label="Start time *"
-                      :error-messages="apiErrors.start_time"
-                      persistent-hint
-                      prepend-icon="mdi-timer"
-                      v-bind="attrs"
-                      v-on="on"
-                  ></v-text-field>
+                      min='08:00'
+                      max='19:59'
+                      :error-messages="errors"
+                      format="24hr"
+                      scrollable
+                      @input="menu1 = false"
+                  ></v-time-picker>
                 </validation-provider>
-              </template>
-              <validation-provider
-                  v-slot="{ errors }"
-                  name="Start time"
-                  rules="required"
+              </v-menu>
+              <v-menu
+                  ref="menu2"
+                  v-model="menu2"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  max-width="290px"
+                  min-width="auto"
               >
-                <v-time-picker
-                    v-model="timeStart"
-                    min='08:00'
-                    max='19:59'
-                    :error-messages="errors"
-                    format="24hr"
-                    scrollable
-                    @input="menu1 = false"
-                ></v-time-picker>
-              </validation-provider>
-            </v-menu>
-            <v-menu
-                ref="menu2"
-                v-model="menu2"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
+                <template v-slot:activator="{ on, attrs }">
+                  <validation-provider
+                      name="End time"
+                      rules="required"
+                  >
+                    <v-text-field
+                        v-model="timeEnd"
+                        label="End time *"
+                        :disabled="!timeStart"
+                        :error-messages="apiErrors.end_time"
+                        persistent-hint
+                        prepend-icon="mdi-timer"
+                        v-bind="attrs"
+                        v-on="on"
+                    ></v-text-field>
+                  </validation-provider>
+                </template>
                 <validation-provider
+                    v-slot="{ errors }"
                     name="End time"
                     rules="required"
                 >
-                  <v-text-field
+                  <v-time-picker
                       v-model="timeEnd"
-                      label="End time *"
-                      :disabled="!timeStart"
-                      :error-messages="apiErrors.end_time"
-                      persistent-hint
-                      prepend-icon="mdi-timer"
-                      v-bind="attrs"
-                      v-on="on"
-                  ></v-text-field>
+                      :min="getTime(1)"
+                      :max="getTime(60)"
+                      :error-messages="errors"
+                      format="24hr"
+                      scrollable
+                      @input="menu2 = false"
+                  ></v-time-picker>
                 </validation-provider>
-              </template>
+              </v-menu>
+              <v-text-field
+                  type="text"
+                  v-model="report.description"
+                  label="Description"
+              ></v-text-field>
               <validation-provider
-                  v-slot="{ errors }"
-                  name="End time"
-                  rules="required"
+                  v-slot="{ errors, validate }"
+                  name="Presentation"
+                  rules="ext:ppt,pptx|size:10"
               >
-                <v-time-picker
-                    v-model="timeEnd"
-                    :min="getTime(1)"
-                    :max="getTime(60)"
+                <v-file-input
+                    show-size
+                    :accept="['.ppt', '.pptx']"
                     :error-messages="errors"
-                    format="24hr"
-                    scrollable
-                    @input="menu2 = false"
-                ></v-time-picker>
+                    label="Presentation"
+                    id="presentation"
+                    @change="validate"
+                ></v-file-input>
               </validation-provider>
-            </v-menu>
-            <v-text-field
-                type="text"
-                v-model="report.description"
-                label="Description"
-            ></v-text-field>
-            <validation-provider
-                v-slot="{ errors, validate }"
-                name="Presentation"
-                rules="ext:ppt,pptx|size:10"
-            >
-              <v-file-input
-                  show-size
-                  :accept="['.ppt', '.pptx']"
-                  :error-messages="errors"
-                  label="Presentation"
-                  id="presentation"
-                  @change="validate"
-              ></v-file-input>
-            </validation-provider>
-            <div v-if="report.presentation" class="mb-6">
-              <a class='text-decoration-underline' @click="downloadFile()" download>{{ report.presentation }}</a>
-            </div>
+              <div v-if="report.presentation" class="mb-6">
+                <a class='text-decoration-underline' @click="downloadFile()" download>{{ report.presentation }}</a>
+              </div>
 
-            <v-btn
-                class="mr-1"
-                type="submit"
-                color="primary"
-                :disabled="invalid"
-            >
-              Save
-            </v-btn>
-            <v-btn
-                class="mr-1"
-                color="error"
-                @click.prevent="deleteReport(report.id)"
-            >
-              Cancel participation
-            </v-btn>
-            <v-btn
-                class="mr-1 white--text"
-                depressed
-                color="grey"
-                @click="goBack"
-            >
-              Back
-            </v-btn>
-          </form>
+              <v-btn
+                  class="mr-1"
+                  type="submit"
+                  color="primary"
+                  :disabled="invalid"
+              >
+                Save
+              </v-btn>
+              <v-btn
+                  class="mr-1"
+                  color="error"
+                  @click.prevent="deleteReport(report.id)"
+              >
+                Cancel participation
+              </v-btn>
+              <v-btn
+                  class="mr-1 white--text"
+                  depressed
+                  color="grey"
+                  @click="goBack"
+              >
+                Back
+              </v-btn>
+            </form>
+          </v-layout>
         </validation-observer>
       </template>
     </div>
@@ -228,9 +230,12 @@ export default {
       this.DownloadFile(this.report.id)
     },
     deleteReport(reportId) {
-      this.DeleteReport(reportId).catch(() => {})
-      this.CancelParticipation(this.report.conference.id).catch(() => {})
-      this.$router.push('/conferences').catch(() => {})
+      this.DeleteReport(reportId).catch(() => {
+      })
+      this.CancelParticipation(this.report.conference.id).catch(() => {
+      })
+      this.$router.push('/conferences').catch(() => {
+      })
     },
   },
   created() {
@@ -256,6 +261,10 @@ export default {
 :deep(.v-time-picker-title__time span) {
   height: 28px;
   font-size: 28px;
+}
+
+form {
+  width: 75%;
 }
 
 </style>
