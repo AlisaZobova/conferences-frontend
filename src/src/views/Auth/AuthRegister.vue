@@ -236,7 +236,7 @@ export default {
     async submitAd() {
       try {
         await this.RegisterAdditional(this.formAd);
-        await this.$router.push("/conferences").catch(() => {});
+        await this.$router.push("/conferences");
         this.showError = false
       } catch (error) {
         this.showError = true
