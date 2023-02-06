@@ -25,7 +25,7 @@
               <v-text-field
                   v-model="form.topic"
                   :error-messages="errors"
-                  label="Topic"
+                  label="Topic *"
               ></v-text-field>
             </validation-provider>
             <v-menu
@@ -39,14 +39,13 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <validation-provider
-                    v-slot="{ errors }"
                     name="Start time"
                     rules="required"
                 >
                   <v-text-field
                       v-model="timeStart"
-                      label="Start time"
-                      :error-messages="errors"
+                      label="Start time *"
+                      :error-messages="apiErrors.start_time"
                       persistent-hint
                       prepend-icon="mdi-timer"
                       v-bind="attrs"
@@ -81,15 +80,14 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <validation-provider
-                    v-slot="{ errors }"
                     name="End time"
                     rules="required"
                 >
                   <v-text-field
                       v-model="timeEnd"
-                      label="End time"
+                      label="End time *"
                       :disabled="!timeStart"
-                      :error-messages="errors"
+                      :error-messages="apiErrors.end_time"
                       persistent-hint
                       prepend-icon="mdi-timer"
                       v-bind="attrs"
@@ -119,16 +117,18 @@
                 label="Description"
             ></v-text-field>
             <validation-provider
-                v-slot="{ errors }"
+                v-slot="{ errors, validate }"
                 name="Presentation"
-                rules="ext:ppt,pptx|size:10240"
+                rules="ext:ppt,pptx|size:10"
             >
-              <v-text-field
+              <v-file-input
+                  show-size
+                  :accept="['.ppt', '.pptx']"
                   :error-messages="errors"
                   label="Presentation"
                   id="presentation"
-                  type="file"
-              ></v-text-field>
+                  @change="validate"
+              ></v-file-input>
             </validation-provider>
 
             <v-btn
@@ -188,6 +188,7 @@ export default {
     timeStart: '',
     timeEnd: '',
     loading: true,
+    apiErrors: {},
   }),
 
   methods: {
@@ -203,9 +204,11 @@ export default {
           if (input.files[0]) {
             this.form.presentation = input.files[0]
           }
-          this.CreateReport(this.form).catch(() => {
-          })
-          this.JoinConference(this.$route.params.id).then(() => this.$router.push("/conferences"));
+          this.CreateReport(this.form).then(() =>
+              this.JoinConference(this.$route.params.id)).then(() =>
+              this.$router.push("/conferences")).catch((error) =>
+                this.apiErrors = error.response.data.errors
+          );
         }
       })
     },

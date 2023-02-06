@@ -76,6 +76,9 @@
           <v-btn v-if="isAuthenticated && !isConferenceJoined(conference.id) && !isAdmin && (!isAnnouncer || conference.available)" depressed class="mr-1 mb-1 mt-1" color="warning" @click="joinConference(conference.id)">
             Join
           </v-btn>
+          <div class="d-inline red--text" v-if="isAnnouncer && !conference.available">
+            Registration is not possible
+          </div>
           <div class="d-inline" v-if="isAuthenticated && isConferenceJoined(conference.id) && !isAdmin">
             <v-btn depressed class="mr-1 mb-1 mt-1" outlined color="cyan darken-1" :href="'https://twitter.com/intent/tweet?text=' + getShareText() + '&url=' + getPath() ">
               TW

@@ -43,14 +43,14 @@ extend('regex', {
 extend('ext', {
     ...ext,
     message: 'Not valid file extension.',
-    validate: (value, extensions) => { return extensions.includes(value.split('.').pop())}
+    validate: (value, extensions) => { return extensions.includes(value.name.split('.').pop())}
 })
 
 extend('size', {
     ...size,
-    message: 'Maximum allowable file size - {size} KB.',
+    message: 'Maximum allowable file size - {size} MB.',
     validate: (value, params) => {
         const input = document.getElementById('presentation');
-        return input.files[0].size <= params.size * 1024
+        return input.files[0].size <= params.size * 1024 * 1024
     }
 })

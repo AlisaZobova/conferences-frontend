@@ -25,7 +25,7 @@
               <v-text-field
                   v-model="report.topic"
                   :error-messages="errors"
-                  label="Topic"
+                  label="Topic *"
               ></v-text-field>
             </validation-provider>
             <v-menu
@@ -39,14 +39,13 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <validation-provider
-                    v-slot="{ errors }"
                     name="Start time"
                     rules="required"
                 >
                   <v-text-field
                       v-model="timeStart"
-                      label="Start time"
-                      :error-messages="errors"
+                      label="Start time *"
+                      :error-messages="apiErrors.start_time"
                       persistent-hint
                       prepend-icon="mdi-timer"
                       v-bind="attrs"
@@ -81,15 +80,14 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <validation-provider
-                    v-slot="{ errors }"
                     name="End time"
                     rules="required"
                 >
                   <v-text-field
                       v-model="timeEnd"
-                      label="End time"
+                      label="End time *"
                       :disabled="!timeStart"
-                      :error-messages="errors"
+                      :error-messages="apiErrors.end_time"
                       persistent-hint
                       prepend-icon="mdi-timer"
                       v-bind="attrs"
@@ -119,16 +117,18 @@
                 label="Description"
             ></v-text-field>
             <validation-provider
-                v-slot="{ errors }"
+                v-slot="{ errors, validate }"
                 name="Presentation"
-                rules="ext:ppt,pptx|size:10240"
+                rules="ext:ppt,pptx|size:10"
             >
-              <v-text-field
+              <v-file-input
+                  show-size
+                  :accept="['.ppt', '.pptx']"
                   :error-messages="errors"
                   label="Presentation"
                   id="presentation"
-                  type="file"
-              ></v-text-field>
+                  @change="validate"
+              ></v-file-input>
             </validation-provider>
             <div v-if="report.presentation" class="mb-6">
               <a class='text-decoration-underline' @click="downloadFile()" download>{{ report.presentation }}</a>
@@ -192,7 +192,8 @@ export default {
     timeStart: '',
     timeEnd: '',
     loading: true,
-    presentation: null
+    presentation: null,
+    apiErrors: {}
   }),
 
   methods: {
@@ -207,7 +208,9 @@ export default {
             this.report.presentation = input.files[0]
           }
           this.UpdateReport({form: this.report, reportId: this.report.id}).then(() =>
-              this.$router.push('/reports'))
+              this.$router.push('/reports')).catch((error) =>
+              this.apiErrors = error.response.data.errors
+          );
         }
       })
     },

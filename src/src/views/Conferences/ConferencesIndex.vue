@@ -68,6 +68,9 @@
         <v-btn v-if="!isAuthenticated" depressed class="mr-1 mb-1 mt-1" color="warning" :to="'/login'">
           Join
         </v-btn>
+        <div class="d-inline red--text" v-if="isAnnouncer && !item.available">
+          Registration is not possible
+        </div>
         <div class="d-inline" v-if="isAuthenticated && isConferenceJoined(item.id) && !isAdmin">
           <v-btn depressed class="mr-1 mb-1 mt-1" outlined color="cyan darken-1" :href="'https://twitter.com/intent/tweet?text=' + getShareText() + '&url=' + getPath() ">
             TW
@@ -126,6 +129,7 @@ export default {
       dialogDelete: false,
       loading: true,
       page: 1,
+      options: {},
       headers: [
         {
           text: 'Title',
