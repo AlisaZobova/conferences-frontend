@@ -28,17 +28,17 @@ const getters = {
 const actions = {
     async Register({commit}, form) {
         let response = await axios.post('register', form)
-        await commit("setUserId", response.data.id)
+        commit("setUserId", response.data.id)
     },
     async RegisterAdditional({state, commit}, form) {
         let response = await axios.post('register/' + state.userId, form)
-        await commit("setUser", response.data)
-        await commit("setUserId", null)
+        commit("setUser", response.data)
+        commit("setUserId", null)
     },
 
     async LogIn({commit}, User) {
         let response = await axios.post('login', User)
-        await commit('setUser', response.data)
+        commit('setUser', response.data)
     },
     async LogOut({commit}){
         commit('LogOut')

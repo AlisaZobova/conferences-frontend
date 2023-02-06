@@ -9,20 +9,20 @@ const state = {
 const actions = {
     async GetReports({commit}) {
         let response = await axios.get('reports')
-        await commit("setReports", response.data)
-        await commit("setReport", null)
+        commit("setReports", response.data)
+        commit("setReport", null)
     },
     async GetReport({commit}, reportId) {
         let response = await axios.get('reports/' + reportId)
-        await commit("setReport", response.data)
+        commit("setReport", response.data)
     },
     async DeleteReport({commit}, reportId) {
         await axios.delete('reports/' + reportId)
-        await commit("setReport", null)
+        commit("setReport", null)
     },
     async UpdateReport({commit}, {form, reportId}) {
         let response = await axios.patch('reports/' + reportId, form)
-        await commit("setReport", response.data)
+        commit("setReport", response.data)
     },
     async CreateReport({commit}, form) {
         let response = await axios.post('reports', form, {
@@ -30,7 +30,7 @@ const actions = {
                 'Content-Type': 'multipart/form-data'
             }
         })
-        await commit("setReport", response.data)
+        commit("setReport", response.data)
     },
     async DownloadFile({state}, reportId) {
         axios.get('/reports/' + reportId + '/download', {

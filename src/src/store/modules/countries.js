@@ -7,7 +7,7 @@ const state = {
 const actions = {
     async GetCountries({commit}) {
         let response = await axios.get('countries')
-        await commit("setCountries", response.data)
+        commit("setCountries", response.data)
     },
 };
 const mutations = {

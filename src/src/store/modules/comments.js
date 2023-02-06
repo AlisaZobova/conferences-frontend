@@ -7,7 +7,7 @@ const state = {
 const actions = {
     async GetComments({commit}, reportId) {
         let response = await axios.get('reports/' + reportId + '/comments')
-        await commit("setComments", response.data)
+        commit("setComments", response.data)
     },
     async UpdateComment(context, {form, commentId}) {
         await axios.patch('comments/' + commentId, form)
