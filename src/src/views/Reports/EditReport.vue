@@ -214,6 +214,8 @@ export default {
             'GetConference',
             'GetReport',
             'DownloadFile',
+            'DeleteReport',
+            'CancelParticipation'
         ]),
         async submit() {
             this.$refs.observer.validate().then((result) => {
@@ -274,9 +276,11 @@ export default {
             this.DownloadFile(this.report.id)
         },
         deleteReport(reportId) {
-            this.DeleteReport(reportId).catch(() => {})
-            this.CancelParticipation(this.report.conference.id).catch(() => {})
-            this.$router.push({ name: 'Conferences' }).catch(() => {})
+          this.loading = true
+          let conferenceId = this.report.conference_id
+            this.DeleteReport(reportId).then(() =>
+                this.CancelParticipation(conferenceId)).then(() =>
+                this.$router.push({ name: 'Conferences' }))
         },
     },
     created() {
