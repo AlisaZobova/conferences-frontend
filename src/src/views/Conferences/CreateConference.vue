@@ -115,15 +115,23 @@
                                         @drag="setLatLng($event.latLng)"
                                     />
                                 </GmapMap>
-                                <validation-provider name="Country" v-slot="{}">
-                                    <v-select
-                                        v-model="form.country"
-                                        :items="countries"
-                                        item-text="name"
-                                        item-value="id"
-                                        label="Country"
-                                    ></v-select>
-                                </validation-provider>
+                                <v-select
+                                    v-model="form.country"
+                                    :items="countries"
+                                    item-text="name"
+                                    label="Country"
+                                ></v-select>
+
+                                <v-tree-select
+                                    v-model="form.category_id"
+                                    :items="categories"
+                                    item-text="name"
+                                    item-value="id"
+                                    label="Category"
+                                    selection-type="independent"
+                                    allow-select-parents
+                                >
+                                </v-tree-select>
 
                                 <v-btn
                                     class="mr-4"
@@ -165,6 +173,11 @@ export default {
         countries() {
             return this.$store.state.countries.countries
         },
+        categories() {
+          return this.$store.state.categories.categories.filter(
+              (category) => !category.parents
+          )
+        }
     },
     data: () => ({
         form: {
@@ -173,6 +186,7 @@ export default {
             latitude: null,
             longitude: null,
             country: '',
+            category_id: null
         },
         menu1: false,
         titleInfoMsg: 'Title must start with a capital letter',
@@ -181,10 +195,11 @@ export default {
     }),
 
     methods: {
-        ...mapActions(['CreateConference', 'GetCountries']),
+        ...mapActions(['CreateConference', 'GetCountries', 'GetCategories']),
         async submit() {
             this.$refs.observer.validate().then((result) => {
                 if (result) {
+                    this.form.category_id = this.form.category_id[0].id
                     this.CreateConference(this.form).catch(() => {})
                     this.$router.push({ name: 'Conferences' }).catch(() => {})
                 }
@@ -218,8 +233,8 @@ export default {
     },
     created() {
         this.GetCountries().then(() => {
-            this.loading = false
-        })
+            this.GetCategories()}).then(() =>
+                this.loading = false)
     },
 }
 </script>
