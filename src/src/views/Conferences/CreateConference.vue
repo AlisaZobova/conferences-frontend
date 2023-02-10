@@ -123,13 +123,14 @@
                                 ></v-select>
 
                                 <v-tree-select
-                                    v-model="form.category_id"
+                                    v-model="category"
                                     :items="categories"
                                     item-text="name"
                                     item-value="id"
                                     label="Category"
                                     selection-type="independent"
                                     allow-select-parents
+                                    show-full-path
                                 >
                                 </v-tree-select>
 
@@ -192,6 +193,7 @@ export default {
         titleInfoMsg: 'Title must start with a capital letter',
         nowDate: new Date().toISOString().slice(0, 10),
         loading: true,
+        category: []
     }),
 
     methods: {
@@ -199,7 +201,9 @@ export default {
         async submit() {
             this.$refs.observer.validate().then((result) => {
                 if (result) {
-                    this.form.category_id = this.form.category_id[0].id
+                  if(this.category.length > 0) {
+                    this.form.category_id = this.category[0].id
+                  }
                     this.CreateConference(this.form).catch(() => {})
                     this.$router.push({ name: 'Conferences' }).catch(() => {})
                 }
