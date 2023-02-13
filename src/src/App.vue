@@ -7,16 +7,19 @@
                         <v-btn @click="logout" class="mr-2 primary--text"
                             >Logout</v-btn
                         >
-                        <v-btn to="/reports" class="mr-2 primary--text">
+                        <v-btn :to="{name: 'Reports'}" class="mr-2 primary--text">
                             Reports
+                        </v-btn>
+                        <v-btn v-if="isAdmin" :to="{name: 'Categories'}" class="mr-2 primary--text">
+                            Categories
                         </v-btn>
                     </span>
                     <span v-else>
-                        <v-btn to="/login" class="mr-2 primary--text">
+                        <v-btn :to="{name: 'Login'}" class="mr-2 primary--text">
                             Login
                         </v-btn>
                     </span>
-                    <v-btn to="/conferences" class="mr-2 primary--text">
+                    <v-btn :to="{name: 'Conferences'}" class="mr-2 primary--text">
                         Home
                     </v-btn>
                 </template>
@@ -38,9 +41,12 @@ import { mapActions } from 'vuex'
 export default {
     name: 'App',
     computed: {
-        isLoggedIn: function () {
+        isLoggedIn() {
             return this.$store.getters.isAuthenticated
         },
+        isAdmin() {
+          return this.$store.getters.isAdmin
+      }
     },
     methods: {
         ...mapActions(['LogOut']),
