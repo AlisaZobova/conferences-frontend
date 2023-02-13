@@ -14,13 +14,14 @@
 
         <v-card-subtitle class="mt-2">
           <b>Conferences:</b> {{ category.conferences.length }}
-          <br />
-          <b>Reports:</b> {{ category.reports.length }} <br />
+          <br/>
+          <b>Reports:</b> {{ category.reports.length }} <br/>
 
         </v-card-subtitle>
 
         <v-card-actions>
           <v-btn outlined class="ml-2 mr-2 mb-2" color="grey" @click="goBack">Back</v-btn>
+          <v-btn outlined class="mr-2 mb-2" color="primary" :to="{ name: 'EditCategory' }">Edit</v-btn>
           <v-dialog
               v-model="dialog"
               width="500"
@@ -31,7 +32,7 @@
                   outlined
                   v-bind="attrs"
                   v-on="on"
-                  class="mb-2"
+                  class="mb-2 ml-2"
               >
                 Delete
               </v-btn>
