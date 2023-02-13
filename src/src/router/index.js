@@ -17,6 +17,7 @@ import CategoriesIndex from "@/views/Categories/CategoriesIndex";
 import CreateCategory from "@/views/Categories/CreateCategory";
 import ShowCategory from "@/views/Categories/ShowCategory";
 import EditCategory from "@/views/Categories/EditCategory";
+import EditProfile from "@/views/Auth/EditProfile";
 
 Vue.use(VueRouter)
 const routes = [
@@ -125,6 +126,12 @@ const routes = [
         name: 'Login',
         component: AuthLogin,
         meta: { guest: true },
+    },
+    {
+        path: '/profile',
+        name: 'Profile',
+        component: EditProfile,
+        meta: { requiresAuth: true },
     },
     {
         path: '/403',

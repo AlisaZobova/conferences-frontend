@@ -35,7 +35,14 @@ const actions = {
         commit('setUser', response.data)
         commit('setUserId', null)
     },
-
+    async UpdateProfile({ commit }, form) {
+        let response = await axios.post('profile/', form)
+        commit('setUser', response.data)
+    },
+    async GetUser({ commit, state }) {
+        let response = await axios.get('user/', state.user.id)
+        commit('setUser', response.data)
+    },
     async LogIn({ commit }, User) {
         let response = await axios.post('login', User)
         commit('setUser', response.data)
