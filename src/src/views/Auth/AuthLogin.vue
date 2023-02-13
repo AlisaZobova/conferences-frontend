@@ -74,7 +74,7 @@ export default {
             User.append('password', this.form.password)
             try {
                 await this.LogIn(User)
-                await this.$router.push('/conferences')
+                await this.$router.push({name: 'Conferences'})
                 this.showError = false
             } catch (error) {
                 this.showError = true

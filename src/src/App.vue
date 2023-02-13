@@ -21,7 +21,7 @@
                 <v-menu offset-y>
                     <template v-slot:activator="{ on }">
                         <v-icon
-                            v-if="isLoggedIn"
+                            v-if="isLoggedIn && !isAdmin"
                             aria-hidden="false"
                             :color="color"
                             class="mr-2"
@@ -86,7 +86,7 @@ export default {
     methods: {
         ...mapActions(['LogOut']),
         async logout() {
-            await this.LogOut()
+            this.LogOut().then(() => this.$router.go(0))
         },
     },
 }

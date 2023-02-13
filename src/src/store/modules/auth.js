@@ -72,6 +72,18 @@ const actions = {
             commit('setUser', response.data)
         })
     },
+    async AddFavorite({ commit, state }, reportId) {
+        await axios.post('reports/' + reportId + '/add-favorite')
+        axios.get('user/' + state.user.id).then((response) => {
+            commit('setUser', response.data)
+        })
+    },
+    async DeleteFavorite({ commit, state }, reportId) {
+        await axios.post('reports/' + reportId + '/delete-favorite')
+        axios.get('user/' + state.user.id).then((response) => {
+            commit('setUser', response.data)
+        })
+    },
 }
 const mutations = {
     setUser(state, user) {
