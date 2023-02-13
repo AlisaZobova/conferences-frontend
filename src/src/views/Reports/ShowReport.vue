@@ -1,5 +1,4 @@
 <template>
-    <v-main>
         <div v-if="loading" class="text-center">
             <v-progress-circular
                 indeterminate
@@ -7,6 +6,7 @@
             ></v-progress-circular>
         </div>
         <div v-else>
+          <v-breadcrumbs :items="items"></v-breadcrumbs>
             <v-card class="flex-grow-1">
                 <v-card-title class="teal--text">
                     {{ report.topic }}
@@ -54,7 +54,6 @@
             </v-card>
             <ReportComments></ReportComments>
         </div>
-    </v-main>
 </template>
 
 <script>
@@ -78,6 +77,17 @@ export default {
     data: () => ({
         show: [],
         loading: true,
+        items: [
+          {
+            text: '',
+          },
+          {
+            text: 'reports',
+            disabled: false,
+            // exact: true,
+            // to: {name: 'Reports'},
+          },
+        ],
     }),
     methods: {
         ...mapActions([
@@ -87,12 +97,6 @@ export default {
             'DownloadFile',
             'GetComments',
         ]),
-        getReport() {
-            this.loading = true
-            this.GetReport(this.$route.params.id).then(
-                () => (this.loading = false)
-            )
-        },
         editReport(reportId) {
             this.$router
                 .push({ name: 'EditReport', params: { id: reportId } })
@@ -108,9 +112,34 @@ export default {
         },
     },
     created() {
-        this.getReport()
+      this.GetReport(this.$route.params.id).then(
+          () => {
+            if (this.report.category) {
+              this.categoryPath = this.report.category.path
+              for (let i in this.categoryPath) {
+                this.items.push(
+                    {
+                      text: this.categoryPath[i],
+                      disabled: false,
+                    },
+                )
+              }
+            }
+            this.items.push(
+                {
+                  text: this.report.topic,
+                  disabled: false,
+                },
+            )
+            this.loading = false
+          }
+      )
     },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+:deep(.v-breadcrumbs) {
+  padding-left: 4px;
+}
+</style>
