@@ -7,12 +7,20 @@
       ></v-progress-circular>
     </div>
     <div v-else>
-      <p class="ml-4">Category: <b>{{ category.name }}</b></p>
-      <div class="d-block">
-        <p class="ml-4">Conferences: {{ category.conferences.length }}</p>
-        <p class="ml-4">Reports: {{ category.reports.length }}</p>
-        <div class="d-inline-block">
-          <v-btn outlined class="ml-4 mr-2" color="grey" @click="goBack">Back</v-btn>
+      <v-card class="flex-grow-1">
+        <v-card-title class="teal--text">
+          {{ category.name }}
+        </v-card-title>
+
+        <v-card-subtitle class="mt-2">
+          <b>Conferences:</b> {{ category.conferences.length }}
+          <br />
+          <b>Reports:</b> {{ category.reports.length }} <br />
+
+        </v-card-subtitle>
+
+        <v-card-actions>
+          <v-btn outlined class="ml-2 mr-2 mb-2" color="grey" @click="goBack">Back</v-btn>
           <v-dialog
               v-model="dialog"
               width="500"
@@ -23,6 +31,7 @@
                   outlined
                   v-bind="attrs"
                   v-on="on"
+                  class="mb-2"
               >
                 Delete
               </v-btn>
@@ -57,8 +66,9 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-        </div>
-      </div>
+        </v-card-actions>
+      </v-card>
+
     </div>
   </v-main>
 </template>
