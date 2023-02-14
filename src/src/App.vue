@@ -17,13 +17,16 @@
                 Home
             </v-btn>
 
-            <v-layout class="d-flex justify-end align-lg-end">
-                <v-btn class="mr-4" v-if="isLoggedIn && favCount > 0" icon>
-                    <v-badge :content="favCount" color="error">
-                        <v-icon :color="iconColor">mdi-heart</v-icon>
-                    </v-badge>
-                </v-btn>
-                <v-icon class="mr-2" v-if="favCount === 0" :color="iconColor"
+            <v-layout class="d-flex justify-end align-center">
+                <v-badge
+                    class="mr-5"
+                    v-if="isLoggedIn && favCount > 0"
+                    :content="favCount"
+                    color="error"
+                >
+                    <v-icon :color="iconColor">mdi-heart</v-icon>
+                </v-badge>
+                <v-icon class="mr-5" v-if="favCount === 0" :color="iconColor"
                     >mdi-heart</v-icon
                 >
                 <v-menu offset-y v-if="isLoggedIn">
