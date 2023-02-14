@@ -18,17 +18,22 @@
             </v-btn>
 
             <v-layout class="d-flex justify-end align-center">
-                <v-badge
-                    class="mr-5"
-                    v-if="isLoggedIn && favCount > 0"
-                    :content="favCount"
-                    color="error"
-                >
-                    <v-icon :color="iconColor">mdi-heart</v-icon>
-                </v-badge>
-                <v-icon class="mr-5" v-if="favCount === 0" :color="iconColor"
-                    >mdi-heart</v-icon
-                >
+                <span>
+                    <v-badge
+                        class="mr-5"
+                        v-if="isLoggedIn && favCount > 0"
+                        :content="favCount"
+                        color="error"
+                    >
+                        <v-icon :color="iconColor">mdi-heart</v-icon>
+                    </v-badge>
+                    <v-icon
+                        class="mr-5"
+                        v-if="isLoggedIn && favCount === 0"
+                        :color="iconColor"
+                        >mdi-heart</v-icon
+                    >
+                </span>
                 <v-menu offset-y v-if="isLoggedIn">
                     <template v-slot:activator="{ on }">
                         <v-btn class="primary--text" v-on="on">
