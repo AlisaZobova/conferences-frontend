@@ -1,5 +1,5 @@
 <template>
-    <div v-if="loading" class="text-center">
+    <div v-if="loading" class="text-center mt-4">
         <v-progress-circular
             indeterminate
             color="primary"
@@ -123,6 +123,9 @@
                 <v-btn :disabled="!isFormValid" type="submit" color="primary">
                     Save
                 </v-btn>
+                <v-btn outlined class="ml-2" color="grey" @click="goBack"
+                    >Back</v-btn
+                >
             </v-form>
         </v-layout>
     </div>
@@ -195,6 +198,9 @@ export default {
             if (this.phone) {
                 this.user.phone = this.phone
             }
+        },
+        goBack() {
+            this.$router.go(-1)
         },
     },
     created() {
