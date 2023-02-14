@@ -18,24 +18,32 @@
             </v-btn>
 
             <v-layout class="d-flex justify-end align-lg-end">
-                <v-menu offset-y>
+                <v-icon
+                    v-if="isLoggedIn"
+                    aria-hidden="false"
+                    :color="color"
+                    class="mr-2"
+                >
+                    mdi-heart
+                </v-icon>
+                <v-menu offset-y v-if="isLoggedIn">
                     <template v-slot:activator="{ on }">
-                        <v-icon
-                            v-if="isLoggedIn && !isAdmin"
-                            aria-hidden="false"
-                            :color="color"
-                            class="mr-2"
-                        >
-                            mdi-heart
-                        </v-icon>
-                        <v-btn
-                            v-if="isLoggedIn"
-                            class="primary--text"
-                            v-on="on"
-                        >
+                        <v-btn class="primary--text" v-on="on">
                             <v-icon aria-hidden="false"> mdi-account </v-icon
                             >&nbsp; Profile
                         </v-btn>
+                    </template>
+                    <v-list class="primary--text">
+                        <v-list-item :to="{ name: 'Profile' }">
+                            <v-list-item-title>My profile</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="logout">
+                            <v-list-item-title>Logout</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+                <v-menu v-if="!isLoggedIn">
+                    <template v-slot:activator="{}">
                         <v-btn
                             v-if="!isLoggedIn"
                             :to="{ name: 'Login' }"
@@ -44,14 +52,6 @@
                             Login
                         </v-btn>
                     </template>
-                    <v-list v-if="isLoggedIn" class="primary--text">
-                        <v-list-item :to="{ name: 'Profile' }">
-                            <v-list-item-title>My profile</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item @click="logout">
-                            <v-list-item-title>Logout</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
                 </v-menu>
             </v-layout>
         </v-app-bar>
@@ -86,7 +86,7 @@ export default {
     methods: {
         ...mapActions(['LogOut']),
         async logout() {
-            this.LogOut().then(() => this.$router.go(0))
+            await this.LogOut()
         },
     },
 }
