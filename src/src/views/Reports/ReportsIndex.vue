@@ -19,7 +19,10 @@
                         <v-card
                             max-width="344"
                             class="flex-grow-1"
-                            :to="'/reports/' + item.id"
+                            :to="{
+                                name: 'ShowReport',
+                                params: { id: item.id },
+                            }"
                         >
                             <v-card-title
                                 class="teal--text"
@@ -65,6 +68,20 @@
                                     @click.prevent="showMore(item.id)"
                                 >
                                     More
+                                </v-btn>
+                            </v-card-actions>
+                            <v-card-actions>
+                                <v-btn
+                                    icon
+                                    @click.prevent="
+                                        getHeartColor(item.id) === 'grey'
+                                            ? addToFavorites(item.id)
+                                            : deleteFromFavorites(item.id)
+                                    "
+                                >
+                                    <v-icon :color="getHeartColor(item.id)">
+                                        mdi-heart
+                                    </v-icon>
                                 </v-btn>
                             </v-card-actions>
 
@@ -113,7 +130,7 @@ export default {
         loading: true,
     }),
     methods: {
-        ...mapActions(['GetReports']),
+        ...mapActions(['GetReports', 'AddFavorite', 'DeleteFavorite']),
         getReport(reportId) {
             this.$router
                 .push({ name: 'ShowReport', params: { id: reportId } })
@@ -128,6 +145,24 @@ export default {
             if (this.show.includes(reportId)) {
                 const index = this.show.indexOf(reportId)
                 this.show.splice(index)
+            }
+        },
+        addToFavorites(reportId) {
+            this.AddFavorite(reportId)
+        },
+        deleteFromFavorites(reportId) {
+            this.DeleteFavorite(reportId)
+        },
+        getHeartColor(reportId) {
+            function isInFav(element) {
+                return element.id === reportId
+            }
+            if (
+                this.$store.state.auth.user.favorites.findIndex(isInFav) !== -1
+            ) {
+                return 'red'
+            } else {
+                return 'grey'
             }
         },
     },
