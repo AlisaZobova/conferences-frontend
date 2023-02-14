@@ -18,14 +18,14 @@
             </v-btn>
 
             <v-layout class="d-flex justify-end align-lg-end">
-                <v-icon
-                    v-if="isLoggedIn"
-                    aria-hidden="false"
-                    :color="color"
-                    class="mr-2"
+                <v-btn class="mr-4" v-if="isLoggedIn && favCount > 0" icon>
+                    <v-badge :content="favCount" color="error">
+                        <v-icon :color="iconColor">mdi-heart</v-icon>
+                    </v-badge>
+                </v-btn>
+                <v-icon class="mr-2" v-if="favCount === 0" :color="iconColor"
+                    >mdi-heart</v-icon
                 >
-                    mdi-heart
-                </v-icon>
                 <v-menu offset-y v-if="isLoggedIn">
                     <template v-slot:activator="{ on }">
                         <v-btn class="primary--text" v-on="on">
@@ -72,7 +72,7 @@ export default {
     name: 'App',
     data() {
         return {
-            color: 'grey',
+            // color: '',
         }
     },
     computed: {
@@ -81,6 +81,15 @@ export default {
         },
         isAdmin() {
             return this.$store.getters.isAdmin
+        },
+        iconColor() {
+            return this.$store.state.auth.user.favorites.length > 0
+                ? 'red'
+                : 'grey'
+        },
+        favCount() {
+            let favoritesCount = this.$store.state.auth.user.favorites.length
+            return favoritesCount > 99 ? '99+' : favoritesCount
         },
     },
     methods: {
