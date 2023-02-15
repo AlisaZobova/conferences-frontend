@@ -108,7 +108,7 @@
                 ></v-text-field>
                 <v-select
                     class="country-select"
-                    v-model="user.country"
+                    v-model="user.country_id"
                     :items="countries"
                     item-text="name"
                     item-value="id"
@@ -153,7 +153,7 @@ export default {
             loading: true,
             nowDate: new Date().toISOString().slice(0, 10),
             isFormValid: false,
-            isPhoneValid: false,
+            isPhoneValid: true,
             password: '',
             password_confirmation: '',
             rules: {
@@ -205,7 +205,10 @@ export default {
     },
     created() {
         this.GetUser()
-            .then(() => this.getCountries())
+            .then(() => {
+              this.phone = this.user.phone
+              this.getCountries()
+            })
             .then(() => (this.loading = false))
     },
 }
