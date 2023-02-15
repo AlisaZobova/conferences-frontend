@@ -214,6 +214,7 @@ export default {
             'JoinConference',
             'GetConference',
             'GetCategory',
+            'GetCategories',
         ]),
         async submit() {
             this.$refs.observer.validate().then((result) => {
@@ -226,6 +227,8 @@ export default {
                     this.form.conference_id = this.conference.id
                     if (this.reportCategory.length > 0) {
                         this.form.category_id = this.reportCategory[0].id
+                    } else {
+                        this.report.category_id = ''
                     }
                     const input = document.getElementById('presentation')
                     if (input.files[0]) {
@@ -261,14 +264,21 @@ export default {
         },
     },
     created() {
-        this.GetConference(this.$route.params.id).then(() => {
-            if (this.conference.category) {
-                this.confCategory.push(this.conference.category)
-                this.loading = false
-            } else {
-                this.loading = false
-            }
-        })
+        this.GetConference(this.$route.params.id)
+            .then(() => this.GetCategories())
+            .then(() => {
+                if (this.conference.category) {
+                    this.confCategory.push(
+                        this.$store.state.categories.categories.filter(
+                            (category) =>
+                                category.id === this.conference.category_id
+                        )[0]
+                    )
+                    this.loading = false
+                } else {
+                    this.loading = false
+                }
+            })
     },
 }
 </script>
