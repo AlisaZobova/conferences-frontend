@@ -61,7 +61,7 @@
                 </v-btn>
             </v-card-actions>
         </v-card>
-        <ReportComments></ReportComments>
+        <ReportComments />
     </div>
 </template>
 
