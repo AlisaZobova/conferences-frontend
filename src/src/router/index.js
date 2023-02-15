@@ -13,6 +13,12 @@ import EditReport from '@/views/Reports/EditReport'
 import CreateReport from '@/views/Reports/CreateReport'
 import ForbiddenError from '@/views/Errors/ForbiddenError'
 import NotFoundError from '@/views/Errors/NotFoundError'
+import CategoriesIndex from '@/views/Categories/CategoriesIndex'
+import CreateCategory from '@/views/Categories/CreateCategory'
+import ShowCategory from '@/views/Categories/ShowCategory'
+import EditCategory from '@/views/Categories/EditCategory'
+import EditProfile from '@/views/Auth/EditProfile'
+import ReportsFavorites from '@/views/Reports/ReportsFavorites'
 
 Vue.use(VueRouter)
 const routes = [
@@ -60,6 +66,12 @@ const routes = [
         meta: { requiresAuth: true },
     },
     {
+        path: '/reports/favorites',
+        name: 'Favorites',
+        component: ReportsFavorites,
+        meta: { requiresAuth: true },
+    },
+    {
         path: '/reports/:id',
         name: 'ShowReport',
         component: ShowReport,
@@ -75,6 +87,42 @@ const routes = [
         },
     },
     {
+        path: '/categories',
+        name: 'Categories',
+        component: CategoriesIndex,
+        meta: {
+            requiresAuth: true,
+            requiresAdmin: true,
+        },
+    },
+    {
+        path: '/categories/create',
+        name: 'CreateCategory',
+        component: CreateCategory,
+        meta: {
+            requiresAuth: true,
+            requiresAdmin: true,
+        },
+    },
+    {
+        path: '/categories/:id',
+        name: 'ShowCategory',
+        component: ShowCategory,
+        meta: {
+            requiresAuth: true,
+            requiresAdmin: true,
+        },
+    },
+    {
+        path: '/categories/:id/edit',
+        name: 'EditCategory',
+        component: EditCategory,
+        meta: {
+            requiresAuth: true,
+            requiresAdmin: true,
+        },
+    },
+    {
         path: '/register',
         name: 'Register',
         component: AuthRegister,
@@ -85,6 +133,12 @@ const routes = [
         name: 'Login',
         component: AuthLogin,
         meta: { guest: true },
+    },
+    {
+        path: '/profile',
+        name: 'Profile',
+        component: EditProfile,
+        meta: { requiresAuth: true },
     },
     {
         path: '/403',
@@ -182,6 +236,18 @@ router.beforeEach((to, from, next) => {
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresPublishPermissions)) {
         if (store.getters.isAnnouncer) {
+            next()
+            return
+        }
+        next('/403')
+    } else {
+        next()
+    }
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some((record) => record.meta.requiresAdmin)) {
+        if (store.getters.isAdmin) {
             next()
             return
         }

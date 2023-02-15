@@ -119,15 +119,39 @@
                                         @drag="setLatLng($event.latLng)"
                                     />
                                 </GmapMap>
-                                <validation-provider name="Country" v-slot="{}">
-                                    <v-select
-                                        v-model="conference.country_id"
-                                        :items="countries"
-                                        item-text="name"
-                                        item-value="id"
-                                        label="Country"
-                                    ></v-select>
-                                </validation-provider>
+                                <v-select
+                                    v-model="conference.country_id"
+                                    :items="countries"
+                                    item-text="name"
+                                    item-value="id"
+                                    label="Country"
+                                ></v-select>
+                                <div v-if="!conference.reports.length > 0">
+                                    <v-text-field
+                                        v-if="currentCategory"
+                                        readonly
+                                        label="Category"
+                                        v-model="currentCategory.name"
+                                    ></v-text-field>
+                                    <p>
+                                        Select category or
+                                        <a
+                                            @click="
+                                                currentCategory = null
+                                                selected = []
+                                            "
+                                            >clean active category</a
+                                        >:
+                                    </p>
+                                    <v-treeview
+                                        activatable
+                                        hoverable
+                                        :active="selected"
+                                        :items="rootCategories"
+                                        @update:active="getActiveValue"
+                                        class="mb-4"
+                                    ></v-treeview>
+                                </div>
                                 <v-btn
                                     class="mr-4"
                                     type="submit"
@@ -173,25 +197,44 @@ export default {
         isAuthenticated() {
             return this.$store.getters.isAuthenticated
         },
+        categories() {
+            return this.$store.state.categories.categories
+        },
+        rootCategories() {
+            return this.categories.filter((category) => !category.parents)
+        },
     },
     data: () => ({
         menu1: false,
         nowDate: new Date().toISOString().slice(0, 10),
         loading: true,
         titleInfoMsg: 'Title must start with a capital letter',
+        selected: [],
+        currentCategory: null,
     }),
 
     methods: {
-        ...mapActions(['UpdateConference', 'GetCountries', 'GetConference']),
+        ...mapActions([
+            'UpdateConference',
+            'GetCountries',
+            'GetConference',
+            'GetCategories',
+            'GetCategory',
+        ]),
         ...mapGetters(['isCreator']),
         async submit() {
             this.$refs.observer.validate().then((result) => {
                 if (result) {
+                    if (this.selected.length > 0) {
+                        this.conference.category_id = this.selected[0]
+                    } else {
+                        this.conference.category_id = null
+                    }
                     this.UpdateConference({
                         form: this.conference,
                         conferenceId: this.conference.id,
                     })
-                    this.$router.push('/conferences').catch(() => {})
+                    this.$router.push({ name: 'Conferences' })
                 }
             })
         },
@@ -220,16 +263,33 @@ export default {
                 return { lat: 50, lng: 30 }
             }
         },
+        getActiveValue(value) {
+            this.selected = value
+            this.currentCategory = this.categories.filter(
+                (category) => category.id === value[0]
+            )[0]
+        },
     },
     created() {
         this.GetCountries()
-        if (this.isAuthenticated) {
-            this.GetConference(this.$route.params.id).then(() => {
-                this.loading = false
+            .then(() => {
+                this.GetCategories()
             })
-        } else {
-            this.loading = false
-        }
+            .then(() => {
+                if (this.isAuthenticated) {
+                    this.GetConference(this.$route.params.id).then(() => {
+                        if (this.conference.category) {
+                            this.selected.push(this.conference.category.id)
+                            this.currentCategory = this.conference.category
+                            this.loading = false
+                        } else {
+                            this.loading = false
+                        }
+                    })
+                } else {
+                    this.loading = false
+                }
+            })
     },
 }
 </script>
@@ -237,5 +297,10 @@ export default {
 <style scoped>
 form {
     width: 75%;
+}
+:deep(.v-treeview) {
+    width: 100%;
+    height: 100%;
+    border: 1px rgb(133, 133, 133) solid;
 }
 </style>

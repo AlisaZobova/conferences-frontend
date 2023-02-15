@@ -35,7 +35,14 @@ const actions = {
         commit('setUser', response.data)
         commit('setUserId', null)
     },
-
+    async UpdateProfile({ commit }, form) {
+        let response = await axios.post('profile', form)
+        commit('setUser', response.data)
+    },
+    async GetUser({ commit, state }) {
+        let response = await axios.get('user/' + state.user.id)
+        commit('setUser', response.data)
+    },
     async LogIn({ commit }, User) {
         let response = await axios.post('login', User)
         commit('setUser', response.data)
@@ -61,6 +68,18 @@ const actions = {
     },
     async CancelParticipation({ commit, state }, conferenceId) {
         await axios.post('conferences/' + conferenceId + '/cancel')
+        axios.get('user/' + state.user.id).then((response) => {
+            commit('setUser', response.data)
+        })
+    },
+    async AddFavorite({ commit, state }, reportId) {
+        await axios.post('reports/' + reportId + '/add-favorite')
+        axios.get('user/' + state.user.id).then((response) => {
+            commit('setUser', response.data)
+        })
+    },
+    async DeleteFavorite({ commit, state }, reportId) {
+        await axios.post('reports/' + reportId + '/delete-favorite')
         axios.get('user/' + state.user.id).then((response) => {
             commit('setUser', response.data)
         })

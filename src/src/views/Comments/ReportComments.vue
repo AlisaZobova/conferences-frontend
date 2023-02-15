@@ -76,6 +76,9 @@
                     </v-responsive>
                 </template>
             </v-list>
+            <p class="text-caption pl-4 red--text" v-if="timeError">
+                Comments can only be edited within 10 minutes
+            </p>
             <tiptap-vuetify
                 placeholder="Write your comment ..."
                 v-model="content"
@@ -154,6 +157,7 @@ export default {
         ],
         content: '',
         comment: null,
+        timeError: false,
     }),
     methods: {
         ...mapActions(['GetComments', 'UpdateComment', 'CreateComment']),
@@ -186,13 +190,21 @@ export default {
                 ':' +
                 sec
             if (this.comment) {
-                const form = {
-                    user_id: this.comment.user_id,
-                    report_id: this.comment.report_id,
-                    content: this.content,
-                    publication_date: newDate,
+                if (this.tenMinCheck(this.comment)) {
+                    const form = {
+                        id: this.comment.id,
+                        user_id: this.comment.user_id,
+                        report_id: this.comment.report_id,
+                        content: this.content,
+                        publication_date: newDate,
+                    }
+                    this.UpdateComment({
+                        form: form,
+                        commentId: this.comment.id,
+                    })
+                } else {
+                    this.timeError = true
                 }
-                this.UpdateComment({ form: form, commentId: this.comment.id })
             } else {
                 const form = {
                     user_id: this.user.id,

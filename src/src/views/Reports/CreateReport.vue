@@ -46,9 +46,7 @@
                                             :error-messages="
                                                 apiErrors.start_time
                                             "
-                                            @change="
-                                                apiErrors.start_time = ''
-                                            "
+                                            @change="apiErrors.start_time = ''"
                                             persistent-hint
                                             prepend-icon="mdi-timer"
                                             v-bind="attrs"
@@ -91,9 +89,7 @@
                                             label="End time *"
                                             :disabled="!timeStart"
                                             :error-messages="apiErrors.end_time"
-                                            @change="
-                                                apiErrors.end_time = ''
-                                            "
+                                            @change="apiErrors.end_time = ''"
                                             persistent-hint
                                             prepend-icon="mdi-timer"
                                             v-bind="attrs"
@@ -136,6 +132,17 @@
                                     @change="validate"
                                 ></v-file-input>
                             </validation-provider>
+                            <v-tree-select
+                                v-if="confCategory.length > 0"
+                                v-model="reportCategory"
+                                :items="confCategory"
+                                item-text="name"
+                                label="Category"
+                                selection-type="independent"
+                                allow-select-parents
+                                show-full-path
+                            >
+                            </v-tree-select>
 
                             <v-btn
                                 class="mr-4"
@@ -189,6 +196,7 @@ export default {
             presentation: '',
             user_id: null,
             conference_id: null,
+            category_id: null,
         },
         menu1: false,
         menu2: false,
@@ -196,10 +204,18 @@ export default {
         timeEnd: '',
         loading: true,
         apiErrors: {},
+        reportCategory: [],
+        confCategory: [],
     }),
 
     methods: {
-        ...mapActions(['CreateReport', 'JoinConference', 'GetConference']),
+        ...mapActions([
+            'CreateReport',
+            'JoinConference',
+            'GetConference',
+            'GetCategory',
+            'GetCategories',
+        ]),
         async submit() {
             this.$refs.observer.validate().then((result) => {
                 if (result) {
@@ -209,6 +225,11 @@ export default {
                         this.conference.conf_date + ' ' + this.timeEnd + ':00'
                     this.form.user_id = this.user.id
                     this.form.conference_id = this.conference.id
+                    if (this.reportCategory.length > 0) {
+                        this.form.category_id = this.reportCategory[0].id
+                    } else {
+                        this.report.category_id = ''
+                    }
                     const input = document.getElementById('presentation')
                     if (input.files[0]) {
                         this.form.presentation = input.files[0]
@@ -243,9 +264,21 @@ export default {
         },
     },
     created() {
-        this.GetConference(this.$route.params.id).then(
-            () => (this.loading = false)
-        )
+        this.GetConference(this.$route.params.id)
+            .then(() => this.GetCategories())
+            .then(() => {
+                if (this.conference.category) {
+                    this.confCategory.push(
+                        this.$store.state.categories.categories.filter(
+                            (category) =>
+                                category.id === this.conference.category_id
+                        )[0]
+                    )
+                    this.loading = false
+                } else {
+                    this.loading = false
+                }
+            })
     },
 }
 </script>

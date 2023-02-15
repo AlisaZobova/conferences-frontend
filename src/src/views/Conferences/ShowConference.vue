@@ -1,6 +1,5 @@
 <template>
     <v-app>
-        <v-main>
             <div v-if="loading" class="text-center">
                 <v-progress-circular
                     indeterminate
@@ -8,6 +7,7 @@
                 ></v-progress-circular>
             </div>
             <div v-else>
+              <v-breadcrumbs :items="items"></v-breadcrumbs>
                 <v-simple-table>
                     <template v-slot:default>
                         <thead>
@@ -178,7 +178,6 @@
                     </div>
                 </div>
             </div>
-        </v-main>
     </v-app>
 </template>
 
@@ -193,6 +192,19 @@ export default {
         return {
             loading: true,
             dialogDelete: false,
+            categoryName: '',
+            categoryPath: '',
+            items: [
+              {
+                text: '',
+              },
+              {
+                text: 'conferences',
+                disabled: false,
+                // exact: true,
+                // to: {name: 'Conferences'},
+              },
+            ],
         }
     },
     computed: {
@@ -235,10 +247,33 @@ export default {
 
     created() {
         this.GetConference(this.$route.params.id).then(
-            () => (this.loading = false)
+            () => {
+              if (this.conference.category) {
+                this.categoryPath = this.conference.category.path
+                for (let i in this.categoryPath) {
+                  this.items.push(
+                      {
+                        text: this.categoryPath[i],
+                        disabled: false,
+                      },
+                  )
+                }
+              }
+              this.items.push(
+                  {
+                    text: this.conference.title,
+                    disabled: false,
+                  },
+              )
+              this.loading = false
+            }
         )
     },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+:deep(.v-breadcrumbs) {
+  padding-left: 14px;
+}
+</style>
