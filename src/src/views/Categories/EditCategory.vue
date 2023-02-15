@@ -119,9 +119,6 @@ export default {
             .then(() => {
                 this.parentCategory.push(this.category.ancestor_id)
                 this.currentCategory = this.category.parent
-                this.name = this.category.parent
-                    ? this.category.parent.name
-                    : ''
                 this.loading = false
             })
     },
