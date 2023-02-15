@@ -40,7 +40,7 @@ const actions = {
         commit('setUser', response.data)
     },
     async GetUser({ commit, state }) {
-        let response = await axios.get('user/', state.user.id)
+        let response = await axios.get('user/' + state.user.id)
         commit('setUser', response.data)
     },
     async LogIn({ commit }, User) {
