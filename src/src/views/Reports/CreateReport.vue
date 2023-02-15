@@ -262,13 +262,9 @@ export default {
     },
     created() {
         this.GetConference(this.$route.params.id).then(() => {
-            if (this.conference.category_id) {
-                this.GetCategory(this.conference.category_id).then(() => {
-                    this.confCategory.push(
-                        this.$store.state.categories.category
-                    )
-                    this.loading = false
-                })
+            if (this.conference.category) {
+                this.confCategory.push(this.conference.category)
+                this.loading = false
             } else {
                 this.loading = false
             }
