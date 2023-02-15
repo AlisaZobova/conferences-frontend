@@ -126,30 +126,32 @@
                                     item-value="id"
                                     label="Country"
                                 ></v-select>
-                                <v-text-field
-                                    v-if="currentCategory"
-                                    readonly
-                                    label="Category"
-                                    v-model="currentCategory.name"
-                                ></v-text-field>
-                                <p>
-                                    Select category or
-                                    <a
-                                        @click="
-                                            currentCategory = null
-                                            selected = []
-                                        "
-                                        >clean active category</a
-                                    >:
-                                </p>
-                                <v-treeview
-                                    activatable
-                                    hoverable
-                                    :active="selected"
-                                    :items="rootCategories"
-                                    @update:active="getActiveValue"
-                                    class="mb-4"
-                                ></v-treeview>
+                                <div v-if="!conference.reports.length > 0">
+                                    <v-text-field
+                                        v-if="currentCategory"
+                                        readonly
+                                        label="Category"
+                                        v-model="currentCategory.name"
+                                    ></v-text-field>
+                                    <p>
+                                        Select category or
+                                        <a
+                                            @click="
+                                                currentCategory = null
+                                                selected = []
+                                            "
+                                            >clean active category</a
+                                        >:
+                                    </p>
+                                    <v-treeview
+                                        activatable
+                                        hoverable
+                                        :active="selected"
+                                        :items="rootCategories"
+                                        @update:active="getActiveValue"
+                                        class="mb-4"
+                                    ></v-treeview>
+                                </div>
                                 <v-btn
                                     class="mr-4"
                                     type="submit"
