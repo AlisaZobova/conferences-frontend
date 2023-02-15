@@ -8,32 +8,29 @@
     <div v-else>
         <v-layout class="mt-6" align-center justify-center>
             <v-form @submit.prevent="submit" v-model="isFormValid">
-                <v-combobox
-                    v-model="name"
-                    :items="categories"
-                    label="Choose parent category or leave empty"
-                >
-                    <template v-slot:item="{ item }">
-                        <v-treeview
-                            v-model="parentCategory"
-                            item-text="name"
-                            item-value="id"
-                            selection-type="independent"
-                            allow-select-parents
-                            hoverable
-                            :items="item"
-                        >
-                            <template #label="{ item }">
-                                <a
-                                    class="d-block text-decoration-none black--text"
-                                    @click.stop="parseInfo(item)"
-                                >
-                                    {{ item.name }}
-                                </a>
-                            </template>
-                        </v-treeview>
-                    </template>
-                </v-combobox>
+                <v-text-field
+                    v-if="currentCategory"
+                    readonly
+                    label="Parent category"
+                    v-model="currentCategory.name"
+                ></v-text-field>
+                <p>
+                    Select parent category or
+                    <a
+                        @click="
+                            currentCategory = null
+                            parentCategory = []
+                        "
+                        >clean active category</a
+                    >:
+                </p>
+                <v-treeview
+                    activatable
+                    hoverable
+                    :active="parentCategory"
+                    :items="rootCategories"
+                    @update:active="getActiveValue"
+                ></v-treeview>
 
                 <v-text-field
                     v-model="category.name"
@@ -43,6 +40,7 @@
                     :rules="[rules.required]"
                     :error-messages="apiError"
                     @click="apiError = ''"
+                    class="mt-4"
                 ></v-text-field>
 
                 <v-btn outlined class="mr-2 mt-2" color="grey" @click="goBack"
@@ -76,18 +74,15 @@ export default {
             isFormValid: false,
             apiError: '',
             parentCategory: [],
-            name: '',
+            currentCategory: null,
         }
     },
     computed: {
         categories() {
-            let categories = this.$store.state.categories.categories.filter(
-                (category) => !category.parents
-            )
-            for (let i in categories) {
-                categories[i] = [categories[i]]
-            }
-            return categories
+            return this.$store.state.categories.categories
+        },
+        rootCategories() {
+            return this.categories.filter((category) => !category.parents)
         },
         category() {
             return this.$store.state.categories.category
@@ -111,9 +106,11 @@ export default {
                     () => (this.apiError = 'This category name already exists')
                 )
         },
-        parseInfo(item) {
-            this.parentCategory = [item.id]
-            this.name = item.name
+        getActiveValue(value) {
+            this.parentCategory = value
+            this.currentCategory = this.categories.filter(
+                (category) => category.id === value[0]
+            )[0]
         },
     },
     created() {
@@ -121,6 +118,7 @@ export default {
             .then(() => this.GetCategory(this.$route.params.id))
             .then(() => {
                 this.parentCategory.push(this.category.ancestor_id)
+                this.currentCategory = this.category.parent
                 this.name = this.category.parent
                     ? this.category.parent.name
                     : ''
@@ -137,9 +135,6 @@ form {
 :deep(.v-treeview) {
     width: 100%;
     height: 100%;
-}
-
-:deep(.v-list-item) {
-    padding: 0;
+    border: 1px rgb(133, 133, 133) solid;
 }
 </style>
