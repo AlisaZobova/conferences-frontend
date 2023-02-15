@@ -96,6 +96,8 @@ export default {
         async submit() {
             if (this.parentCategory.length > 0) {
                 this.category.ancestor_id = this.parentCategory[0]
+            } else {
+                this.category.ancestor_id = null
             }
             this.UpdateCategory({
                 form: this.category,
