@@ -46,9 +46,7 @@
                                             :error-messages="
                                                 apiErrors.start_time
                                             "
-                                            @change="
-                                                apiErrors.start_time = ''
-                                            "
+                                            @change="apiErrors.start_time = ''"
                                             persistent-hint
                                             prepend-icon="mdi-timer"
                                             v-bind="attrs"
@@ -91,9 +89,7 @@
                                             label="End time *"
                                             :disabled="!timeStart"
                                             :error-messages="apiErrors.end_time"
-                                            @change="
-                                                apiErrors.end_time = ''
-                                            "
+                                            @change="apiErrors.end_time = ''"
                                             persistent-hint
                                             prepend-icon="mdi-timer"
                                             v-bind="attrs"
@@ -133,10 +129,13 @@
                                     :error-messages="errors"
                                     label="Presentation"
                                     id="presentation"
-                                    @change="validate; presentation=true"
+                                    @change="
+                                        validate
+                                        presentation = true
+                                    "
                                 ></v-file-input>
                             </validation-provider>
-                            <div v-if="!presentation" class="mb-6">
+                            <div v-if="!presentation">
                                 <a
                                     class="text-decoration-underline"
                                     @click="downloadFile()"
@@ -144,6 +143,30 @@
                                     >{{ report.presentation }}</a
                                 >
                             </div>
+                            <v-text-field
+                                v-if="currentCategory"
+                                readonly
+                                label="Category"
+                                v-model="currentCategory.name"
+                            ></v-text-field>
+                            <p>
+                                Select category or
+                                <a
+                                    @click="
+                                        currentCategory = null
+                                        selected = []
+                                    "
+                                    >clean active category</a
+                                >:
+                            </p>
+                            <v-treeview
+                                activatable
+                                hoverable
+                                :active="selected"
+                                :items="category"
+                                @update:active="getActiveValue"
+                                class="mb-4"
+                            ></v-treeview>
 
                             <v-btn
                                 class="mr-1"
@@ -196,7 +219,15 @@ export default {
         },
         report() {
             return this.$store.state.reports.report
-        }
+        },
+        categories() {
+            return this.$store.state.categories.categories
+        },
+        category() {
+            return this.categories.filter(
+                (category) => category.id === this.conference.category_id
+            )
+        },
     },
     data: () => ({
         menu1: false,
@@ -206,6 +237,8 @@ export default {
         presentation: false,
         loading: true,
         apiErrors: {},
+        selected: [],
+        currentCategory: null,
     }),
 
     methods: {
@@ -215,7 +248,8 @@ export default {
             'GetReport',
             'DownloadFile',
             'DeleteReport',
-            'CancelParticipation'
+            'CancelParticipation',
+            'GetCategories',
         ]),
         async submit() {
             this.$refs.observer.validate().then((result) => {
@@ -228,30 +262,40 @@ export default {
                     if (input.files[0]) {
                         this.report.presentation = input.files[0]
                     } else {
-                      this.report.presentation = ''
+                        this.report.presentation = ''
                     }
 
-                  const fd = new FormData();
-                  fd.append('id', this.report.id);
-                  fd.append('presentation', this.report.presentation);
-                  fd.append('topic', this.report.topic);
-                  fd.append('start_time', this.report.start_time);
-                  fd.append('end_time', this.report.end_time);
-                  fd.append('description', this.report.description ? this.report.description : '');
-                  fd.append('user_id', this.report.user_id);
-                  fd.append('conference_id', this.report.conference_id);
-                  fd.append('_method', 'PATCH');
+                    if (this.selected.length > 0) {
+                        this.report.category_id = this.selected[0]
+                    } else {
+                        this.report.category_id = ''
+                    }
 
-                  this.UpdateReport({
-                      form: fd,
-                      reportId: this.report.id,
-                  })
-                      .then(() => this.$router.push({ name: 'Reports' }))
-                      .catch(
-                          (error) =>
-                              (this.apiErrors = error.response.data.errors)
-                      )
-              }
+                    const fd = new FormData()
+                    fd.append('id', this.report.id)
+                    fd.append('presentation', this.report.presentation)
+                    fd.append('topic', this.report.topic)
+                    fd.append('start_time', this.report.start_time)
+                    fd.append('end_time', this.report.end_time)
+                    fd.append(
+                        'description',
+                        this.report.description ? this.report.description : ''
+                    )
+                    fd.append('user_id', this.report.user_id)
+                    fd.append('conference_id', this.report.conference_id)
+                    fd.append('category_id', this.report.category_id)
+                    fd.append('_method', 'PATCH')
+
+                    this.UpdateReport({
+                        form: fd,
+                        reportId: this.report.id,
+                    })
+                        .then(() => this.$router.push({ name: 'Reports' }))
+                        .catch(
+                            (error) =>
+                                (this.apiErrors = error.response.data.errors)
+                        )
+                }
             })
         },
         goBack() {
@@ -276,20 +320,30 @@ export default {
             this.DownloadFile(this.report.id)
         },
         deleteReport(reportId) {
-          this.loading = true
-          let conferenceId = this.report.conference_id
-            this.DeleteReport(reportId).then(() =>
-                this.CancelParticipation(conferenceId)).then(() =>
-                this.$router.push({ name: 'Conferences' }))
+            this.loading = true
+            let conferenceId = this.report.conference_id
+            this.DeleteReport(reportId)
+                .then(() => this.CancelParticipation(conferenceId))
+                .then(() => this.$router.push({ name: 'Conferences' }))
+        },
+        getActiveValue(value) {
+            this.selected = value
+            this.currentCategory = this.categories.filter(
+                (category) => category.id === value[0]
+            )[0]
         },
     },
     created() {
-        this.GetReport(this.$route.params.id)
-            .then(() => {
-                this.timeStart = this.report.start_time.slice(11, 16)
-                this.timeEnd = this.report.end_time.slice(11, 16)
-                this.GetConference(this.report.conference_id)
-            })
+        this.GetReport(this.$route.params.id).then(() => {
+            this.timeStart = this.report.start_time.slice(11, 16)
+            this.timeEnd = this.report.end_time.slice(11, 16)
+            if (this.report.category) {
+                this.selected.push(this.report.category.id)
+                this.currentCategory = this.report.category
+            }
+        })
+        this.GetConference(this.report.conference_id)
+            .then(() => this.GetCategories())
             .then(() => (this.loading = false))
     },
 }
@@ -312,5 +366,11 @@ export default {
 
 form {
     width: 75%;
+}
+
+:deep(.v-treeview) {
+    width: 100%;
+    height: 100%;
+    border: 1px rgb(133, 133, 133) solid;
 }
 </style>
