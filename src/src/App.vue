@@ -25,7 +25,9 @@
                         :content="favCount"
                         color="error"
                     >
-                        <v-icon :color="iconColor">mdi-heart</v-icon>
+                        <v-icon @click="goToFav" :color="iconColor"
+                            >mdi-heart</v-icon
+                        >
                     </v-badge>
                     <v-icon
                         class="mr-5"
@@ -99,6 +101,9 @@ export default {
         ...mapActions(['LogOut']),
         async logout() {
             await this.LogOut()
+        },
+        goToFav() {
+            this.$router.push({ name: 'Favorites' })
         },
     },
 }

@@ -13,11 +13,12 @@ import EditReport from '@/views/Reports/EditReport'
 import CreateReport from '@/views/Reports/CreateReport'
 import ForbiddenError from '@/views/Errors/ForbiddenError'
 import NotFoundError from '@/views/Errors/NotFoundError'
-import CategoriesIndex from "@/views/Categories/CategoriesIndex";
-import CreateCategory from "@/views/Categories/CreateCategory";
-import ShowCategory from "@/views/Categories/ShowCategory";
-import EditCategory from "@/views/Categories/EditCategory";
-import EditProfile from "@/views/Auth/EditProfile";
+import CategoriesIndex from '@/views/Categories/CategoriesIndex'
+import CreateCategory from '@/views/Categories/CreateCategory'
+import ShowCategory from '@/views/Categories/ShowCategory'
+import EditCategory from '@/views/Categories/EditCategory'
+import EditProfile from '@/views/Auth/EditProfile'
+import ReportsFavorites from '@/views/Reports/ReportsFavorites'
 
 Vue.use(VueRouter)
 const routes = [
@@ -65,6 +66,12 @@ const routes = [
         meta: { requiresAuth: true },
     },
     {
+        path: '/reports/favorites',
+        name: 'Favorites',
+        component: ReportsFavorites,
+        meta: { requiresAuth: true },
+    },
+    {
         path: '/reports/:id',
         name: 'ShowReport',
         component: ShowReport,
@@ -85,7 +92,7 @@ const routes = [
         component: CategoriesIndex,
         meta: {
             requiresAuth: true,
-            requiresAdmin: true
+            requiresAdmin: true,
         },
     },
     {
@@ -94,7 +101,7 @@ const routes = [
         component: CreateCategory,
         meta: {
             requiresAuth: true,
-            requiresAdmin: true
+            requiresAdmin: true,
         },
     },
     {
@@ -103,7 +110,7 @@ const routes = [
         component: ShowCategory,
         meta: {
             requiresAuth: true,
-            requiresAdmin: true
+            requiresAdmin: true,
         },
     },
     {
@@ -112,7 +119,7 @@ const routes = [
         component: EditCategory,
         meta: {
             requiresAuth: true,
-            requiresAdmin: true
+            requiresAdmin: true,
         },
     },
     {
