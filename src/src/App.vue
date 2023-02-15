@@ -78,11 +78,6 @@ import { mapActions } from 'vuex'
 
 export default {
     name: 'App',
-    data() {
-        return {
-            // color: '',
-        }
-    },
     computed: {
         isLoggedIn() {
             return this.$store.getters.isAuthenticated
