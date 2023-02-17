@@ -1,6 +1,6 @@
 <template>
-    <v-main>
-        <div v-if="loading" class="text-center">
+    <div class="mt-4">
+        <div v-if="loading" class="text-center mb-4">
             <v-progress-circular
                 indeterminate
                 color="primary"
@@ -111,7 +111,10 @@
                 </v-row>
             </v-container>
         </div>
-    </v-main>
+        <div class="text-center pt-2">
+            <v-pagination v-model="page" :length="pageCount"></v-pagination>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -121,12 +124,16 @@ export default {
     name: 'ReportsIndex',
     computed: {
         reports() {
-            return this.$store.state.reports.reports
+            return this.$store.state.reports.reports.data
+        },
+        pageCount() {
+            return this.$store.state.reports.reports.last_page
         },
     },
     data: () => ({
         show: [],
         loading: true,
+        page: 1,
     }),
     methods: {
         ...mapActions(['GetReports', 'AddFavorite', 'DeleteFavorite']),
@@ -165,8 +172,16 @@ export default {
             }
         },
     },
+    watch: {
+        page(newValue) {
+            this.loading = true
+            this.GetReports(newValue).then(() => {
+                this.loading = false
+            })
+        },
+    },
     created() {
-        this.GetReports().then(() => {
+        this.GetReports(this.page).then(() => {
             this.loading = false
         })
     },

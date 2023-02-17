@@ -1,102 +1,97 @@
 <template>
-    <v-main>
-        <v-container fluid>
-            <v-row dense>
-                <v-col
-                    v-for="item in user.favorites"
-                    :key="item.id"
-                    class="d-flex"
-                    style="flex-direction: column"
-                    cols="4"
+    <v-container fluid>
+        <v-row dense>
+            <v-col
+                v-for="item in user.favorites"
+                :key="item.id"
+                class="d-flex"
+                style="flex-direction: column"
+                cols="4"
+            >
+                <v-card
+                    max-width="344"
+                    class="flex-grow-1"
+                    :to="{
+                        name: 'ShowReport',
+                        params: { id: item.id },
+                    }"
                 >
-                    <v-card
-                        max-width="344"
-                        class="flex-grow-1"
-                        :to="{
-                            name: 'ShowReport',
-                            params: { id: item.id },
-                        }"
+                    <v-card-title
+                        class="teal--text d-inline-flex"
+                        @click.prevent="getReport(item.id)"
                     >
-                        <v-card-title
-                            class="teal--text d-inline-flex"
-                            @click.prevent="getReport(item.id)"
-                        >
-                            {{ item.topic }}
-                        </v-card-title>
+                        {{ item.topic }}
+                    </v-card-title>
 
+                    <v-btn
+                        icon
+                        @click.prevent="
+                            getHeartColor(item.id) === 'grey'
+                                ? addToFavorites(item.id)
+                                : deleteFromFavorites(item.id)
+                        "
+                    >
+                        <v-icon :color="getHeartColor(item.id)">
+                            mdi-heart
+                        </v-icon>
+                    </v-btn>
+
+                    <v-card-subtitle class="mt-2 pb-0">
+                        <b>Date:</b> {{ item.start_time.slice(0, 10)
+                        }}<br /><br />
+                        <b>From:</b> {{ item.start_time.slice(10, 16) }}<br />
+                        <b>To:</b> {{ item.end_time.slice(10, 16) }}<br /><br />
+                    </v-card-subtitle>
+
+                    <v-card-subtitle class="pt-0" v-if="item.description">
+                        <b>Description:</b>
+                        {{
+                            item.description.length >= 100
+                                ? item.description.slice(0, 100) + '...'
+                                : item.description
+                        }}
+                    </v-card-subtitle>
+
+                    <v-card-actions
+                        v-if="
+                            item.description && item.description.length >= 100
+                        "
+                    >
                         <v-btn
-                            icon
-                            @click.prevent="
-                                getHeartColor(item.id) === 'grey'
-                                    ? addToFavorites(item.id)
-                                    : deleteFromFavorites(item.id)
-                            "
+                            text
+                            color="yellow darken-1"
+                            @click.prevent="showMore(item.id)"
                         >
-                            <v-icon :color="getHeartColor(item.id)">
-                                mdi-heart
-                            </v-icon>
+                            More
                         </v-btn>
+                    </v-card-actions>
 
-                        <v-card-subtitle class="mt-2 pb-0">
-                            <b>Date:</b> {{ item.start_time.slice(0, 10)
-                            }}<br /><br />
-                            <b>From:</b> {{ item.start_time.slice(10, 16)
-                            }}<br />
-                            <b>To:</b> {{ item.end_time.slice(10, 16)
-                            }}<br /><br />
-                        </v-card-subtitle>
-
-                        <v-card-subtitle class="pt-0" v-if="item.description">
-                            <b>Description:</b>
-                            {{
-                                item.description.length >= 100
-                                    ? item.description.slice(0, 100) + '...'
-                                    : item.description
-                            }}
-                        </v-card-subtitle>
-
-                        <v-card-actions
-                            v-if="
-                                item.description &&
-                                item.description.length >= 100
-                            "
+                    <v-expand-transition>
+                        <v-card
+                            v-if="show.includes(item.id)"
+                            class="transition-fast-in-fast-out v-card--reveal"
+                            style="height: 100%"
                         >
-                            <v-btn
-                                text
-                                color="yellow darken-1"
-                                @click.prevent="showMore(item.id)"
-                            >
-                                More
-                            </v-btn>
-                        </v-card-actions>
+                            <v-card-subtitle class="mt-2">
+                                <b>Description:</b>
+                                {{ item.description }}
+                            </v-card-subtitle>
 
-                        <v-expand-transition>
-                            <v-card
-                                v-if="show.includes(item.id)"
-                                class="transition-fast-in-fast-out v-card--reveal"
-                                style="height: 100%"
-                            >
-                                <v-card-subtitle class="mt-2">
-                                    <b>Description:</b>
-                                    {{ item.description }}
-                                </v-card-subtitle>
-
-                                <v-card-actions>
-                                    <v-btn
-                                        text
-                                        color="yellow darken-1"
-                                        @click.prevent="hideMore(item.id)"
-                                    >
-                                        Close
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-expand-transition>
-                    </v-card>
-                </v-col>
-            </v-row>
-        </v-container>
-    </v-main>
+                            <v-card-actions>
+                                <v-btn
+                                    text
+                                    color="yellow darken-1"
+                                    @click.prevent="hideMore(item.id)"
+                                >
+                                    Close
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-expand-transition>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>

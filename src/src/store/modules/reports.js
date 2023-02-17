@@ -7,8 +7,8 @@ const state = {
 }
 
 const actions = {
-    async GetReports({ commit }) {
-        let response = await axios.get('reports')
+    async GetReports({ commit }, page) {
+        let response = await axios.get('reports?page=' + page)
         commit('setReports', response.data)
         commit('setReport', null)
     },
