@@ -228,7 +228,7 @@ export default {
                     if (this.reportCategory.length > 0) {
                         this.form.category_id = this.reportCategory[0].id
                     } else {
-                        this.report.category_id = ''
+                        this.form.category_id = ''
                     }
                     const input = document.getElementById('presentation')
                     if (input.files[0]) {
