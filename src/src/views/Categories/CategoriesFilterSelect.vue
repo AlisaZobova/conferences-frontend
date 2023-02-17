@@ -1,12 +1,15 @@
 <template>
     <v-combobox
         :loading="loading"
+        class="pt-0"
+        color="teal"
         :items="items"
         item-text="name"
         v-model="selected"
         @change="toggle"
         label="Choose categories"
         multiple
+        :menu-props="{ maxWidth: '278' }"
     >
         <template v-slot:append-item>
             <v-divider class="mt-2"></v-divider>
@@ -79,5 +82,9 @@ export default {
 }
 :deep(.v-list-item--link:hover) {
     background-color: #eeeeee;
+}
+
+:deep(.v-select__selections) {
+    max-width: 250px;
 }
 </style>

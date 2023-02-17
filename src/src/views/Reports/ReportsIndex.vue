@@ -1,13 +1,14 @@
 <template>
-    <div class="mt-4">
+    <div>
         <div v-if="loading" class="text-center mb-4">
             <v-progress-circular
                 indeterminate
                 color="primary"
             ></v-progress-circular>
         </div>
-        <div v-else>
-            <v-container fluid>
+        <v-layout v-else class="align-start">
+            <ReportsFilters />
+            <v-container class="d-inline-block">
                 <v-row dense>
                     <v-col
                         v-for="item in this.reports"
@@ -110,7 +111,7 @@
                     </v-col>
                 </v-row>
             </v-container>
-        </div>
+        </v-layout>
         <div class="text-center pt-2">
             <v-pagination v-model="page" :length="pageCount"></v-pagination>
         </div>
@@ -119,9 +120,11 @@
 
 <script>
 import { mapActions } from 'vuex'
+import ReportsFilters from '@/views/Reports/ReportsFilters'
 
 export default {
     name: 'ReportsIndex',
+    components: { ReportsFilters },
     computed: {
         reports() {
             return this.$store.state.reports.reports.data
@@ -134,6 +137,7 @@ export default {
         show: [],
         loading: true,
         page: 1,
+        filters: '',
     }),
     methods: {
         ...mapActions(['GetReports', 'AddFavorite', 'DeleteFavorite']),
@@ -175,13 +179,21 @@ export default {
     watch: {
         page(newValue) {
             this.loading = true
-            this.GetReports(newValue).then(() => {
+            this.GetReports({ page: newValue, filters: this.filters }).then(
+                () => {
+                    this.loading = false
+                }
+            )
+        },
+        filters(newValue) {
+            this.loading = true
+            this.GetReports({ page: this.page, filters: newValue }).then(() => {
                 this.loading = false
             })
         },
     },
     created() {
-        this.GetReports(this.page).then(() => {
+        this.GetReports({ page: this.page, filters: this.filters }).then(() => {
             this.loading = false
         })
     },
@@ -199,5 +211,8 @@ export default {
 :deep(.col) {
     max-width: 25%;
     margin-bottom: 1%;
+}
+:deep(.container) {
+    max-width: 75%;
 }
 </style>
