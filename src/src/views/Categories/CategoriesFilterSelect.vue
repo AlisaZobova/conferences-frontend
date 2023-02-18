@@ -59,6 +59,7 @@ export default {
                 this.category = this.categoriesIds
                 this.selected = this.categories
             }
+            this.$emit('updateCategory', this.category)
         },
         updateSelected(value) {
             this.selected = this.categories.filter((category) =>

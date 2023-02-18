@@ -6,9 +6,12 @@
                 color="primary"
             ></v-progress-circular>
         </div>
-        <v-layout v-else class="align-start">
-            <ReportsFilters />
-            <v-container class="d-inline-block">
+        <v-layout v-else>
+            <ReportsFilters
+                @updateFilters="filters = $event"
+                @applyFilters="getFilteredData"
+            />
+            <v-container v-if="responseLength > 0" class="d-inline-block">
                 <v-row dense>
                     <v-col
                         v-for="item in this.reports"
@@ -110,11 +113,22 @@
                         </v-card>
                     </v-col>
                 </v-row>
+                <div class="text-center pt-2">
+                    <v-pagination
+                        v-model="page"
+                        :length="pageCount"
+                    ></v-pagination>
+                </div>
             </v-container>
+            <v-layout class="align-center justify-center">
+                <div
+                    v-if="responseLength === 0"
+                    class="d-inline-block teal--text text-h6"
+                >
+                    Unfortunately, there are no records matching your request.
+                </div>
+            </v-layout>
         </v-layout>
-        <div class="text-center pt-2">
-            <v-pagination v-model="page" :length="pageCount"></v-pagination>
-        </div>
     </div>
 </template>
 
@@ -132,12 +146,15 @@ export default {
         pageCount() {
             return this.$store.state.reports.reports.last_page
         },
+        responseLength() {
+            return this.$store.state.reports.reports.total
+        },
     },
     data: () => ({
         show: [],
         loading: true,
         page: 1,
-        filters: '',
+        filters: {},
     }),
     methods: {
         ...mapActions(['GetReports', 'AddFavorite', 'DeleteFavorite']),
@@ -175,6 +192,14 @@ export default {
                 return 'grey'
             }
         },
+        getFilteredData() {
+            this.loading = true
+            this.GetReports({ page: this.page, filters: this.filters }).then(
+                () => {
+                    this.loading = false
+                }
+            )
+        },
     },
     watch: {
         page(newValue) {
@@ -184,12 +209,6 @@ export default {
                     this.loading = false
                 }
             )
-        },
-        filters(newValue) {
-            this.loading = true
-            this.GetReports({ page: this.page, filters: newValue }).then(() => {
-                this.loading = false
-            })
         },
     },
     created() {
