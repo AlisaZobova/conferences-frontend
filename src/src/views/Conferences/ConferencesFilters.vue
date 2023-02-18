@@ -16,6 +16,7 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
+                        :disabled="$props.disabled"
                         v-model="from"
                         label="From"
                         persistent-hint
@@ -42,6 +43,7 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
+                        :disabled="$props.disabled"
                         class="mt-0"
                         v-model="to"
                         label="To"
@@ -55,10 +57,11 @@
                     v-model="to"
                     :min="from ? from : false"
                     no-title
-                    @input="menu1 = false"
+                    @input="menu2 = false"
                 ></v-date-picker>
             </v-menu>
             <v-slider
+                :disabled="$props.disabled"
                 @change="(value) => (this.reports = value)"
                 class="mt-4"
                 label="Duration"
@@ -67,10 +70,14 @@
                 ticks
                 min="1"
             ></v-slider>
-            <CategoriesFilterSelect @updateCategory="category = $event" />
+            <CategoriesFilterSelect
+                :disabled="$props.disabled"
+                @updateCategory="category = $event"
+            />
         </v-card-text>
         <v-card-actions>
             <v-btn
+                :disabled="$props.disabled"
                 text
                 outlined
                 color="primary"
@@ -87,6 +94,9 @@ import CategoriesFilterSelect from '@/views/Categories/CategoriesFilterSelect'
 export default {
     name: 'ConferencesFilters',
     components: { CategoriesFilterSelect },
+    props: {
+        disabled: Boolean,
+    },
     methods: {
         applyFilters() {
             this.setStrFilters()

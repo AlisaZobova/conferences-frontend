@@ -16,6 +16,7 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
+                        :disabled="$props.disabled"
                         v-model="from"
                         label="From"
                         persistent-hint
@@ -44,6 +45,7 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
+                        :disabled="$props.disabled"
                         class="mt-0"
                         v-model="to"
                         label="To"
@@ -63,6 +65,7 @@
                 ></v-time-picker>
             </v-menu>
             <v-slider
+                :disabled="$props.disabled"
                 @change="(value) => (this.duration = value)"
                 class="mt-4"
                 color="teal"
@@ -75,6 +78,7 @@
                 max="60"
             ></v-slider>
             <CategoriesFilterSelect
+                :disabled="$props.disabled"
                 color="teal"
                 @updateCategory="category = $event"
             />
@@ -121,6 +125,9 @@ export default {
             filters: {},
             strFilters: '',
         }
+    },
+    props: {
+        disabled: Boolean,
     },
     watch: {
         from(newValue) {

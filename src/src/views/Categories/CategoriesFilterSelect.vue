@@ -1,5 +1,6 @@
 <template>
     <v-combobox
+        :disabled="$props.disabled || loading"
         :loading="loading"
         class="pt-0"
         :color="this.$props.color"
@@ -35,6 +36,7 @@ export default {
             type: String,
             default: 'primary',
         },
+        disabled: Boolean,
     },
     data() {
         return {

@@ -2,6 +2,7 @@
     <v-app>
         <v-layout>
             <ConferencesFilters
+                :disabled="loading"
                 v-if="isAuthenticated"
                 @updateFilters="filters = $event"
                 @applyFilters="getFilteredData"

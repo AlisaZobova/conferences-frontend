@@ -1,17 +1,22 @@
 <template>
     <div class="mt-4">
-        <div v-if="loading" class="text-center mb-4">
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            ></v-progress-circular>
-        </div>
-        <v-layout v-else>
+        <v-layout>
             <ReportsFilters
+                :disabled="loading"
                 @updateFilters="filters = $event"
                 @applyFilters="getFilteredData"
             />
-            <v-container v-if="responseLength > 0" class="d-inline-block">
+            <v-layout v-if="loading" class="align-center justify-center">
+                <v-progress-circular
+                    class="d-inline-block"
+                    indeterminate
+                    color="primary"
+                ></v-progress-circular>
+            </v-layout>
+            <v-container
+                v-if="!loading && responseLength > 0"
+                class="d-inline-block"
+            >
                 <v-row dense>
                     <v-col
                         v-for="item in this.reports"
@@ -121,7 +126,7 @@
                 </div>
             </v-container>
             <v-layout
-                v-if="responseLength === 0"
+                v-if="!loading && responseLength === 0"
                 class="align-center justify-center"
             >
                 <div class="d-inline-block teal--text text-h6">
