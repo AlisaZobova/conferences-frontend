@@ -125,6 +125,7 @@ export default {
             } else {
                 this.filters['from'] = this.from
             }
+            this.applyFilters()
         },
         to(newValue) {
             this.to = newValue
@@ -133,6 +134,7 @@ export default {
             } else {
                 this.filters['to'] = this.to
             }
+            this.applyFilters()
         },
         reports(newValue) {
             this.reports = newValue
@@ -141,6 +143,7 @@ export default {
             } else {
                 this.filters['reports'] = newValue
             }
+            this.applyFilters()
         },
         category(newValue) {
             this.category = newValue
@@ -149,6 +152,7 @@ export default {
             } else {
                 this.filters['category'] = this.category.toString()
             }
+            this.applyFilters()
         },
     },
 }

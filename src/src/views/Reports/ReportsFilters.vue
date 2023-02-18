@@ -130,6 +130,7 @@ export default {
             } else {
                 this.filters['from'] = this.from + ':00'
             }
+            this.applyFilters()
         },
         to(newValue) {
             this.to = newValue
@@ -138,6 +139,7 @@ export default {
             } else {
                 this.filters['to'] = this.to + ':00'
             }
+            this.applyFilters()
         },
         duration(newValue) {
             this.duration = newValue
@@ -146,6 +148,7 @@ export default {
             } else {
                 this.filters['duration'] = newValue
             }
+            this.applyFilters()
         },
         category(newValue) {
             this.category = newValue
@@ -154,6 +157,7 @@ export default {
             } else {
                 this.filters['category'] = this.category.toString()
             }
+            this.applyFilters()
         },
     },
 }
