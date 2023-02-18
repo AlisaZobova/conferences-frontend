@@ -6,13 +6,22 @@
                 @updateFilters="filters = $event"
                 @applyFilters="getFilteredData"
             />
-            <v-layout v-if="loading" class="align-center justify-center">
-                <v-progress-circular
-                    class="d-inline-block"
-                    indeterminate
-                    color="primary"
-                ></v-progress-circular>
-            </v-layout>
+            <v-container v-if="loading" class="d-inline-block">
+                <v-row dense>
+                    <v-col
+                        v-for="i in 12"
+                        :key="i"
+                        style="flex-direction: column"
+                        cols="4"
+                    >
+                        <v-skeleton-loader
+                            max-width="344"
+                            class="mx-auto"
+                            type="card"
+                        ></v-skeleton-loader>
+                    </v-col>
+                </v-row>
+            </v-container>
             <v-container
                 v-if="!loading && responseLength > 0"
                 class="d-inline-block"
@@ -238,5 +247,9 @@ export default {
 }
 :deep(.container) {
     max-width: 75%;
+}
+
+.v-application .d-flex {
+    /* display: flex !important; */
 }
 </style>

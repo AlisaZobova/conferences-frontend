@@ -7,18 +7,23 @@
                 @updateFilters="filters = $event"
                 @applyFilters="getFilteredData"
             />
+            <v-container v-if="loading" class="d-inline-block">
+                <v-skeleton-loader type="table-heading"></v-skeleton-loader>
+                <v-skeleton-loader type="table-thead"></v-skeleton-loader>
+                <v-skeleton-loader
+                    type="table-row-divider@15"
+                ></v-skeleton-loader>
+            </v-container>
             <v-container
-                v-if="totalConferences > 0"
+                v-if="!loading && totalConferences > 0"
                 :class="isAuthenticated ? 'with-filters' : ''"
                 :fluid="!isAuthenticated"
             >
                 <v-data-table
                     :headers="headers"
                     :items="conferences"
-                    :options.sync="options"
                     :page="page"
                     :server-items-length="totalConferences"
-                    :loading="loading"
                     :items-per-page="perPage"
                     hide-default-footer
                     :class="
@@ -207,7 +212,7 @@
                 </div>
             </v-container>
             <v-layout
-                v-if="totalConferences === 0"
+                v-if="!loading && totalConferences === 0"
                 class="align-center justify-center"
             >
                 <div class="d-inline-block teal--text text-h6">
@@ -247,7 +252,6 @@ export default {
             dialogDelete: false,
             loading: true,
             page: 1,
-            options: {},
             filters: '',
             headers: [
                 {
@@ -267,12 +271,6 @@ export default {
         }
     },
     watch: {
-        options: {
-            handler() {
-                this.getConferences()
-            },
-            deep: true,
-        },
         dialogDelete(val) {
             val || this.closeDelete()
         },
@@ -280,7 +278,6 @@ export default {
     methods: {
         ...mapActions(['GetConferences', 'DeleteConference', 'DeleteReport']),
         getConferences() {
-            this.loading = true
             this.GetConferences({
                 page: this.page,
                 filters: this.filters,
