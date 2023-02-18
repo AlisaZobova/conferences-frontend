@@ -206,8 +206,8 @@ export default {
     created() {
         this.GetUser()
             .then(() => {
-              this.phone = this.user.phone
-              this.getCountries()
+                this.phone = this.user.phone
+                this.getCountries()
             })
             .then(() => (this.loading = false))
     },
