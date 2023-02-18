@@ -2,10 +2,15 @@
     <v-app>
         <v-layout>
             <ConferencesFilters
+                v-if="isAuthenticated"
                 @updateFilters="filters = $event"
                 @applyFilters="getFilteredData"
             />
-            <v-container v-if="totalConferences > 0">
+            <v-container
+                v-if="totalConferences > 0"
+                :class="isAuthenticated ? 'with-filters' : ''"
+                :fluid="!isAuthenticated"
+            >
                 <v-data-table
                     :headers="headers"
                     :items="conferences"
@@ -15,7 +20,11 @@
                     :loading="loading"
                     :items-per-page="perPage"
                     hide-default-footer
-                    class="d-inline-block elevation-1"
+                    :class="
+                        isAuthenticated
+                            ? 'd-inline-block elevation-1'
+                            : 'elevation-1'
+                    "
                 >
                     <template v-slot:top>
                         <v-toolbar flat>
@@ -326,7 +335,7 @@ export default {
 </script>
 
 <style scoped>
-:deep(.container) {
+.container.with-filters {
     max-width: 75%;
 }
 </style>
