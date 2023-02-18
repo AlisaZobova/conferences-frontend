@@ -1,6 +1,6 @@
 <template>
     <v-card class="filters d-inline-block mt-3">
-        <v-card-subtitle class="text-center text-h6 teal--text"
+        <v-card-subtitle class="text-center text-h6 primary--text"
             >Choose filters <v-icon>mdi-filter</v-icon></v-card-subtitle
         >
         <v-card-text class="pb-0">
@@ -19,19 +19,17 @@
                         v-model="from"
                         label="From"
                         persistent-hint
-                        prepend-icon="mdi-timer"
+                        prepend-icon="mdi-calendar"
                         v-bind="attrs"
                         v-on="on"
                     ></v-text-field>
                 </template>
-                <v-time-picker
+                <v-date-picker
                     v-model="from"
-                    min="08:00"
-                    :max="to ? to : '19:59'"
-                    format="24hr"
-                    scrollable
+                    :max="to ? to : false"
+                    no-title
                     @input="menu1 = false"
-                ></v-time-picker>
+                ></v-date-picker>
             </v-menu>
             <v-menu
                 ref="menu2"
@@ -48,39 +46,36 @@
                         v-model="to"
                         label="To"
                         persistent-hint
-                        prepend-icon="mdi-timer"
+                        prepend-icon="mdi-calendar"
                         v-bind="attrs"
                         v-on="on"
                     ></v-text-field>
                 </template>
-                <v-time-picker
+                <v-date-picker
                     v-model="to"
-                    format="24hr"
-                    scrollable
-                    :min="from ? from : '08:01'"
-                    max="20:00"
-                    @input="menu2 = false"
-                ></v-time-picker>
+                    :min="from ? from : false"
+                    no-title
+                    @input="menu1 = false"
+                ></v-date-picker>
             </v-menu>
             <v-slider
-                @change="(value) => (this.duration = value)"
+                @change="(value) => (this.reports = value)"
                 class="mt-4"
-                color="teal"
-                track-color="teal"
                 label="Duration"
                 step="1"
                 thumb-label
                 ticks
                 min="1"
-                max="60"
             ></v-slider>
-            <CategoriesFilterSelect
-                color="teal"
-                @updateCategory="category = $event"
-            />
+            <CategoriesFilterSelect @updateCategory="category = $event" />
         </v-card-text>
         <v-card-actions>
-            <v-btn text outlined color="teal" @click="applyFilters"
+            <v-btn
+                text
+                outlined
+                color="primary"
+                class="apply"
+                @click="applyFilters"
                 >Apply</v-btn
             >
         </v-card-actions>
@@ -90,7 +85,7 @@
 <script>
 import CategoriesFilterSelect from '@/views/Categories/CategoriesFilterSelect'
 export default {
-    name: 'ReportsFilters',
+    name: 'ConferencesFilters',
     components: { CategoriesFilterSelect },
     methods: {
         applyFilters() {
@@ -116,7 +111,7 @@ export default {
             menu2: false,
             from: '',
             to: '',
-            duration: '',
+            reports: '',
             category: [],
             filters: {},
             strFilters: '',
@@ -128,7 +123,7 @@ export default {
             if (!newValue) {
                 delete this.filters['from']
             } else {
-                this.filters['from'] = this.from + ':00'
+                this.filters['from'] = this.from
             }
         },
         to(newValue) {
@@ -136,15 +131,15 @@ export default {
             if (!newValue) {
                 delete this.filters['to']
             } else {
-                this.filters['to'] = this.to + ':00'
+                this.filters['to'] = this.to
             }
         },
-        duration(newValue) {
-            this.duration = newValue
+        reports(newValue) {
+            this.reports = newValue
             if (!newValue) {
-                delete this.filters['duration']
+                delete this.filters['reports']
             } else {
-                this.filters['duration'] = newValue
+                this.filters['reports'] = newValue
             }
         },
         category(newValue) {
@@ -163,24 +158,10 @@ export default {
 :deep(.v-slider) {
     margin-right: 0;
 }
-:deep(.v-btn) {
+.v-btn.apply {
     width: 100%;
 }
 .v-card.filters {
     width: 25%;
-}
-
-:deep(.v-picker__title) {
-    height: 60px;
-}
-
-:deep(.v-picker__title__btn, .v-time-picker-title__time) {
-    height: 28px;
-    font-size: 28px;
-}
-
-:deep(.v-time-picker-title__time span) {
-    height: 28px;
-    font-size: 28px;
 }
 </style>

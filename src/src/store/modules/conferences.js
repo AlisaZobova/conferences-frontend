@@ -6,8 +6,8 @@ const state = {
 }
 
 const actions = {
-    async GetConferences({ commit }, page) {
-        let response = await axios.get('conferences?page=' + page)
+    async GetConferences({ commit }, {page, filters}) {
+        let response = await axios.get('conferences?page=' + page + filters)
         commit('setConferences', response.data)
         commit('setConference', null)
     },

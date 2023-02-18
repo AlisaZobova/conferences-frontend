@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mt-4">
         <div v-if="loading" class="text-center mb-4">
             <v-progress-circular
                 indeterminate
@@ -120,11 +120,11 @@
                     ></v-pagination>
                 </div>
             </v-container>
-            <v-layout class="align-center justify-center">
-                <div
-                    v-if="responseLength === 0"
-                    class="d-inline-block teal--text text-h6"
-                >
+            <v-layout
+                v-if="responseLength === 0"
+                class="align-center justify-center"
+            >
+                <div class="d-inline-block teal--text text-h6">
                     Unfortunately, there are no records matching your request.
                 </div>
             </v-layout>
@@ -154,7 +154,7 @@ export default {
         show: [],
         loading: true,
         page: 1,
-        filters: {},
+        filters: '',
     }),
     methods: {
         ...mapActions(['GetReports', 'AddFavorite', 'DeleteFavorite']),

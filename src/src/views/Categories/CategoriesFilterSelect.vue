@@ -2,7 +2,7 @@
     <v-combobox
         :loading="loading"
         class="pt-0"
-        color="teal"
+        :color="this.$props.color"
         :items="items"
         item-text="name"
         v-model="selected"
@@ -30,6 +30,12 @@ import { mapActions } from 'vuex'
 
 export default {
     name: 'CategoriesFilterSelect',
+    props: {
+        color: {
+            type: String,
+            default: 'primary',
+        },
+    },
     data() {
         return {
             loading: true,
