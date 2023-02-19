@@ -78,6 +78,7 @@
                 max="60"
             ></v-slider>
             <CategoriesFilterSelect
+                :clear="category.length === 0"
                 :disabled="$props.disabled"
                 color="teal"
                 @updateCategory="category = $event"
@@ -88,6 +89,16 @@
         <!--                >Apply</v-btn-->
         <!--            >-->
         <!--        </v-card-actions>-->
+        <v-card-actions>
+            <v-btn
+                text
+                outlined
+                color="teal"
+                :disabled="$props.disabled"
+                @click="resetFilters"
+                >Reset filters</v-btn
+            >
+        </v-card-actions>
     </v-card>
 </template>
 
@@ -98,6 +109,16 @@ export default {
     components: { CategoriesFilterSelect },
     methods: {
         applyFilters() {
+            this.setStrFilters()
+            this.$emit('updateFilters', this.strFilters)
+            this.$emit('applyFilters')
+        },
+        resetFilters() {
+            this.filters = {}
+            this.from = ''
+            this.to = ''
+            this.reports = ''
+            this.category = []
             this.setStrFilters()
             this.$emit('updateFilters', this.strFilters)
             this.$emit('applyFilters')

@@ -37,6 +37,7 @@ export default {
             default: 'primary',
         },
         disabled: Boolean,
+        clear: Boolean,
     },
     data() {
         return {
@@ -74,6 +75,14 @@ export default {
                 value.includes(category.id)
             )
             this.$emit('updateCategory', this.category)
+        },
+    },
+    watch: {
+        clear(newValue) {
+            if (newValue) {
+                this.category = []
+                this.selected = []
+            }
         },
     },
     created() {

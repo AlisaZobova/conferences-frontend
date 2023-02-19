@@ -71,6 +71,7 @@
                 min="1"
             ></v-slider>
             <CategoriesFilterSelect
+                :clear="category.length === 0"
                 :disabled="$props.disabled"
                 @updateCategory="category = $event"
             />
@@ -86,6 +87,17 @@
         <!--                >Apply</v-btn-->
         <!--            >-->
         <!--        </v-card-actions>-->
+        <v-card-actions>
+            <v-btn
+                :disabled="$props.disabled"
+                text
+                outlined
+                color="primary"
+                class="reset"
+                @click="resetFilters"
+                >Reset filters</v-btn
+            >
+        </v-card-actions>
     </v-card>
 </template>
 
@@ -99,6 +111,16 @@ export default {
     },
     methods: {
         applyFilters() {
+            this.setStrFilters()
+            this.$emit('updateFilters', this.strFilters)
+            this.$emit('applyFilters')
+        },
+        resetFilters() {
+            this.filters = {}
+            this.from = ''
+            this.to = ''
+            this.reports = ''
+            this.category = []
             this.setStrFilters()
             this.$emit('updateFilters', this.strFilters)
             this.$emit('applyFilters')
@@ -172,7 +194,11 @@ export default {
 :deep(.v-slider) {
     margin-right: 0;
 }
-.v-btn.apply {
+/*.v-btn.apply {*/
+/*    width: 100%;*/
+/*}*/
+
+.v-btn.reset {
     width: 100%;
 }
 .v-card.filters {
