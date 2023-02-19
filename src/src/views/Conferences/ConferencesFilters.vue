@@ -1,7 +1,7 @@
 <template>
     <v-card class="filters d-inline-block mt-3">
         <v-card-subtitle class="text-center text-h6 primary--text"
-            >Choose filters <v-icon>mdi-filter</v-icon></v-card-subtitle
+            >Choose filters</v-card-subtitle
         >
         <v-card-text class="pb-0">
             <v-divider></v-divider>

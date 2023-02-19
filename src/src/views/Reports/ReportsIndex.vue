@@ -2,11 +2,20 @@
     <div class="mt-4">
         <v-layout>
             <ReportsFilters
+                v-if="openFilters"
                 :disabled="loading"
                 @updateFilters="filters = $event"
                 @applyFilters="getFilteredData"
             />
-            <v-container v-if="loading" class="d-inline-block">
+            <v-container
+                v-if="loading"
+                :class="openFilters ? 'with-filters d-inline-block' : ''"
+                :fluid="!openFilters"
+            >
+                <v-skeleton-loader
+                    type="button"
+                    class="mb-2"
+                ></v-skeleton-loader>
                 <v-row dense>
                     <v-col
                         v-for="i in 12"
@@ -24,8 +33,20 @@
             </v-container>
             <v-container
                 v-if="!loading && responseLength > 0"
-                class="d-inline-block"
+                :class="openFilters ? 'with-filters d-inline-block' : ''"
+                :fluid="!openFilters"
             >
+                <v-card class="text-end mb-2">
+                    <v-btn
+                        class="filter-btn"
+                        text
+                        color="grey"
+                        @click="openFilters = !openFilters"
+                    >
+                        <v-icon color="teal"> mdi-filter </v-icon>
+                        Filters
+                    </v-btn>
+                </v-card>
                 <v-row dense>
                     <v-col
                         v-for="item in this.reports"
@@ -169,6 +190,7 @@ export default {
         loading: true,
         page: 1,
         filters: '',
+        openFilters: false,
     }),
     methods: {
         ...mapActions(['GetReports', 'AddFavorite', 'DeleteFavorite']),
@@ -245,11 +267,14 @@ export default {
     max-width: 25%;
     margin-bottom: 1%;
 }
-:deep(.container) {
+.container.with-filters {
     max-width: 75%;
 }
+.filter-btn {
+    width: 100%;
+}
 
-.v-application .d-flex {
-    /* display: flex !important; */
+:deep(.v-skeleton-loader__button) {
+    width: 100%;
 }
 </style>

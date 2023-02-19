@@ -3,11 +3,19 @@
         <v-layout>
             <ConferencesFilters
                 :disabled="loading"
-                v-if="isAuthenticated"
+                v-if="isAuthenticated && openFilters"
                 @updateFilters="filters = $event"
                 @applyFilters="getFilteredData"
             />
-            <v-container v-if="loading" class="skeleton d-inline-block">
+            <v-container
+                v-if="loading"
+                :class="
+                    isAuthenticated && openFilters
+                        ? 'with-filters d-inline-block'
+                        : ''
+                "
+                :fluid="!isAuthenticated || !openFilters"
+            >
                 <v-skeleton-loader type="table-heading"></v-skeleton-loader>
                 <v-skeleton-loader type="table-thead"></v-skeleton-loader>
                 <v-skeleton-loader
@@ -16,8 +24,8 @@
             </v-container>
             <v-container
                 v-if="!loading && totalConferences > 0"
-                :class="isAuthenticated ? 'with-filters' : ''"
-                :fluid="!isAuthenticated"
+                :class="isAuthenticated && openFilters ? 'with-filters' : ''"
+                :fluid="!isAuthenticated || !openFilters"
             >
                 <v-data-table
                     :headers="headers"
@@ -27,7 +35,7 @@
                     :items-per-page="perPage"
                     hide-default-footer
                     :class="
-                        isAuthenticated
+                        isAuthenticated && openFilters
                             ? 'd-inline-block elevation-1'
                             : 'elevation-1'
                     "
@@ -37,49 +45,66 @@
                             <v-toolbar-title>Conferences</v-toolbar-title>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
-                            <v-dialog
-                                v-if="
-                                    isAuthenticated && (isAdmin || isAnnouncer)
-                                "
-                                max-width="500px"
-                            >
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn
-                                        color="primary"
-                                        dark
-                                        class="mb-2"
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        @click="createItem"
-                                    >
-                                        New Conference
-                                    </v-btn>
-                                </template>
-                            </v-dialog>
-                            <v-dialog v-model="dialogDelete" max-width="500px">
-                                <v-card>
-                                    <v-card-title class="text-h5"
-                                        >Are you sure you want to delete this
-                                        item?</v-card-title
-                                    >
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
+                            <v-layout class="justify-end">
+                                <v-btn
+                                    class="mr-2"
+                                    text
+                                    color="grey"
+                                    @click="openFilters = !openFilters"
+                                >
+                                    <v-icon color="primary">
+                                        mdi-filter
+                                    </v-icon>
+                                    Filters
+                                </v-btn>
+                                <v-dialog
+                                    v-if="
+                                        isAuthenticated &&
+                                        (isAdmin || isAnnouncer)
+                                    "
+                                    max-width="500px"
+                                >
+                                    <template v-slot:activator="{ on, attrs }">
                                         <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="closeDelete"
-                                            >Cancel</v-btn
+                                            color="primary"
+                                            dark
+                                            class="mb-2"
+                                            v-bind="attrs"
+                                            v-on="on"
+                                            @click="createItem"
                                         >
-                                        <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="deleteItemConfirm"
-                                            >OK</v-btn
+                                            New Conference
+                                        </v-btn>
+                                    </template>
+                                </v-dialog>
+                                <v-dialog
+                                    v-model="dialogDelete"
+                                    max-width="500px"
+                                >
+                                    <v-card>
+                                        <v-card-title class="text-h5"
+                                            >Are you sure you want to delete
+                                            this item?</v-card-title
                                         >
-                                        <v-spacer></v-spacer>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn
+                                                color="blue darken-1"
+                                                text
+                                                @click="closeDelete"
+                                                >Cancel</v-btn
+                                            >
+                                            <v-btn
+                                                color="blue darken-1"
+                                                text
+                                                @click="deleteItemConfirm"
+                                                >OK</v-btn
+                                            >
+                                            <v-spacer></v-spacer>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                            </v-layout>
                         </v-toolbar>
                     </template>
                     <template v-slot:[`item.actions`]="{ item }">
@@ -253,6 +278,7 @@ export default {
             loading: true,
             page: 1,
             filters: '',
+            openFilters: false,
             headers: [
                 {
                     text: 'Title',
@@ -333,7 +359,7 @@ export default {
 </script>
 
 <style scoped>
-.container.with-filters .container.skeleton {
+.container.with-filters {
     max-width: 75%;
 }
 </style>
