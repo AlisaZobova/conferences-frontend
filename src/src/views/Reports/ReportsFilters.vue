@@ -83,11 +83,11 @@
                 @updateCategory="category = $event"
             />
         </v-card-text>
-        <v-card-actions>
-            <v-btn text outlined color="teal" @click="applyFilters"
-                >Apply</v-btn
-            >
-        </v-card-actions>
+        <!--        <v-card-actions>-->
+        <!--            <v-btn text outlined color="teal" :disabled="$props.disabled" @click="applyFilters"-->
+        <!--                >Apply</v-btn-->
+        <!--            >-->
+        <!--        </v-card-actions>-->
     </v-card>
 </template>
 

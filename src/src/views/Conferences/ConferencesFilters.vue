@@ -27,7 +27,7 @@
                 </template>
                 <v-date-picker
                     v-model="from"
-                    :max="to ? to : false"
+                    :max="to ? to : ''"
                     no-title
                     @input="menu1 = false"
                 ></v-date-picker>
@@ -55,7 +55,7 @@
                 </template>
                 <v-date-picker
                     v-model="to"
-                    :min="from ? from : false"
+                    :min="from ? from : ''"
                     no-title
                     @input="menu2 = false"
                 ></v-date-picker>
@@ -75,17 +75,17 @@
                 @updateCategory="category = $event"
             />
         </v-card-text>
-        <v-card-actions>
-            <v-btn
-                :disabled="$props.disabled"
-                text
-                outlined
-                color="primary"
-                class="apply"
-                @click="applyFilters"
-                >Apply</v-btn
-            >
-        </v-card-actions>
+        <!--        <v-card-actions>-->
+        <!--            <v-btn-->
+        <!--                :disabled="$props.disabled"-->
+        <!--                text-->
+        <!--                outlined-->
+        <!--                color="primary"-->
+        <!--                class="apply"-->
+        <!--                @click="applyFilters"-->
+        <!--                >Apply</v-btn-->
+        <!--            >-->
+        <!--        </v-card-actions>-->
     </v-card>
 </template>
 

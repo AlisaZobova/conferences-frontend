@@ -7,7 +7,7 @@
                 @updateFilters="filters = $event"
                 @applyFilters="getFilteredData"
             />
-            <v-container v-if="loading" class="d-inline-block">
+            <v-container v-if="loading" class="skeleton d-inline-block">
                 <v-skeleton-loader type="table-heading"></v-skeleton-loader>
                 <v-skeleton-loader type="table-thead"></v-skeleton-loader>
                 <v-skeleton-loader
@@ -333,7 +333,7 @@ export default {
 </script>
 
 <style scoped>
-.container.with-filters {
+.container.with-filters .container.skeleton {
     max-width: 75%;
 }
 </style>

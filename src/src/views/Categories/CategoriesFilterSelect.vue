@@ -73,6 +73,7 @@ export default {
             this.selected = this.categories.filter((category) =>
                 value.includes(category.id)
             )
+            this.$emit('updateCategory', this.category)
         },
     },
     created() {
