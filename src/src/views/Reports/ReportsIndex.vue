@@ -24,7 +24,6 @@
                         cols="4"
                     >
                         <v-skeleton-loader
-                            max-width="344"
                             class="mx-auto"
                             type="card"
                         ></v-skeleton-loader>
@@ -56,7 +55,6 @@
                         cols="4"
                     >
                         <v-card
-                            max-width="344"
                             class="flex-grow-1"
                             :to="{
                                 name: 'ShowReport',
