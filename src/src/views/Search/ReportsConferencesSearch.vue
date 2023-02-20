@@ -22,11 +22,12 @@
                 </v-text-field>
             </template>
             <v-layout class="search-layout white">
-                <v-skeleton-loader
-                    width="60%"
-                    v-if="loading"
-                    type="list-item@10"
-                ></v-skeleton-loader>
+                <v-layout align-center justify-center v-if="loading">
+                    <v-progress-circular
+                        indeterminate
+                        color="primary"
+                    ></v-progress-circular>
+                </v-layout>
                 <v-layout
                     align-center
                     justify-center
@@ -235,7 +236,4 @@ export default {
     width: 60%;
 }
 
-:deep(.v-skeleton-loader__list-item) {
-    height: 50px;
-}
 </style>
