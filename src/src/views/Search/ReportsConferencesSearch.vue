@@ -1,6 +1,6 @@
 <template>
     <div class="text-center">
-        <v-menu offset-y :close-on-content-click="false">
+        <v-menu offset-y :close-on-content-click="false" v-model="menu">
             <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                     :loading="loading"
@@ -10,6 +10,7 @@
                     v-bind="attrs"
                     v-on="on"
                     @input="
+                        menu = true
                         query ? (searchInput = true) : (searchInput = false)
                     "
                     prepend-inner-icon="mdi-magnify"
@@ -82,6 +83,7 @@
                                 name: 'ShowConference',
                                 params: { id: item.id },
                             }"
+                            target="_blank"
                         >
                             <v-list-item-title>{{
                                 item.title
@@ -126,6 +128,7 @@
                                 name: 'ShowReport',
                                 params: { id: item.id },
                             }"
+                            target="_blank"
                         >
                             <v-list-item-title>{{
                                 item.topic
@@ -195,6 +198,7 @@ export default {
         reportsQuery: '',
         searchType: null,
         searchInput: false,
+        menu: false,
     }),
     watch: {
         query(newValue) {
