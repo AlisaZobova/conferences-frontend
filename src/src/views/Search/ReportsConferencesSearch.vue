@@ -78,6 +78,10 @@
                         <v-list-item
                             v-for="(item, index) in conferences"
                             :key="index"
+                            :to="{
+                                name: 'ShowConference',
+                                params: { id: item.id },
+                            }"
                         >
                             <v-list-item-title>{{
                                 item.title
@@ -118,6 +122,10 @@
                         <v-list-item
                             v-for="(item, index) in reports"
                             :key="index"
+                            :to="{
+                                name: 'ShowReport',
+                                params: { id: item.id },
+                            }"
                         >
                             <v-list-item-title>{{
                                 item.topic
