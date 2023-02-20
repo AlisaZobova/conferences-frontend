@@ -64,7 +64,7 @@
                     @input="menu2 = false"
                 ></v-time-picker>
             </v-menu>
-            <v-slider
+            <v-range-slider
                 :disabled="$props.disabled"
                 @change="(value) => (this.duration = value)"
                 class="mt-4"
@@ -76,7 +76,7 @@
                 ticks
                 min="1"
                 max="60"
-            ></v-slider>
+            ></v-range-slider>
             <CategoriesFilterSelect
                 :clear="category.length === 0"
                 :disabled="$props.disabled"
@@ -174,7 +174,7 @@ export default {
             if (!newValue) {
                 delete this.filters['duration']
             } else {
-                this.filters['duration'] = newValue
+                this.filters['duration'] = `${newValue[0]}-${newValue[1]}`
             }
             this.applyFilters()
         },

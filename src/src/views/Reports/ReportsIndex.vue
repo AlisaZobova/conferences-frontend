@@ -152,6 +152,7 @@
                     <v-pagination
                         v-model="page"
                         :length="pageCount"
+                        color="teal"
                     ></v-pagination>
                 </div>
             </v-container>

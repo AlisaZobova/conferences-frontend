@@ -60,16 +60,16 @@
                     @input="menu2 = false"
                 ></v-date-picker>
             </v-menu>
-            <v-slider
+            <v-range-slider
                 :disabled="$props.disabled"
                 @change="(value) => (this.reports = value)"
                 class="mt-4"
-                label="Duration"
+                label="Reports"
                 step="1"
                 thumb-label
                 ticks
                 min="1"
-            ></v-slider>
+            ></v-range-slider>
             <CategoriesFilterSelect
                 :clear="category.length === 0"
                 :disabled="$props.disabled"
@@ -173,7 +173,7 @@ export default {
             if (!newValue) {
                 delete this.filters['reports']
             } else {
-                this.filters['reports'] = newValue
+                this.filters['reports'] = `${newValue[0]}-${newValue[1]}`
             }
             this.applyFilters()
         },
