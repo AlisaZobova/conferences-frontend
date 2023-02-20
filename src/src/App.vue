@@ -18,6 +18,10 @@
             </v-btn>
 
             <v-layout class="d-flex justify-end align-center">
+                <ReportsConferencesSearch
+                    v-if="isLoggedIn"
+                    class="mr-2"
+                ></ReportsConferencesSearch>
                 <span>
                     <v-badge
                         class="mr-5"
@@ -77,9 +81,11 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
+import ReportsConferencesSearch from '@/views/Search/ReportsConferencesSearch'
 
 export default {
     name: 'App',
+    components: { ReportsConferencesSearch },
     computed: {
         isLoggedIn() {
             return this.$store.getters.isAuthenticated

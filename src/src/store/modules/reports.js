@@ -2,6 +2,7 @@ import axios from 'axios'
 import { saveAs } from 'file-saver'
 
 const state = {
+    searchedReports: [],
     reports: [],
     report: null,
 }
@@ -10,6 +11,11 @@ const actions = {
     async GetReports({ commit }, {page, filters}) {
         let response = await axios.get('reports?page=' + page + filters)
         commit('setReports', response.data)
+        commit('setReport', null)
+    },
+    async SearchReports({ commit }, query) {
+        let response = await axios.get('reports/search' + query)
+        commit('setSearchReports', response.data)
         commit('setReport', null)
     },
     async GetReport({ commit }, reportId) {
@@ -53,6 +59,9 @@ const actions = {
 const mutations = {
     setReports(state, reports) {
         state.reports = reports
+    },
+    setSearchReports(state, reports) {
+        state.searchedReports = reports
     },
     setReport(state, report) {
         state.report = report

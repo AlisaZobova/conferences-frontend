@@ -1,0 +1,229 @@
+<template>
+    <div class="text-center">
+        <v-menu offset-y :close-on-content-click="false">
+            <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    :loading="loading"
+                    :disabled="loading"
+                    class="search-input"
+                    v-model="query"
+                    v-bind="attrs"
+                    v-on="on"
+                    @input="
+                        query ? (searchInput = true) : (searchInput = false)
+                    "
+                    prepend-inner-icon="mdi-magnify"
+                    @change="
+                        search()
+                        searchInput = false
+                    "
+                >
+                </v-text-field>
+            </template>
+            <v-layout class="search-layout white">
+                <v-skeleton-loader
+                    width="60%"
+                    v-if="loading"
+                    type="list-item@10"
+                ></v-skeleton-loader>
+                <v-layout
+                    align-center
+                    justify-center
+                    v-if="
+                        !loading &&
+                        query &&
+                        ((reports.length === 0 && conferences.length === 0) ||
+                            (reports.length === 0 &&
+                                searchType === 'reports') ||
+                            (conferences.length === 0 &&
+                                searchType === 'conferences'))
+                    "
+                >
+                    <p>No records</p>
+                </v-layout>
+                <div
+                    class="d-inline-block search-result"
+                    v-if="
+                        !loading &&
+                        (((reports.length > 0 || conferences.length > 0) &&
+                            !searchType) ||
+                            (reports.length > 0 && searchType === 'reports') ||
+                            (conferences.length > 0 &&
+                                searchType === 'conferences'))
+                    "
+                >
+                    <div
+                        v-if="
+                            !loading &&
+                            (searchType === 'conferences' || !searchType) &&
+                            conferences.length > 0
+                        "
+                    >
+                        <v-list-item>
+                            <v-list-item-title
+                                class="primary--text font-weight-medium"
+                                >Conferences</v-list-item-title
+                            >
+                        </v-list-item>
+                        <v-divider></v-divider>
+                    </div>
+                    <v-list
+                        :max-height="searchType === 'conferences' ? 500 : 250"
+                        class="overflow-y-auto"
+                        v-if="
+                            !loading &&
+                            (searchType === 'conferences' || !searchType)
+                        "
+                    >
+                        <v-list-item
+                            v-for="(item, index) in conferences"
+                            :key="index"
+                        >
+                            <v-list-item-title>{{
+                                item.title
+                            }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                    <v-divider
+                        v-if="
+                            !loading &&
+                            !searchType &&
+                            conferences.length > 0 &&
+                            reports.length > 0
+                        "
+                    ></v-divider>
+                    <div
+                        v-if="
+                            !loading &&
+                            (searchType === 'reports' || !searchType) &&
+                            reports.length > 0
+                        "
+                    >
+                        <v-list-item>
+                            <v-list-item-title
+                                class="primary--text font-weight-medium"
+                                >Reports</v-list-item-title
+                            >
+                        </v-list-item>
+                        <v-divider></v-divider>
+                    </div>
+                    <v-list
+                        :max-height="searchType === 'reports' ? 500 : 250"
+                        class="overflow-y-auto"
+                        v-if="
+                            !loading &&
+                            (searchType === 'reports' || !searchType)
+                        "
+                    >
+                        <v-list-item
+                            v-for="(item, index) in reports"
+                            :key="index"
+                        >
+                            <v-list-item-title>{{
+                                item.topic
+                            }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                    <v-divider
+                        v-if="!loading && reports.length > 0"
+                        class="mb-4"
+                    ></v-divider>
+                </div>
+
+                <v-divider class="mx-4" inset vertical></v-divider>
+                <v-radio-group
+                    v-model="searchType"
+                    label="Search by:"
+                    :disabled="loading || searchInput"
+                    class="radio-type-select d-inline-block"
+                    @change="search"
+                >
+                    <v-radio label="Conferences" value="conferences"></v-radio>
+                    <v-radio label="Reports" value="reports"></v-radio>
+                    <v-radio label="All" value=""></v-radio>
+                </v-radio-group>
+            </v-layout>
+        </v-menu>
+    </div>
+</template>
+
+<script>
+import { mapActions } from 'vuex'
+
+export default {
+    name: 'ReportsConferencesSearch',
+    computed: {
+        reports() {
+            return this.$store.state.reports.searchedReports
+        },
+        conferences() {
+            return this.$store.state.conferences.searchedConferences
+        },
+    },
+    methods: {
+        ...mapActions(['SearchConferences', 'SearchReports']),
+        search() {
+            this.loading = true
+            if (this.searchType === 'conferences') {
+                this.SearchConferences(this.conferencesQuery).then(
+                    () => (this.loading = false)
+                )
+            }
+            if (this.searchType === 'reports') {
+                this.SearchReports(this.reportsQuery).then(
+                    () => (this.loading = false)
+                )
+            } else {
+                this.SearchConferences(this.conferencesQuery)
+                    .then(() => this.SearchReports(this.reportsQuery))
+                    .then(() => (this.loading = false))
+            }
+        },
+    },
+    data: () => ({
+        loading: true,
+        query: '',
+        conferencesQuery: '',
+        reportsQuery: '',
+        searchType: null,
+        searchInput: false,
+    }),
+    watch: {
+        query(newValue) {
+            this.query = newValue
+            if (this.searchType === 'conferences') {
+                this.conferencesQuery = `?title=${newValue}`
+            }
+            if (this.searchType === 'reports') {
+                this.reportsQuery = `?topic=${newValue}`
+            } else {
+                this.conferencesQuery = `?title=${newValue}`
+                this.reportsQuery = `?topic=${newValue}`
+            }
+        },
+    },
+    created() {
+        this.SearchConferences(this.conferencesQuery)
+            .then(() => this.SearchReports(this.reportsQuery))
+            .then(() => (this.loading = false))
+    },
+}
+</script>
+
+<style scoped>
+.radio-type-select {
+    width: 40%;
+}
+
+.search-input {
+    min-width: 400px;
+}
+
+.search-result {
+    width: 60%;
+}
+
+:deep(.v-skeleton-loader__list-item) {
+    height: 50px;
+}
+</style>

@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const state = {
     conferences: [],
+    searchedConferences: [],
     conference: null,
 }
 
@@ -9,6 +10,11 @@ const actions = {
     async GetConferences({ commit }, {page, filters}) {
         let response = await axios.get('conferences?page=' + page + filters)
         commit('setConferences', response.data)
+        commit('setConference', null)
+    },
+    async SearchConferences({ commit }, query) {
+        let response = await axios.get('conferences/search' + query)
+        commit('setSearchedConferences', response.data)
         commit('setConference', null)
     },
     async GetConference({ commit }, conferenceId) {
@@ -37,6 +43,9 @@ const actions = {
 const mutations = {
     setConferences(state, conferences) {
         state.conferences = conferences
+    },
+    setSearchedConferences(state, conferences) {
+        state.searchedConferences = conferences
     },
     setConference(state, conference) {
         state.conference = conference
