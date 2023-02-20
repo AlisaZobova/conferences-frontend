@@ -16,10 +16,35 @@
                 "
                 :fluid="!isAuthenticated || !openFilters"
             >
-                <v-skeleton-loader type="table-heading"></v-skeleton-loader>
-                <v-skeleton-loader type="table-thead"></v-skeleton-loader>
+                <v-layout align-center class="table-heading-skeleton">
+                    <v-skeleton-loader
+                        type="text"
+                        width="112"
+                        class="d-inline-block"
+                    ></v-skeleton-loader>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+                    <v-spacer></v-spacer>
+                    <v-skeleton-loader
+                        type="button"
+                        width="117"
+                        class="full-btn d-inline-block mr-2"
+                    ></v-skeleton-loader>
+                    <v-skeleton-loader
+                        type="button"
+                        width="172"
+                        class="full-btn d-inline-block"
+                    ></v-skeleton-loader>
+                </v-layout>
                 <v-skeleton-loader
-                    type="table-row-divider@15"
+                    class="table-thead-skeleton"
+                    type="heading@3"
+                ></v-skeleton-loader>
+                <v-skeleton-loader type="divider"></v-skeleton-loader>
+                <v-skeleton-loader
+                    v-for="n in 15"
+                    :key="n"
+                    type="table-cell@2, button@4, divider"
+                    class="table-skeleton"
                 ></v-skeleton-loader>
             </v-container>
             <v-container
@@ -361,5 +386,38 @@ export default {
 <style scoped>
 .container.with-filters {
     max-width: 75%;
+}
+
+:deep(.full-btn .v-skeleton-loader__button) {
+    width: 100%;
+}
+
+:deep(.table-skeleton .v-skeleton-loader__button) {
+    width: 7%;
+    display: inline-block;
+    margin-right: 4px;
+    margin-top: 6px;
+    height: 30px;
+}
+
+:deep(.v-skeleton-loader__heading) {
+    width: 12%;
+    display: inline-block;
+    margin-right: 13.3%;
+}
+:deep(.v-skeleton-loader__table-cell) {
+    width: 12%;
+    display: inline-block;
+    margin-right: 13.3%;
+    margin-top: 10px;
+    height: 20px;
+}
+
+.table-heading-skeleton {
+    height: 64px;
+}
+.table-thead-skeleton {
+    padding-top: 10px;
+    height: 48px;
 }
 </style>
