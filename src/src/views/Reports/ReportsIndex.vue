@@ -13,6 +13,7 @@
                 :fluid="!openFilters"
             >
                 <v-skeleton-loader
+                    v-if="isAuthenticated"
                     type="button"
                     class="mb-2"
                 ></v-skeleton-loader>
@@ -37,6 +38,7 @@
             >
                 <v-card class="text-end mb-2">
                     <v-btn
+                        v-if="isAuthenticated"
                         class="filter-btn"
                         text
                         color="grey"
@@ -182,6 +184,9 @@ export default {
         },
         responseLength() {
             return this.$store.state.reports.reports.total
+        },
+        isAuthenticated() {
+            return this.$store.getters.isAuthenticated
         },
     },
     data: () => ({

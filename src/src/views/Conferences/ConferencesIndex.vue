@@ -25,11 +25,13 @@
                     <v-divider class="mx-4" inset vertical></v-divider>
                     <v-spacer></v-spacer>
                     <v-skeleton-loader
+                        v-if="isAuthenticated"
                         type="button"
                         width="117"
                         class="full-btn d-inline-block mr-2"
                     ></v-skeleton-loader>
                     <v-skeleton-loader
+                        v-if="isAuthenticated"
                         type="button"
                         width="172"
                         class="full-btn d-inline-block"
@@ -72,6 +74,7 @@
                             <v-spacer></v-spacer>
                             <v-layout class="justify-end">
                                 <v-btn
+                                    v-if="isAuthenticated"
                                     class="mr-2"
                                     text
                                     color="grey"
