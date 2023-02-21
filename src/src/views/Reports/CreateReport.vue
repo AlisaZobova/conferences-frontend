@@ -234,13 +234,14 @@ export default {
                     if (input.files[0]) {
                         this.form.presentation = input.files[0]
                     }
+                    this.loading = true
                     this.CreateReport(this.form)
                         .then(() => this.JoinConference(this.$route.params.id))
                         .then(() => this.$router.push('/conferences'))
-                        .catch(
-                            (error) =>
-                                (this.apiErrors = error.response.data.errors)
-                        )
+                        .catch((error) => {
+                            this.apiErrors = error.response.data.errors
+                            this.loading = false
+                        })
                 }
             })
         },

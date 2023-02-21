@@ -7,7 +7,7 @@ const state = {
 }
 
 const actions = {
-    async GetConferences({ commit }, {page, filters}) {
+    async GetConferences({ commit }, { page, filters }) {
         let response = await axios.get('conferences?page=' + page + filters)
         commit('setConferences', response.data)
         commit('setConference', null)
@@ -20,22 +20,26 @@ const actions = {
         let response = await axios.get('conferences/' + conferenceId)
         commit('setConference', response.data)
     },
-    async DeleteConference({ commit, rootState }, conferenceId) {
-        await axios.delete('conferences/' + conferenceId)
-        commit('setConference', null)
+    async GetUser({ commit, rootState }) {
         axios.get('user/' + rootState.auth.user.id).then((response) => {
             commit('setUser', response.data, { root: true })
+        })
+    },
+
+    async DeleteConference({ commit, dispatch }, conferenceId) {
+        axios.delete('conferences/' + conferenceId).then(() => {
+            commit('setConference', null)
+            dispatch('GetUser')
         })
     },
     async UpdateConference({ commit }, { form, conferenceId }) {
         let response = await axios.patch('conferences/' + conferenceId, form)
         commit('setConference', response.data)
     },
-    async CreateConference({ commit, rootState }, form) {
-        let response = await axios.post('conferences', form)
-        commit('setConference', response.data)
-        axios.get('user/' + rootState.auth.user.id).then((response) => {
-            commit('setUser', response.data, { root: true })
+    async CreateConference({ commit, dispatch }, form) {
+        axios.post('conferences', form).then((response) => {
+            commit('setConference', response.data)
+            dispatch('GetUser')
         })
     },
 }
