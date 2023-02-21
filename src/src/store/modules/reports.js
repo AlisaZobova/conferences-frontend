@@ -5,6 +5,13 @@ const state = {
     searchedReports: [],
     reports: [],
     report: null,
+    page: 1,
+}
+
+const getters = {
+    currentReportsPage: (state) => {
+        return state.page
+    },
 }
 
 const actions = {
@@ -54,6 +61,9 @@ const actions = {
                 )
             })
     },
+    SetReportsPage({ commit }, newValue) {
+        commit('setPage', newValue)
+    },
 }
 const mutations = {
     setReports(state, reports) {
@@ -65,10 +75,14 @@ const mutations = {
     setReport(state, report) {
         state.report = report
     },
+    setPage(state, page) {
+        state.page = page
+    },
 }
 
 export default {
     state,
+    getters,
     actions,
     mutations,
 }

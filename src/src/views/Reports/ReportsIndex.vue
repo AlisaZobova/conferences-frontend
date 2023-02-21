@@ -188,11 +188,18 @@ export default {
         isAuthenticated() {
             return this.$store.getters.isAuthenticated
         },
+        page: {
+            get() {
+                return this.$store.getters['currentReportsPage']
+            },
+            set(newValue) {
+                return this.$store.dispatch('SetReportsPage', newValue)
+            },
+        },
     },
     data: () => ({
         show: [],
         loading: true,
-        page: 1,
         filters: '',
         openFilters: false,
     }),
