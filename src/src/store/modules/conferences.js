@@ -15,7 +15,6 @@ const actions = {
     async SearchConferences({ commit }, query) {
         let response = await axios.get('conferences/search' + query)
         commit('setSearchedConferences', response.data)
-        commit('setConference', null)
     },
     async GetConference({ commit }, conferenceId) {
         let response = await axios.get('conferences/' + conferenceId)

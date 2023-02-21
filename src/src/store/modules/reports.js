@@ -16,7 +16,6 @@ const actions = {
     async SearchReports({ commit }, query) {
         let response = await axios.get('reports/search' + query)
         commit('setSearchReports', response.data)
-        commit('setReport', null)
     },
     async GetReport({ commit }, reportId) {
         let response = await axios.get('reports/' + reportId)
