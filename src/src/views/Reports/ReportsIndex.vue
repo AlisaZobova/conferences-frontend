@@ -126,8 +126,8 @@
                             <v-expand-transition>
                                 <v-card
                                     v-if="show.includes(item.id)"
-                                    class="transition-fast-in-fast-out v-card--reveal"
-                                    style="height: 100%"
+                                    class="overflow-y-auto v-card--reveal"
+                                    height="100%"
                                 >
                                     <v-card-subtitle class="mt-2">
                                         <b>Description:</b>
