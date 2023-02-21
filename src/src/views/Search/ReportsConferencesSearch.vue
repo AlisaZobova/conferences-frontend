@@ -235,5 +235,4 @@ export default {
 .search-result {
     width: 60%;
 }
-
 </style>

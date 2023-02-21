@@ -79,10 +79,14 @@
             <p class="text-caption pl-4 red--text" v-if="timeError">
                 Comments can only be edited within 10 minutes
             </p>
+            <p class="text-caption pl-4 red--text" v-if="contentError">
+                Comment content can not be empty!
+            </p>
             <tiptap-vuetify
                 placeholder="Write your comment ..."
                 v-model="content"
                 :extensions="extensions"
+                @input="contentError = false"
             />
             <v-btn
                 @click="sendComment"
@@ -158,6 +162,7 @@ export default {
         content: '',
         comment: null,
         timeError: false,
+        contentError: false,
     }),
     methods: {
         ...mapActions(['GetComments', 'UpdateComment', 'CreateComment']),
@@ -169,6 +174,10 @@ export default {
             this.content = comment.content
         },
         sendComment() {
+            if (!this.content.replace(/(<([^>]+)>)/gi, '')) {
+                this.contentError = true
+                return
+            }
             this.loading = true
             let nowDate = new Date()
             let year = nowDate.getFullYear()
