@@ -3,26 +3,24 @@
         <v-menu offset-y :close-on-content-click="false" v-model="menu">
             <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                    :loading="loading"
-                    :disabled="loading"
+                    :loading="loading || doubleSearch"
+                    :disabled="loading || doubleSearch"
                     class="search-input"
                     v-model="query"
                     v-bind="attrs"
                     v-on="on"
-                    @input="
-                        menu = true
-                        query ? (searchInput = true) : (searchInput = false)
-                    "
+                    @input="menu = true"
                     prepend-inner-icon="mdi-magnify"
-                    @change="
-                        search()
-                        searchInput = false
-                    "
+                    @change="search"
                 >
                 </v-text-field>
             </template>
             <v-layout class="search-layout white">
-                <v-layout align-center justify-center v-if="loading">
+                <v-layout
+                    align-center
+                    justify-center
+                    v-if="loading || doubleSearch"
+                >
                     <v-progress-circular
                         indeterminate
                         color="primary"
@@ -33,7 +31,7 @@
                     justify-center
                     v-if="
                         !loading &&
-                        query &&
+                        !doubleSearch &&
                         ((reports.length === 0 && conferences.length === 0) ||
                             (reports.length === 0 &&
                                 searchType === 'reports') ||
@@ -47,6 +45,7 @@
                     class="d-inline-block search-result"
                     v-if="
                         !loading &&
+                        !doubleSearch &&
                         (((reports.length > 0 || conferences.length > 0) &&
                             !searchType) ||
                             (reports.length > 0 && searchType === 'reports') ||
@@ -57,6 +56,7 @@
                     <div
                         v-if="
                             !loading &&
+                            !doubleSearch &&
                             (searchType === 'conferences' || !searchType) &&
                             conferences.length > 0
                         "
@@ -74,6 +74,7 @@
                         class="overflow-y-auto"
                         v-if="
                             !loading &&
+                            !doubleSearch &&
                             (searchType === 'conferences' || !searchType)
                         "
                     >
@@ -94,6 +95,7 @@
                     <v-divider
                         v-if="
                             !loading &&
+                            !doubleSearch &&
                             !searchType &&
                             conferences.length > 0 &&
                             reports.length > 0
@@ -102,6 +104,7 @@
                     <div
                         v-if="
                             !loading &&
+                            !doubleSearch &&
                             (searchType === 'reports' || !searchType) &&
                             reports.length > 0
                         "
@@ -119,6 +122,7 @@
                         class="overflow-y-auto"
                         v-if="
                             !loading &&
+                            !doubleSearch &&
                             (searchType === 'reports' || !searchType)
                         "
                     >
@@ -137,7 +141,7 @@
                         </v-list-item>
                     </v-list>
                     <v-divider
-                        v-if="!loading && reports.length > 0"
+                        v-if="!loading && !doubleSearch && reports.length > 0"
                         class="mb-4"
                     ></v-divider>
                 </div>
@@ -146,9 +150,11 @@
                 <v-radio-group
                     v-model="searchType"
                     label="Search by:"
-                    :disabled="loading || searchInput"
                     class="radio-type-select d-inline-block"
-                    @change="search"
+                    @change="
+                        doubleSearch = true
+                        search()
+                    "
                 >
                     <v-radio label="Conferences" value="conferences"></v-radio>
                     <v-radio label="Reports" value="reports"></v-radio>
@@ -174,21 +180,26 @@ export default {
     },
     methods: {
         ...mapActions(['SearchConferences', 'SearchReports']),
-        search() {
+        async search() {
             this.loading = true
             if (this.searchType === 'conferences') {
-                this.SearchConferences(this.conferencesQuery).then(
-                    () => (this.loading = false)
-                )
+                this.SearchConferences(this.conferencesQuery).then(() => {
+                    this.loading = false
+                    this.doubleSearch = false
+                })
             }
             if (this.searchType === 'reports') {
-                this.SearchReports(this.reportsQuery).then(
-                    () => (this.loading = false)
-                )
+                this.SearchReports(this.reportsQuery).then(() => {
+                    this.loading = false
+                    this.doubleSearch = false
+                })
             } else {
                 this.SearchConferences(this.conferencesQuery)
                     .then(() => this.SearchReports(this.reportsQuery))
-                    .then(() => (this.loading = false))
+                    .then(() => {
+                        this.loading = false
+                        this.doubleSearch = false
+                    })
             }
         },
     },
@@ -198,21 +209,14 @@ export default {
         conferencesQuery: '',
         reportsQuery: '',
         searchType: null,
-        searchInput: false,
         menu: false,
+        doubleSearch: false,
     }),
     watch: {
         query(newValue) {
             this.query = newValue
-            if (this.searchType === 'conferences') {
-                this.conferencesQuery = `?title=${newValue}`
-            }
-            if (this.searchType === 'reports') {
-                this.reportsQuery = `?topic=${newValue}`
-            } else {
-                this.conferencesQuery = `?title=${newValue}`
-                this.reportsQuery = `?topic=${newValue}`
-            }
+            this.conferencesQuery = `?title=${this.query}`
+            this.reportsQuery = `?topic=${this.query}`
         },
     },
     created() {
