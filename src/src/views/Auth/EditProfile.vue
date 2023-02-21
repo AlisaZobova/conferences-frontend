@@ -223,10 +223,16 @@ export default {
     text-align: left;
     padding-top: 12px;
 }
+
+:deep(.vue-tel-input:hover) {
+    border-bottom-color: black;
+}
+
 :deep(.vue-tel-input:focus-within) {
     box-shadow: none;
     border-bottom-width: 2px;
     border-color: #1976d2;
+    transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
 }
 
 :deep(.vti__dropdown) {
