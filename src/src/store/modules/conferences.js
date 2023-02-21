@@ -4,6 +4,13 @@ const state = {
     conferences: [],
     searchedConferences: [],
     conference: null,
+    page: 1,
+}
+
+const getters = {
+    currentConferencesPage: (state) => {
+        return state.page
+    },
 }
 
 const actions = {
@@ -42,6 +49,9 @@ const actions = {
             dispatch('GetUser')
         })
     },
+    SetConferencesPage({ commit }, newValue) {
+        commit('setPage', newValue)
+    },
 }
 const mutations = {
     setConferences(state, conferences) {
@@ -53,9 +63,13 @@ const mutations = {
     setConference(state, conference) {
         state.conference = conference
     },
+    setPage(state, page) {
+        state.page = page
+    },
 }
 export default {
     state,
+    getters,
     actions,
     mutations,
 }

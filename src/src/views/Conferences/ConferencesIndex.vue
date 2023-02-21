@@ -298,13 +298,20 @@ export default {
         pageCount() {
             return this.$store.state.conferences.conferences.last_page
         },
+        page: {
+            get() {
+                return this.$store.getters['currentConferencesPage']
+            },
+            set(newValue) {
+                return this.$store.dispatch('SetConferencesPage', newValue)
+            },
+        },
     },
     data() {
         return {
             selectedItem: null,
             dialogDelete: false,
             loading: true,
-            page: 1,
             filters: '',
             openFilters: false,
             headers: [
@@ -327,6 +334,10 @@ export default {
     watch: {
         dialogDelete(val) {
             val || this.closeDelete()
+        },
+        page() {
+            this.loading = true
+            this.getConferences()
         },
     },
     methods: {
