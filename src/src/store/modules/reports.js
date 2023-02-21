@@ -8,7 +8,7 @@ const state = {
 }
 
 const actions = {
-    async GetReports({ commit }, {page, filters}) {
+    async GetReports({ commit }, { page, filters }) {
         let response = await axios.get('reports?page=' + page + filters)
         commit('setReports', response.data)
         commit('setReport', null)
@@ -28,7 +28,7 @@ const actions = {
     async UpdateReport({ commit }, { form, reportId }) {
         let response = await axios.post('reports/' + reportId, form, {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
         })
         commit('setReport', response.data)
