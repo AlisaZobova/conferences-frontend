@@ -268,7 +268,7 @@
                 v-if="!loading && totalConferences === 0"
                 class="align-center justify-center"
             >
-                <div class="d-inline-block teal--text text-h6">
+                <div class="d-inline-block teal--text text-h6 pl-4">
                     Unfortunately, there are no records matching your request.
                 </div>
             </v-layout>
