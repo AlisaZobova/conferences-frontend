@@ -38,8 +38,8 @@
                     name="name"
                     label="Name"
                     :rules="[rules.required]"
-                    :error-messages="apiError"
-                    @click="apiError = ''"
+                    :error-messages="categoryError"
+                    @click="categoryError = ''"
                     class="mt-4"
                 ></v-text-field>
 
@@ -72,7 +72,7 @@ export default {
                 required: (value) => !!value || 'Required.',
             },
             isFormValid: false,
-            apiError: '',
+            categoryError: '',
             parentCategory: [],
             currentCategory: null,
         }
@@ -104,9 +104,10 @@ export default {
                 categoryId: this.category.id,
             })
                 .then(() => this.$router.push({ name: 'Categories' }))
-                .catch(
-                    () => (this.apiError = 'This category name already exists')
-                )
+                .catch((error) => {
+                    let apiErrors = error.response.data.errors
+                    this.categoryError = apiErrors.name
+                })
         },
         getActiveValue(value) {
             this.parentCategory = value
