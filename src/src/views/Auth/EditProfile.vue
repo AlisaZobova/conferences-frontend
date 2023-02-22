@@ -91,9 +91,13 @@
                 <v-text-field
                     v-model="password"
                     :append-icon="isPasswordVisible ? 'mdi-eye' : 'mdi-eye-off'"
-                    :rules="[rules.required, rules.min]"
                     :type="isPasswordVisible ? 'text' : 'password'"
                     hint="At least 8 characters"
+                    :error-messages="passwordError"
+                    @input="
+                        isFormValid = true
+                        passwordError = ''
+                    "
                     counter
                     @click:append="isPasswordVisible = !isPasswordVisible"
                     name="password"
@@ -107,7 +111,7 @@
                     :append-icon="
                         isConfirmationVisible ? 'mdi-eye' : 'mdi-eye-off'
                     "
-                    :rules="[rules.required, rules.min, rules.match]"
+                    :rules="[rules.match]"
                     :type="isConfirmationVisible ? 'text' : 'password'"
                     hint="At least 8 characters"
                     class="input-group--focused mb-1"
@@ -156,6 +160,7 @@ export default {
             isPhoneValid: true,
             password: '',
             password_confirmation: '',
+            passwordError: '',
             rules: {
                 required: (value) => !!value || 'Required.',
                 min: (v) => v.length >= 8 || 'Min 8 characters',
@@ -174,6 +179,11 @@ export default {
     methods: {
         ...mapActions(['UpdateProfile', 'GetCountries', 'GetUser']),
         async submit() {
+            if (this.password.length > 0 && this.password.length < 8) {
+                this.isFormValid = false
+                this.passwordError = 'Password must be at least 8 characters'
+                return
+            }
             this.user.password = this.password
             this.user.password_confirmation = this.password_confirmation
             this.UpdateProfile(this.user)
@@ -195,9 +205,7 @@ export default {
             this.isPhoneValid = data.valid
         },
         async setNumber() {
-            if (this.phone) {
-                this.user.phone = this.phone
-            }
+            this.user.phone = this.phone
         },
         goBack() {
             this.$router.go(-1)
