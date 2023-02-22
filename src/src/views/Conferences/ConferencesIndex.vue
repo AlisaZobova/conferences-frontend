@@ -45,7 +45,7 @@
                 <v-skeleton-loader
                     v-for="n in 15"
                     :key="n"
-                    type="table-cell@2, button@4, divider"
+                    type="table-cell@2, button@2, divider"
                     class="table-skeleton"
                 ></v-skeleton-loader>
             </v-container>
@@ -407,7 +407,7 @@ export default {
 }
 
 :deep(.table-skeleton .v-skeleton-loader__button) {
-    width: 7%;
+    width: 96px;
     display: inline-block;
     margin-right: 4px;
     margin-top: 6px;
@@ -415,9 +415,9 @@ export default {
 }
 
 :deep(.v-skeleton-loader__heading) {
-    width: 12%;
+    width: 6%;
     display: inline-block;
-    margin-right: 13.3%;
+    margin-right: 19.3%;
 }
 :deep(.v-skeleton-loader__table-cell) {
     width: 12%;
