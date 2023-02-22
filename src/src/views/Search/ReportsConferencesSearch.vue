@@ -3,24 +3,20 @@
         <v-menu offset-y :close-on-content-click="false" v-model="menu">
             <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                    :loading="loading || doubleSearch"
-                    :disabled="loading || doubleSearch"
+                    :loading="loading"
+                    :disabled="loading"
                     class="search-input"
                     v-model="query"
                     v-bind="attrs"
                     v-on="on"
                     @input="menu = true"
                     prepend-inner-icon="mdi-magnify"
-                    @change="search"
+                    @change="searchWithTimeout"
                 >
                 </v-text-field>
             </template>
             <v-layout class="search-layout white">
-                <v-layout
-                    align-center
-                    justify-center
-                    v-if="loading || doubleSearch"
-                >
+                <v-layout align-center justify-center v-if="loading">
                     <v-progress-circular
                         indeterminate
                         color="primary"
@@ -31,7 +27,6 @@
                     justify-center
                     v-if="
                         !loading &&
-                        !doubleSearch &&
                         ((reports.length === 0 && conferences.length === 0) ||
                             (reports.length === 0 &&
                                 searchType === 'reports') ||
@@ -45,7 +40,6 @@
                     class="d-inline-block search-result"
                     v-if="
                         !loading &&
-                        !doubleSearch &&
                         (((reports.length > 0 || conferences.length > 0) &&
                             !searchType) ||
                             (reports.length > 0 && searchType === 'reports') ||
@@ -56,7 +50,6 @@
                     <div
                         v-if="
                             !loading &&
-                            !doubleSearch &&
                             (searchType === 'conferences' || !searchType) &&
                             conferences.length > 0
                         "
@@ -74,7 +67,6 @@
                         class="overflow-y-auto"
                         v-if="
                             !loading &&
-                            !doubleSearch &&
                             (searchType === 'conferences' || !searchType)
                         "
                     >
@@ -95,7 +87,6 @@
                     <v-divider
                         v-if="
                             !loading &&
-                            !doubleSearch &&
                             !searchType &&
                             conferences.length > 0 &&
                             reports.length > 0
@@ -104,7 +95,6 @@
                     <div
                         v-if="
                             !loading &&
-                            !doubleSearch &&
                             (searchType === 'reports' || !searchType) &&
                             reports.length > 0
                         "
@@ -122,7 +112,6 @@
                         class="overflow-y-auto"
                         v-if="
                             !loading &&
-                            !doubleSearch &&
                             (searchType === 'reports' || !searchType)
                         "
                     >
@@ -141,7 +130,7 @@
                         </v-list-item>
                     </v-list>
                     <v-divider
-                        v-if="!loading && !doubleSearch && reports.length > 0"
+                        v-if="!loading && reports.length > 0"
                         class="mb-4"
                     ></v-divider>
                 </div>
@@ -152,8 +141,8 @@
                     label="Search by:"
                     class="radio-type-select d-inline-block"
                     @change="
-                        doubleSearch = true
-                        search()
+                        (value) =>
+                            !loading ? search() : (this.searchType = value)
                     "
                 >
                     <v-radio label="Conferences" value="conferences"></v-radio>
@@ -185,22 +174,22 @@ export default {
             if (this.searchType === 'conferences') {
                 this.SearchConferences(this.conferencesQuery).then(() => {
                     this.loading = false
-                    this.doubleSearch = false
                 })
-            }
-            if (this.searchType === 'reports') {
+            } else if (this.searchType === 'reports') {
                 this.SearchReports(this.reportsQuery).then(() => {
                     this.loading = false
-                    this.doubleSearch = false
                 })
             } else {
                 this.SearchConferences(this.conferencesQuery)
                     .then(() => this.SearchReports(this.reportsQuery))
                     .then(() => {
                         this.loading = false
-                        this.doubleSearch = false
                     })
             }
+        },
+        searchWithTimeout() {
+            this.loading = true
+            setTimeout(this.search, 2000)
         },
     },
     data: () => ({
@@ -210,7 +199,6 @@ export default {
         reportsQuery: '',
         searchType: null,
         menu: false,
-        doubleSearch: false,
     }),
     watch: {
         query(newValue) {
