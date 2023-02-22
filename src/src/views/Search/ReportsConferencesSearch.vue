@@ -135,7 +135,7 @@
                     ></v-divider>
                 </div>
 
-                <v-divider class="mx-4" inset vertical></v-divider>
+                <v-divider class="mx-2" inset vertical></v-divider>
                 <v-radio-group
                     v-model="searchType"
                     label="Search by:"
@@ -217,14 +217,21 @@ export default {
 
 <style scoped>
 .radio-type-select {
-    width: 40%;
+    width: 50%;
 }
 
 .search-input {
-    min-width: 400px;
+    min-width: 300px;
+}
+
+:deep(.radio-type-select .v-label) {
+    font-size: 14px;
+}
+.search-layout {
+    min-width: 300px;
 }
 
 .search-result {
-    width: 60%;
+    width: 50%;
 }
 </style>
