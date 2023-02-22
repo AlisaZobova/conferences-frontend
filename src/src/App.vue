@@ -106,7 +106,11 @@ export default {
     methods: {
         ...mapActions(['LogOut']),
         async logout() {
-            await this.LogOut()
+            this.LogOut().then(() => {
+                if (this.$route.name === 'Conferences') {
+                    this.$router.go(0)
+                }
+            })
         },
         goToFav() {
             this.$router.push({ name: 'Favorites' })
