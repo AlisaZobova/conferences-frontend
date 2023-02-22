@@ -243,6 +243,7 @@ export default {
         },
         getFilteredData() {
             this.loading = true
+            this.page = 1
             this.GetReports({ page: this.page, filters: this.filters }).then(
                 () => {
                     this.loading = false

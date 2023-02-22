@@ -383,6 +383,7 @@ export default {
         },
         getFilteredData() {
             this.loading = true
+            this.page = 1
             this.GetConferences({
                 page: this.page,
                 filters: this.filters,
