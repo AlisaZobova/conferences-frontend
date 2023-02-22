@@ -66,7 +66,7 @@
             </v-menu>
             <v-range-slider
                 :disabled="$props.disabled"
-                @change="(value) => (this.duration = value)"
+                @end="(value) => (this.duration = value)"
                 class="mt-4"
                 color="teal"
                 track-color="teal"
@@ -76,6 +76,7 @@
                 ticks
                 min="1"
                 max="60"
+                ref="duration"
             ></v-range-slider>
             <CategoriesFilterSelect
                 :clear="category.length === 0"
@@ -117,7 +118,7 @@ export default {
             this.filters = {}
             this.from = ''
             this.to = ''
-            this.reports = ''
+            this.duration = ''
             this.category = []
             this.setStrFilters()
             this.$emit('updateFilters', this.strFilters)
@@ -173,6 +174,7 @@ export default {
             this.duration = newValue
             if (!newValue) {
                 delete this.filters['duration']
+                this.$refs.duration.value = [1, 1]
             } else {
                 this.filters['duration'] = `${newValue[0]}-${newValue[1]}`
             }

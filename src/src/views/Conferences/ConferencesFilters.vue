@@ -62,13 +62,14 @@
             </v-menu>
             <v-range-slider
                 :disabled="$props.disabled"
-                @change="(value) => (this.reports = value)"
+                @end="(value) => (this.reports = value)"
                 class="mt-4"
                 label="Reports"
                 step="1"
                 thumb-label
                 ticks
                 min="1"
+                ref="reports"
             ></v-range-slider>
             <CategoriesFilterSelect
                 :clear="category.length === 0"
@@ -172,6 +173,7 @@ export default {
             this.reports = newValue
             if (!newValue) {
                 delete this.filters['reports']
+                this.$refs.reports.value = [1, 1]
             } else {
                 this.filters['reports'] = `${newValue[0]}-${newValue[1]}`
             }
