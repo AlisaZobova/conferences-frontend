@@ -176,6 +176,13 @@ export default {
             this.comment = comment
             this.content = comment.content
         },
+        getCommentsAfterSend() {
+            this.GetComments(this.$route.params.id).then(() => {
+                this.comment = null
+                this.content = ''
+                this.loading = false
+            })
+        },
         sendComment() {
             if (!this.content.replace(/(<([^>]+)>)/gi, '')) {
                 this.contentError = true
@@ -213,7 +220,7 @@ export default {
                     this.UpdateComment({
                         form: form,
                         commentId: this.comment.id,
-                    })
+                    }).then(() => this.getCommentsAfterSend())
                 } else {
                     this.timeError = true
                 }
@@ -224,13 +231,8 @@ export default {
                     content: this.content,
                     publication_date: newDate,
                 }
-                this.CreateComment(form)
+                this.CreateComment(form).then(() => this.getCommentsAfterSend())
             }
-            this.comment = null
-            this.content = ''
-            this.GetComments(this.$route.params.id).then(
-                () => (this.loading = false)
-            )
         },
     },
     created() {
