@@ -26,9 +26,9 @@
                     <v-btn
                         icon
                         @click.prevent="
-                            getHeartColor(item.id) === 'grey'
-                                ? addToFavorites(item.id)
-                                : deleteFromFavorites(item.id)
+                            isInFav(item.id)
+                                ? deleteFromFavorites(item.id)
+                                : addToFavorites(item.id)
                         "
                     >
                         <v-icon :color="getHeartColor(item.id)">
@@ -133,13 +133,15 @@ export default {
         deleteFromFavorites(reportId) {
             this.DeleteFavorite(reportId)
         },
+        isInFav(reportId) {
+            return (
+                this.$store.state.auth.user.favorites.findIndex(
+                    (element) => element.id === reportId
+                ) !== -1
+            )
+        },
         getHeartColor(reportId) {
-            function isInFav(element) {
-                return element.id === reportId
-            }
-            if (
-                this.$store.state.auth.user.favorites.findIndex(isInFav) !== -1
-            ) {
+            if (this.isInFav(reportId)) {
                 return 'red'
             } else {
                 return 'grey'
