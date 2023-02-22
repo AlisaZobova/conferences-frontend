@@ -22,34 +22,6 @@
                 ></v-text-field>
 
                 <v-text-field
-                    v-model="password"
-                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                    :rules="[rules.required, rules.min]"
-                    :type="show1 ? 'text' : 'password'"
-                    hint="At least 8 characters"
-                    counter
-                    @click:append="show1 = !show1"
-                    name="password"
-                    id="password"
-                    label="Password"
-                    required
-                ></v-text-field>
-
-                <v-text-field
-                    v-model="password_confirmation"
-                    :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
-                    :rules="[rules.required, rules.min, rules.match]"
-                    :type="show2 ? 'text' : 'password'"
-                    hint="At least 8 characters"
-                    class="input-group--focused mb-1"
-                    @click:append="show2 = !show2"
-                    name="password_confirmation"
-                    id="password_confirmation"
-                    label="Confirm password"
-                    required
-                ></v-text-field>
-
-                <v-text-field
                     v-model="user.firstname"
                     name="firstname"
                     label="Firstname"
@@ -65,8 +37,8 @@
                 ></v-text-field>
 
                 <v-menu
-                    ref="menu1"
-                    v-model="menu1"
+                    ref="birthdateMenu"
+                    v-model="birthdateMenu"
                     :close-on-content-click="false"
                     transition="scale-transition"
                     offset-y
@@ -88,7 +60,7 @@
                         :max="nowDate"
                         v-model="user.birthdate"
                         no-title
-                        @input="menu1 = false"
+                        @input="birthdateMenu = false"
                     ></v-date-picker>
                 </v-menu>
                 <vue-tel-input
@@ -116,9 +88,37 @@
                     :rules="[rules.required]"
                 ></v-select>
 
-                <p class="text-center" v-if="showErrorCountry">
-                    Failed to get list of countries
-                </p>
+                <v-text-field
+                    v-model="password"
+                    :append-icon="isPasswordVisible ? 'mdi-eye' : 'mdi-eye-off'"
+                    :rules="[rules.required, rules.min]"
+                    :type="isPasswordVisible ? 'text' : 'password'"
+                    hint="At least 8 characters"
+                    counter
+                    @click:append="isPasswordVisible = !isPasswordVisible"
+                    name="password"
+                    id="password"
+                    label="Password"
+                    required
+                ></v-text-field>
+
+                <v-text-field
+                    v-model="password_confirmation"
+                    :append-icon="
+                        isConfirmationVisible ? 'mdi-eye' : 'mdi-eye-off'
+                    "
+                    :rules="[rules.required, rules.min, rules.match]"
+                    :type="isConfirmationVisible ? 'text' : 'password'"
+                    hint="At least 8 characters"
+                    class="input-group--focused mb-1"
+                    @click:append="
+                        isConfirmationVisible = !isConfirmationVisible
+                    "
+                    name="password_confirmation"
+                    id="password_confirmation"
+                    label="Confirm password"
+                    required
+                ></v-text-field>
 
                 <v-btn :disabled="!isFormValid" type="submit" color="primary">
                     Save
@@ -146,9 +146,9 @@ export default {
     },
     data() {
         return {
-            show1: false,
-            show2: false,
-            menu1: false,
+            isPasswordVisible: false,
+            isConfirmationVisible: false,
+            birthdateMenu: false,
             phone: null,
             loading: true,
             nowDate: new Date().toISOString().slice(0, 10),

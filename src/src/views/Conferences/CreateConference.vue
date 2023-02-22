@@ -31,8 +31,8 @@
                                     ></v-text-field>
                                 </validation-provider>
                                 <v-menu
-                                    ref="menu1"
-                                    v-model="menu1"
+                                    ref="confDateMenu"
+                                    v-model="confDateMenu"
                                     :close-on-content-click="false"
                                     transition="scale-transition"
                                     offset-y
@@ -66,7 +66,7 @@
                                             :min="nowDate"
                                             :error-messages="errors"
                                             no-title
-                                            @input="menu1 = false"
+                                            @input="confDateMenu = false"
                                         ></v-date-picker>
                                     </validation-provider>
                                 </v-menu>
@@ -189,7 +189,7 @@ export default {
             country: '',
             category_id: null,
         },
-        menu1: false,
+        confDateMenu: false,
         titleInfoMsg: 'Title must start with a capital letter',
         nowDate: new Date().toISOString().slice(0, 10),
         loading: true,

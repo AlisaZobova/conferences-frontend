@@ -27,8 +27,8 @@
                                 ></v-text-field>
                             </validation-provider>
                             <v-menu
-                                ref="menu1"
-                                v-model="menu1"
+                                ref="startTimeMenu"
+                                v-model="startTimeMenu"
                                 :close-on-content-click="false"
                                 transition="scale-transition"
                                 offset-y
@@ -66,13 +66,13 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @input="menu1 = false"
+                                        @input="startTimeMenu = false"
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>
                             <v-menu
-                                ref="menu2"
-                                v-model="menu2"
+                                ref="endTimeMenu"
+                                v-model="endTimeMenu"
                                 :close-on-content-click="false"
                                 transition="scale-transition"
                                 offset-y
@@ -109,7 +109,7 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @input="menu2 = false"
+                                        @input="endTimeMenu = false"
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>
@@ -198,8 +198,8 @@ export default {
             conference_id: null,
             category_id: null,
         },
-        menu1: false,
-        menu2: false,
+        startTimeMenu: false,
+        endTimeMenu: false,
         timeStart: '',
         timeEnd: '',
         loading: true,

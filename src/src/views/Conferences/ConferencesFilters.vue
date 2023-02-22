@@ -6,8 +6,8 @@
         <v-card-text class="pb-0">
             <v-divider></v-divider>
             <v-menu
-                ref="menu1"
-                v-model="menu1"
+                ref="dateFromMenu"
+                v-model="dateFromMenu"
                 :close-on-content-click="false"
                 transition="scale-transition"
                 offset-y
@@ -29,12 +29,12 @@
                     v-model="from"
                     :max="to ? to : ''"
                     no-title
-                    @input="menu1 = false"
+                    @input="dateFromMenu = false"
                 ></v-date-picker>
             </v-menu>
             <v-menu
-                ref="menu2"
-                v-model="menu2"
+                ref="dateToMenu"
+                v-model="dateToMenu"
                 :close-on-content-click="false"
                 transition="scale-transition"
                 offset-y
@@ -57,7 +57,7 @@
                     v-model="to"
                     :min="from ? from : ''"
                     no-title
-                    @input="menu2 = false"
+                    @input="dateToMenu = false"
                 ></v-date-picker>
             </v-menu>
             <v-range-slider
@@ -139,8 +139,8 @@ export default {
     },
     data() {
         return {
-            menu1: false,
-            menu2: false,
+            dateFromMenu: false,
+            dateToMenu: false,
             from: '',
             to: '',
             reports: '',

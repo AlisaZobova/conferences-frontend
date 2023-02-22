@@ -31,8 +31,8 @@
                                     ></v-text-field>
                                 </validation-provider>
                                 <v-menu
-                                    ref="menu1"
-                                    v-model="menu1"
+                                    ref="confDateMenu"
+                                    v-model="confDateMenu"
                                     :close-on-content-click="false"
                                     transition="scale-transition"
                                     offset-y
@@ -66,7 +66,7 @@
                                             :min="nowDate"
                                             :error-messages="errors"
                                             no-title
-                                            @input="menu1 = false"
+                                            @input="confDateMenu = false"
                                         ></v-date-picker>
                                     </validation-provider>
                                 </v-menu>
@@ -205,7 +205,7 @@ export default {
         },
     },
     data: () => ({
-        menu1: false,
+        confDateMenu: false,
         nowDate: new Date().toISOString().slice(0, 10),
         loading: true,
         titleInfoMsg: 'Title must start with a capital letter',

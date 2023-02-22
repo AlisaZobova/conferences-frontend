@@ -6,8 +6,8 @@
         <v-card-text class="pb-0">
             <v-divider></v-divider>
             <v-menu
-                ref="menu1"
-                v-model="menu1"
+                ref="timeFromMenu"
+                v-model="timeFromMenu"
                 :close-on-content-click="false"
                 transition="scale-transition"
                 offset-y
@@ -31,12 +31,12 @@
                     :max="to ? to : '19:59'"
                     format="24hr"
                     scrollable
-                    @input="menu1 = false"
+                    @input="timeFromMenu = false"
                 ></v-time-picker>
             </v-menu>
             <v-menu
-                ref="menu2"
-                v-model="menu2"
+                ref="timeToMenu"
+                v-model="timeToMenu"
                 :close-on-content-click="false"
                 transition="scale-transition"
                 offset-y
@@ -61,7 +61,7 @@
                     scrollable
                     :min="from ? from : '08:01'"
                     max="20:00"
-                    @input="menu2 = false"
+                    @input="timeToMenu = false"
                 ></v-time-picker>
             </v-menu>
             <v-range-slider
@@ -137,8 +137,8 @@ export default {
     },
     data() {
         return {
-            menu1: false,
-            menu2: false,
+            timeFromMenu: false,
+            timeToMenu: false,
             from: '',
             to: '',
             duration: '',
