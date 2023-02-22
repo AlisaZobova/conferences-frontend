@@ -226,6 +226,10 @@ export default {
     min-width: 35px;
 }
 
+:deep(.search-input .v-input__slot) {
+    margin-bottom: 0;
+}
+
 :deep(.radio-type-select .v-label) {
     font-size: 14px;
 }
