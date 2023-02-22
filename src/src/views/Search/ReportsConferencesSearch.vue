@@ -10,9 +10,11 @@
                     v-bind="attrs"
                     v-on="on"
                     @input="menu = true"
-                    prepend-inner-icon="mdi-magnify"
                     @change="searchWithTimeout"
                 >
+                    <template v-slot:prepend-inner>
+                        <v-icon v-bind="attrs" v-on="on">mdi-magnify</v-icon>
+                    </template>
                 </v-text-field>
             </template>
             <v-layout class="search-layout white">
