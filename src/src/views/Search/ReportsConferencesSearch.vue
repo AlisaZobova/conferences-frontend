@@ -223,7 +223,7 @@ export default {
 }
 
 .search-input {
-    min-width: 300px;
+    min-width: 35px;
 }
 
 :deep(.radio-type-select .v-label) {
