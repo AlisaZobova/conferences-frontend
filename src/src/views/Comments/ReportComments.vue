@@ -1,16 +1,19 @@
 <template>
-    <div v-if="loading" class="text-center pt-3 pb-3">
-        Comments is loading ...
-    </div>
-    <div v-else>
-        <v-card class="mt-4">
-            <v-card-text class="grey--text text--darken-2">
-                COMMENTS
-                <p class="d-inline teal--text font-weight-medium">
-                    {{ comments.length }}
-                </p>
-            </v-card-text>
-            <v-divider></v-divider>
+    <v-card class="mt-4">
+        <v-card-text class="grey--text text--darken-2">
+            COMMENTS
+            <p class="d-inline teal--text font-weight-medium">
+                {{ comments.length }}
+            </p>
+        </v-card-text>
+        <v-divider></v-divider>
+        <div v-if="loading" class="text-center pt-3 pb-3">
+            <v-progress-circular
+                indeterminate
+                color="primary"
+            ></v-progress-circular>
+        </div>
+        <div v-else>
             <v-list align-top dense>
                 <template v-for="(comment, index) in comments">
                     <v-responsive
@@ -76,24 +79,28 @@
                     </v-responsive>
                 </template>
             </v-list>
-            <p class="text-caption pl-4 red--text" v-if="timeError">
-                Comments can only be edited within 10 minutes
-            </p>
-            <tiptap-vuetify
-                placeholder="Write your comment ..."
-                v-model="content"
-                :extensions="extensions"
-            />
-            <v-btn
-                @click="sendComment"
-                width="100%"
-                color="grey lighten-4"
-                class="rounded-t-0 teal--text"
-            >
-                Send
-            </v-btn>
-        </v-card>
-    </div>
+        </div>
+        <p class="text-caption pl-4 red--text" v-if="timeError">
+            Comments can only be edited within 10 minutes
+        </p>
+        <p class="text-caption pl-4 red--text" v-if="contentError">
+            Comment content can not be empty!
+        </p>
+        <tiptap-vuetify
+            placeholder="Write your comment ..."
+            v-model="content"
+            :extensions="extensions"
+            @input="contentError = false"
+        />
+        <v-btn
+            @click="sendComment"
+            width="100%"
+            color="grey lighten-4"
+            class="rounded-t-0 teal--text"
+        >
+            Send
+        </v-btn>
+    </v-card>
 </template>
 
 <script>
@@ -158,6 +165,7 @@ export default {
         content: '',
         comment: null,
         timeError: false,
+        contentError: false,
     }),
     methods: {
         ...mapActions(['GetComments', 'UpdateComment', 'CreateComment']),
@@ -168,7 +176,18 @@ export default {
             this.comment = comment
             this.content = comment.content
         },
+        getCommentsAfterSend() {
+            this.GetComments(this.$route.params.id).then(() => {
+                this.comment = null
+                this.content = ''
+                this.loading = false
+            })
+        },
         sendComment() {
+            if (!this.content.replace(/(<([^>]+)>)/gi, '')) {
+                this.contentError = true
+                return
+            }
             this.loading = true
             let nowDate = new Date()
             let year = nowDate.getFullYear()
@@ -201,7 +220,7 @@ export default {
                     this.UpdateComment({
                         form: form,
                         commentId: this.comment.id,
-                    })
+                    }).then(() => this.getCommentsAfterSend())
                 } else {
                     this.timeError = true
                 }
@@ -212,13 +231,8 @@ export default {
                     content: this.content,
                     publication_date: newDate,
                 }
-                this.CreateComment(form)
+                this.CreateComment(form).then(() => this.getCommentsAfterSend())
             }
-            this.comment = null
-            this.content = ''
-            this.GetComments(this.$route.params.id).then(
-                () => (this.loading = false)
-            )
         },
     },
     created() {

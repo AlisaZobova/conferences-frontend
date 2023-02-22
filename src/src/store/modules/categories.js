@@ -23,7 +23,7 @@ const actions = {
         let response = await axios.patch('categories/' + categoryId, form)
         commit('setCategory', response.data)
     },
-    async CreateCategory({ commit}, form) {
+    async CreateCategory({ commit }, form) {
         let response = await axios.post('categories', form)
         commit('setCategory', response.data)
     },

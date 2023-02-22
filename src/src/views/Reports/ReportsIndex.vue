@@ -1,13 +1,53 @@
 <template>
-    <v-main>
-        <div v-if="loading" class="text-center">
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            ></v-progress-circular>
-        </div>
-        <div v-else>
-            <v-container fluid>
+    <div class="mt-4">
+        <v-layout>
+            <ReportsFilters
+                v-if="openFilters"
+                :disabled="loading"
+                @updateFilters="filters = $event"
+                @applyFilters="getFilteredData"
+            />
+            <v-container
+                v-if="loading"
+                :class="openFilters ? 'with-filters d-inline-block' : ''"
+                :fluid="!openFilters"
+            >
+                <v-skeleton-loader
+                    v-if="isAuthenticated"
+                    type="button"
+                    class="mb-2"
+                ></v-skeleton-loader>
+                <v-row dense>
+                    <v-col
+                        v-for="i in 12"
+                        :key="i"
+                        style="flex-direction: column"
+                        cols="4"
+                    >
+                        <v-skeleton-loader
+                            class="mx-auto"
+                            type="card"
+                        ></v-skeleton-loader>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <v-container
+                v-if="!loading && responseLength > 0"
+                :class="openFilters ? 'with-filters d-inline-block' : ''"
+                :fluid="!openFilters"
+            >
+                <v-card class="text-end mb-2">
+                    <v-btn
+                        v-if="isAuthenticated"
+                        class="filter-btn"
+                        text
+                        color="grey"
+                        @click="openFilters = !openFilters"
+                    >
+                        <v-icon color="teal"> mdi-filter </v-icon>
+                        Filters
+                    </v-btn>
+                </v-card>
                 <v-row dense>
                     <v-col
                         v-for="item in this.reports"
@@ -17,7 +57,6 @@
                         cols="4"
                     >
                         <v-card
-                            max-width="344"
                             class="flex-grow-1"
                             :to="{
                                 name: 'ShowReport',
@@ -34,9 +73,9 @@
                             <v-btn
                                 icon
                                 @click.prevent="
-                                    getHeartColor(item.id) === 'grey'
-                                        ? addToFavorites(item.id)
-                                        : deleteFromFavorites(item.id)
+                                    isInFav(item.id)
+                                        ? deleteFromFavorites(item.id)
+                                        : addToFavorites(item.id)
                                 "
                             >
                                 <v-icon :color="getHeartColor(item.id)">
@@ -87,8 +126,8 @@
                             <v-expand-transition>
                                 <v-card
                                     v-if="show.includes(item.id)"
-                                    class="transition-fast-in-fast-out v-card--reveal"
-                                    style="height: 100%"
+                                    class="overflow-y-auto v-card--reveal"
+                                    height="100%"
                                 >
                                     <v-card-subtitle class="mt-2">
                                         <b>Description:</b>
@@ -109,24 +148,60 @@
                         </v-card>
                     </v-col>
                 </v-row>
+                <div class="text-center pt-2">
+                    <v-pagination
+                        v-model="page"
+                        :length="pageCount"
+                        color="teal"
+                    ></v-pagination>
+                </div>
             </v-container>
-        </div>
-    </v-main>
+            <v-layout
+                v-if="!loading && responseLength === 0"
+                class="align-center justify-center"
+            >
+                <div class="d-inline-block teal--text text-h6 pl-4">
+                    Unfortunately, there are no records matching your request.
+                </div>
+            </v-layout>
+        </v-layout>
+    </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import ReportsFilters from '@/views/Reports/ReportsFilters'
 
 export default {
     name: 'ReportsIndex',
+    components: { ReportsFilters },
     computed: {
         reports() {
-            return this.$store.state.reports.reports
+            return this.$store.state.reports.reports.data
+        },
+        pageCount() {
+            return this.$store.state.reports.reports.last_page
+        },
+        responseLength() {
+            return this.$store.state.reports.reports.total
+        },
+        isAuthenticated() {
+            return this.$store.getters.isAuthenticated
+        },
+        page: {
+            get() {
+                return this.$store.getters['currentReportsPage']
+            },
+            set(newValue) {
+                return this.$store.dispatch('SetReportsPage', newValue)
+            },
         },
     },
     data: () => ({
         show: [],
         loading: true,
+        filters: '',
+        openFilters: false,
     }),
     methods: {
         ...mapActions(['GetReports', 'AddFavorite', 'DeleteFavorite']),
@@ -152,21 +227,42 @@ export default {
         deleteFromFavorites(reportId) {
             this.DeleteFavorite(reportId)
         },
+        isInFav(reportId) {
+            return (
+                this.$store.state.auth.user.favorites.findIndex(
+                    (element) => element.id === reportId
+                ) !== -1
+            )
+        },
         getHeartColor(reportId) {
-            function isInFav(element) {
-                return element.id === reportId
-            }
-            if (
-                this.$store.state.auth.user.favorites.findIndex(isInFav) !== -1
-            ) {
+            if (this.isInFav(reportId)) {
                 return 'red'
             } else {
                 return 'grey'
             }
         },
+        getFilteredData() {
+            this.loading = true
+            this.page = 1
+            this.GetReports({ page: this.page, filters: this.filters }).then(
+                () => {
+                    this.loading = false
+                }
+            )
+        },
+    },
+    watch: {
+        page(newValue) {
+            this.loading = true
+            this.GetReports({ page: newValue, filters: this.filters }).then(
+                () => {
+                    this.loading = false
+                }
+            )
+        },
     },
     created() {
-        this.GetReports().then(() => {
+        this.GetReports({ page: this.page, filters: this.filters }).then(() => {
             this.loading = false
         })
     },
@@ -184,5 +280,15 @@ export default {
 :deep(.col) {
     max-width: 25%;
     margin-bottom: 1%;
+}
+.container.with-filters {
+    max-width: 75%;
+}
+.filter-btn {
+    width: 100%;
+}
+
+:deep(.v-skeleton-loader__button) {
+    width: 100%;
 }
 </style>

@@ -40,8 +40,9 @@ const actions = {
         commit('setUser', response.data)
     },
     async GetUser({ commit, state }) {
-        let response = await axios.get('user/' + state.user.id)
-        commit('setUser', response.data)
+        axios.get('user/' + state.user.id).then((response) => {
+            commit('setUser', response.data)
+        })
     },
     async LogIn({ commit }, User) {
         let response = await axios.post('login', User)
@@ -60,29 +61,25 @@ const actions = {
             }
         })
     },
-    async JoinConference({ commit, state }, conferenceId) {
-        await axios.post('conferences/' + conferenceId + '/join')
-        axios.get('user/' + state.user.id).then((response) => {
-            commit('setUser', response.data)
-        })
+    async JoinConference({ dispatch }, conferenceId) {
+        axios
+            .post('conferences/' + conferenceId + '/join')
+            .then(() => dispatch('GetUser'))
     },
-    async CancelParticipation({ commit, state }, conferenceId) {
-        await axios.post('conferences/' + conferenceId + '/cancel')
-        axios.get('user/' + state.user.id).then((response) => {
-            commit('setUser', response.data)
-        })
+    async CancelParticipation({ dispatch }, conferenceId) {
+        axios
+            .post('conferences/' + conferenceId + '/cancel')
+            .then(() => dispatch('GetUser'))
     },
-    async AddFavorite({ commit, state }, reportId) {
-        await axios.post('reports/' + reportId + '/add-favorite')
-        axios.get('user/' + state.user.id).then((response) => {
-            commit('setUser', response.data)
-        })
+    async AddFavorite({ dispatch }, reportId) {
+        await axios
+            .post('reports/' + reportId + '/add-favorite')
+            .then(() => dispatch('GetUser'))
     },
-    async DeleteFavorite({ commit, state }, reportId) {
-        await axios.post('reports/' + reportId + '/delete-favorite')
-        axios.get('user/' + state.user.id).then((response) => {
-            commit('setUser', response.data)
-        })
+    async DeleteFavorite({ dispatch }, reportId) {
+        axios
+            .post('reports/' + reportId + '/delete-favorite')
+            .then(() => dispatch('GetUser'))
     },
 }
 const mutations = {

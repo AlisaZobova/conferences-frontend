@@ -43,15 +43,22 @@
                                         <v-text-field
                                             v-model="form.password"
                                             :append-icon="
-                                                show1
+                                                isPasswordVisible
                                                     ? 'mdi-eye'
                                                     : 'mdi-eye-off'
                                             "
                                             :rules="[rules.required, rules.min]"
-                                            :type="show1 ? 'text' : 'password'"
+                                            :type="
+                                                isPasswordVisible
+                                                    ? 'text'
+                                                    : 'password'
+                                            "
                                             hint="At least 8 characters"
                                             counter
-                                            @click:append="show1 = !show1"
+                                            @click:append="
+                                                isPasswordVisible =
+                                                    !isPasswordVisible
+                                            "
                                             name="password"
                                             id="password"
                                             label="Password"
@@ -61,7 +68,7 @@
                                         <v-text-field
                                             v-model="form.password_confirmation"
                                             :append-icon="
-                                                show2
+                                                isConfirmationVisible
                                                     ? 'mdi-eye'
                                                     : 'mdi-eye-off'
                                             "
@@ -70,10 +77,17 @@
                                                 rules.min,
                                                 rules.match,
                                             ]"
-                                            :type="show2 ? 'text' : 'password'"
+                                            :type="
+                                                isConfirmationVisible
+                                                    ? 'text'
+                                                    : 'password'
+                                            "
                                             hint="At least 8 characters"
                                             class="input-group--focused mb-1"
-                                            @click:append="show2 = !show2"
+                                            @click:append="
+                                                isConfirmationVisible =
+                                                    !isConfirmationVisible
+                                            "
                                             name="password_confirmation"
                                             id="password_confirmation"
                                             label="Confirm password"
@@ -122,8 +136,8 @@
                                         ></v-text-field>
 
                                         <v-menu
-                                            ref="menu1"
-                                            v-model="menu1"
+                                            ref="birthdateMenu"
+                                            v-model="birthdateMenu"
                                             :close-on-content-click="false"
                                             transition="scale-transition"
                                             offset-y
@@ -147,7 +161,7 @@
                                                 :max="nowDate"
                                                 v-model="formAd.birthdate"
                                                 no-title
-                                                @input="menu1 = false"
+                                                @input="birthdateMenu = false"
                                             ></v-date-picker>
                                         </v-menu>
                                         <vue-tel-input
@@ -223,9 +237,9 @@ export default {
     data() {
         return {
             step: 1,
-            show1: false,
-            show2: false,
-            menu1: false,
+            isPasswordVisible: false,
+            isConfirmationVisible: false,
+            birthdateMenu: false,
             phone: null,
             nowDate: new Date().toISOString().slice(0, 10),
             isFormValid: false,
@@ -310,10 +324,15 @@ export default {
     text-align: left;
     padding-top: 12px;
 }
+:deep(.vue-tel-input:hover) {
+    border-bottom-color: black;
+}
+
 :deep(.vue-tel-input:focus-within) {
     box-shadow: none;
     border-bottom-width: 2px;
     border-color: #1976d2;
+    transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
 }
 
 :deep(.vti__dropdown) {

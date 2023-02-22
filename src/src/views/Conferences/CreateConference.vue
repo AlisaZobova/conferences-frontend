@@ -31,8 +31,8 @@
                                     ></v-text-field>
                                 </validation-provider>
                                 <v-menu
-                                    ref="menu1"
-                                    v-model="menu1"
+                                    ref="confDateMenu"
+                                    v-model="confDateMenu"
                                     :close-on-content-click="false"
                                     transition="scale-transition"
                                     offset-y
@@ -66,7 +66,7 @@
                                             :min="nowDate"
                                             :error-messages="errors"
                                             no-title
-                                            @input="menu1 = false"
+                                            @input="confDateMenu = false"
                                         ></v-date-picker>
                                     </validation-provider>
                                 </v-menu>
@@ -175,10 +175,10 @@ export default {
             return this.$store.state.countries.countries
         },
         categories() {
-          return this.$store.state.categories.categories.filter(
-              (category) => !category.parents
-          )
-        }
+            return this.$store.state.categories.categories.filter(
+                (category) => !category.parents
+            )
+        },
     },
     data: () => ({
         form: {
@@ -187,13 +187,13 @@ export default {
             latitude: null,
             longitude: null,
             country: '',
-            category_id: null
+            category_id: null,
         },
-        menu1: false,
+        confDateMenu: false,
         titleInfoMsg: 'Title must start with a capital letter',
         nowDate: new Date().toISOString().slice(0, 10),
         loading: true,
-        category: []
+        category: [],
     }),
 
     methods: {
@@ -201,9 +201,9 @@ export default {
         async submit() {
             this.$refs.observer.validate().then((result) => {
                 if (result) {
-                  if(this.category.length > 0) {
-                    this.form.category_id = this.category[0].id
-                  }
+                    if (this.category.length > 0) {
+                        this.form.category_id = this.category[0].id
+                    }
                     this.CreateConference(this.form).catch(() => {})
                     this.$router.push({ name: 'Conferences' }).catch(() => {})
                 }
@@ -236,9 +236,11 @@ export default {
         },
     },
     created() {
-        this.GetCountries().then(() => {
-            this.GetCategories()}).then(() =>
-                this.loading = false)
+        this.GetCountries()
+            .then(() => {
+                this.GetCategories()
+            })
+            .then(() => (this.loading = false))
     },
 }
 </script>

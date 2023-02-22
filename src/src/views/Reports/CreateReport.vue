@@ -27,8 +27,8 @@
                                 ></v-text-field>
                             </validation-provider>
                             <v-menu
-                                ref="menu1"
-                                v-model="menu1"
+                                ref="startTimeMenu"
+                                v-model="startTimeMenu"
                                 :close-on-content-click="false"
                                 transition="scale-transition"
                                 offset-y
@@ -66,13 +66,13 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @input="menu1 = false"
+                                        @input="startTimeMenu = false"
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>
                             <v-menu
-                                ref="menu2"
-                                v-model="menu2"
+                                ref="endTimeMenu"
+                                v-model="endTimeMenu"
                                 :close-on-content-click="false"
                                 transition="scale-transition"
                                 offset-y
@@ -109,7 +109,7 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @input="menu2 = false"
+                                        @input="endTimeMenu = false"
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>
@@ -198,8 +198,8 @@ export default {
             conference_id: null,
             category_id: null,
         },
-        menu1: false,
-        menu2: false,
+        startTimeMenu: false,
+        endTimeMenu: false,
         timeStart: '',
         timeEnd: '',
         loading: true,
@@ -228,19 +228,20 @@ export default {
                     if (this.reportCategory.length > 0) {
                         this.form.category_id = this.reportCategory[0].id
                     } else {
-                        this.report.category_id = ''
+                        this.form.category_id = ''
                     }
                     const input = document.getElementById('presentation')
                     if (input.files[0]) {
                         this.form.presentation = input.files[0]
                     }
+                    this.loading = true
                     this.CreateReport(this.form)
                         .then(() => this.JoinConference(this.$route.params.id))
                         .then(() => this.$router.push('/conferences'))
-                        .catch(
-                            (error) =>
-                                (this.apiErrors = error.response.data.errors)
-                        )
+                        .catch((error) => {
+                            this.apiErrors = error.response.data.errors
+                            this.loading = false
+                        })
                 }
             })
         },
@@ -274,11 +275,9 @@ export default {
                                 category.id === this.conference.category_id
                         )[0]
                     )
-                    this.loading = false
-                } else {
-                    this.loading = false
                 }
             })
+            .finally(() => (this.loading = false))
     },
 }
 </script>

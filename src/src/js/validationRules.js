@@ -8,6 +8,7 @@ import {
     numeric,
     ext,
     size,
+    email
 } from 'vee-validate/dist/rules'
 import { extend, setInteractionMode } from 'vee-validate'
 
@@ -37,6 +38,11 @@ extend('between', {
 extend('required', {
     ...required,
     message: '{_field_} can not be empty',
+})
+
+extend('email', {
+    ...email,
+    message: 'Not valid email',
 })
 
 extend('max', {

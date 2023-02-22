@@ -18,10 +18,14 @@
             </v-btn>
 
             <v-layout class="d-flex justify-end align-center">
-                <span>
+                <ReportsConferencesSearch
+                    v-if="isLoggedIn"
+                    class="mr-2"
+                ></ReportsConferencesSearch>
+                <span v-if="isLoggedIn">
                     <v-badge
                         class="mr-5"
-                        v-if="isLoggedIn && favCount > 0"
+                        v-if="favCount > 0"
                         :content="favCount"
                         color="error"
                     >
@@ -31,7 +35,7 @@
                     </v-badge>
                     <v-icon
                         class="mr-5"
-                        v-if="isLoggedIn && favCount === 0"
+                        v-if="favCount === 0"
                         :color="iconColor"
                         >mdi-heart</v-icon
                     >
@@ -77,9 +81,11 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
+import ReportsConferencesSearch from '@/views/Search/ReportsConferencesSearch'
 
 export default {
     name: 'App',
+    components: { ReportsConferencesSearch },
     computed: {
         isLoggedIn() {
             return this.$store.getters.isAuthenticated
@@ -100,7 +106,11 @@ export default {
     methods: {
         ...mapActions(['LogOut']),
         async logout() {
-            await this.LogOut()
+            this.LogOut().then(() => {
+                if (this.$route.name === 'Conferences') {
+                    this.$router.go(0)
+                }
+            })
         },
         goToFav() {
             this.$router.push({ name: 'Favorites' })

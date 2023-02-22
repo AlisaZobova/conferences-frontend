@@ -2,15 +2,27 @@ import axios from 'axios'
 import { saveAs } from 'file-saver'
 
 const state = {
+    searchedReports: [],
     reports: [],
     report: null,
+    page: 1,
+}
+
+const getters = {
+    currentReportsPage: (state) => {
+        return state.page
+    },
 }
 
 const actions = {
-    async GetReports({ commit }) {
-        let response = await axios.get('reports')
+    async GetReports({ commit }, { page, filters }) {
+        let response = await axios.get('reports?page=' + page + filters)
         commit('setReports', response.data)
         commit('setReport', null)
+    },
+    async SearchReports({ commit }, query) {
+        let response = await axios.get('reports/search' + query)
+        commit('setSearchReports', response.data)
     },
     async GetReport({ commit }, reportId) {
         let response = await axios.get('reports/' + reportId)
@@ -23,7 +35,7 @@ const actions = {
     async UpdateReport({ commit }, { form, reportId }) {
         let response = await axios.post('reports/' + reportId, form, {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
         })
         commit('setReport', response.data)
@@ -49,18 +61,28 @@ const actions = {
                 )
             })
     },
+    SetReportsPage({ commit }, newValue) {
+        commit('setPage', newValue)
+    },
 }
 const mutations = {
     setReports(state, reports) {
         state.reports = reports
     },
+    setSearchReports(state, reports) {
+        state.searchedReports = reports
+    },
     setReport(state, report) {
         state.report = report
+    },
+    setPage(state, page) {
+        state.page = page
     },
 }
 
 export default {
     state,
+    getters,
     actions,
     mutations,
 }
