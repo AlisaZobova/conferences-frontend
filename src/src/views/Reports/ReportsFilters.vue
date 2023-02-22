@@ -180,7 +180,7 @@ export default {
         },
         category(newValue) {
             this.category = newValue
-            if (!newValue) {
+            if (newValue.length === 0) {
                 delete this.filters['category']
             } else {
                 this.filters['category'] = this.category.toString()
