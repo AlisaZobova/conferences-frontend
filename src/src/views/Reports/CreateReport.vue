@@ -275,11 +275,9 @@ export default {
                                 category.id === this.conference.category_id
                         )[0]
                     )
-                    this.loading = false
-                } else {
-                    this.loading = false
                 }
             })
+            .finally(() => (this.loading = false))
     },
 }
 </script>
