@@ -22,10 +22,10 @@
                     v-if="isLoggedIn"
                     class="mr-2"
                 ></ReportsConferencesSearch>
-                <span>
+                <span v-if="isLoggedIn">
                     <v-badge
                         class="mr-5"
-                        v-if="isLoggedIn && favCount > 0"
+                        v-if="favCount > 0"
                         :content="favCount"
                         color="error"
                     >
@@ -35,7 +35,7 @@
                     </v-badge>
                     <v-icon
                         class="mr-5"
-                        v-if="isLoggedIn && favCount === 0"
+                        v-if="favCount === 0"
                         :color="iconColor"
                         >mdi-heart</v-icon
                     >
