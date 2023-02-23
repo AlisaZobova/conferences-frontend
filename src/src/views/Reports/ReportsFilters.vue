@@ -26,12 +26,14 @@
                     ></v-text-field>
                 </template>
                 <v-time-picker
+                    ref="from"
                     v-model="from"
                     min="08:00"
                     :max="to ? to : '19:59'"
                     format="24hr"
                     scrollable
                     @input="timeFromMenu = false"
+                    @click:minute="setFromOnHours"
                 ></v-time-picker>
             </v-menu>
             <v-menu
@@ -56,12 +58,14 @@
                     ></v-text-field>
                 </template>
                 <v-time-picker
+                    ref="to"
                     v-model="to"
                     format="24hr"
                     scrollable
                     :min="from ? from : '08:01'"
                     max="20:00"
                     @input="timeToMenu = false"
+                    @click:minute="setToOnHours"
                 ></v-time-picker>
             </v-menu>
             <v-range-slider
@@ -134,6 +138,16 @@ export default {
                 }
                 this.strFilters = this.strFilters.slice(0, -1)
             }
+        },
+        setFromOnHours() {
+            this.$nextTick(() => {
+                this.$refs.from.selectingHour = true
+            })
+        },
+        setToOnHours() {
+            this.$nextTick(() => {
+                this.$refs.to.selectingHour = true
+            })
         },
     },
     data() {
