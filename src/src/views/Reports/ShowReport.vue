@@ -60,6 +60,15 @@
                     <v-icon :color="color"> mdi-heart </v-icon>
                 </v-btn>
             </v-card-actions>
+            <v-card-actions v-if="$store.getters.isAdmin">
+                <v-btn
+                    text
+                    color="red"
+                    @click.prevent="adminDeleteReport(report.id)"
+                >
+                    Delete
+                </v-btn>
+            </v-card-actions>
         </v-card>
         <ReportComments />
     </div>
@@ -110,14 +119,16 @@ export default {
             'DeleteFavorite',
         ]),
         editReport(reportId) {
-            this.$router
-                .push({ name: 'EditReport', params: { id: reportId } })
-                .catch(() => {})
+            this.$router.push({ name: 'EditReport', params: { id: reportId } })
         },
         deleteReport(reportId) {
+            this.DeleteReport(reportId)
+            this.CancelParticipation(this.report.conference.id)
+            this.$router.push({ name: 'Conferences' })
+        },
+        adminDeleteReport(reportId) {
             this.DeleteReport(reportId).catch(() => {})
-            this.CancelParticipation(this.report.conference.id).catch(() => {})
-            this.$router.push({ name: 'Conferences' }).catch(() => {})
+            this.$router.push({ name: 'Reports' })
         },
         downloadFile() {
             this.DownloadFile(this.report.id)
