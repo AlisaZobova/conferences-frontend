@@ -61,11 +61,7 @@
                     :server-items-length="totalConferences"
                     :items-per-page="perPage"
                     hide-default-footer
-                    :class="
-                        isAuthenticated && openFilters
-                            ? 'd-inline-block elevation-1'
-                            : 'elevation-1'
-                    "
+                    class="elevation-1"
                 >
                     <template v-slot:top>
                         <v-toolbar flat>
