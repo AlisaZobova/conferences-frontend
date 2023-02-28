@@ -1,153 +1,161 @@
 <template>
     <div class="mt-4">
         <v-layout>
-            <ReportsFilters
-                class="mb-5"
-                v-if="openFilters"
-                :disabled="loading"
-                @updateFilters="filters = $event"
-                @applyFilters="getFilteredData"
-            />
-            <v-container
-                v-if="loading"
-                :class="openFilters ? 'with-filters d-inline-block' : ''"
-                :fluid="!openFilters"
-            >
-                <v-skeleton-loader
-                    v-if="isAuthenticated"
-                    type="button"
-                    class="mb-2"
-                ></v-skeleton-loader>
-                <v-row dense>
-                    <v-col
-                        v-for="i in 12"
-                        :key="i"
-                        style="flex-direction: column"
-                        cols="4"
-                    >
-                        <v-skeleton-loader
-                            class="mx-auto"
-                            type="card"
-                        ></v-skeleton-loader>
-                    </v-col>
-                </v-row>
-            </v-container>
-            <v-container
-                v-if="!loading && responseLength > 0"
-                :class="openFilters ? 'with-filters' : ''"
-                :fluid="!openFilters"
-            >
-                <v-btn
-                    v-if="isAuthenticated"
-                    class="filter-btn mb-2"
-                    text
-                    color="grey"
-                    @click="openFilters = !openFilters"
+            <v-slide-x-transition>
+                <ReportsFilters
+                    class="mb-5"
+                    v-if="openFilters"
+                    :disabled="loading"
+                    @updateFilters="filters = $event"
+                    @applyFilters="getFilteredData"
+                />
+            </v-slide-x-transition>
+            <v-slide-x-transition>
+                <v-container
+                    v-if="loading"
+                    :class="openFilters ? 'with-filters d-inline-block' : ''"
+                    :fluid="!openFilters"
                 >
-                    <v-icon color="teal"> mdi-filter </v-icon>
-                    Filters
-                </v-btn>
-                <v-row dense>
-                    <v-col
-                        v-for="item in this.reports"
-                        :key="item.id"
-                        class="d-flex"
-                        style="flex-direction: column"
-                        cols="4"
-                    >
-                        <v-card
-                            class="flex-grow-1"
-                            :to="{
-                                name: 'ShowReport',
-                                params: { id: item.id },
-                            }"
+                    <v-skeleton-loader
+                        v-if="isAuthenticated"
+                        type="button"
+                        class="mb-2"
+                    ></v-skeleton-loader>
+                    <v-row dense>
+                        <v-col
+                            v-for="i in 12"
+                            :key="i"
+                            style="flex-direction: column"
+                            cols="4"
                         >
-                            <v-card-title
-                                class="teal--text d-inline-flex"
-                                @click.prevent="getReport(item.id)"
+                            <v-skeleton-loader
+                                class="mx-auto"
+                                type="card"
+                            ></v-skeleton-loader>
+                        </v-col>
+                    </v-row>
+                </v-container>
+                <v-container
+                    v-if="!loading && responseLength > 0"
+                    :class="openFilters ? 'with-filters' : ''"
+                    :fluid="!openFilters"
+                >
+                    <v-btn
+                        v-if="isAuthenticated"
+                        class="filter-btn mb-2"
+                        text
+                        color="grey"
+                        @click="openFilters = !openFilters"
+                    >
+                        <v-icon color="teal"> mdi-filter </v-icon>
+                        Filters
+                    </v-btn>
+                    <v-row dense>
+                        <v-col
+                            v-for="item in this.reports"
+                            :key="item.id"
+                            class="d-flex"
+                            style="flex-direction: column"
+                            cols="4"
+                        >
+                            <v-card
+                                class="flex-grow-1"
+                                :to="{
+                                    name: 'ShowReport',
+                                    params: { id: item.id },
+                                }"
                             >
-                                {{ item.topic }}
-                            </v-card-title>
+                                <v-card-title
+                                    class="teal--text d-inline-flex"
+                                    @click.prevent="getReport(item.id)"
+                                >
+                                    {{ item.topic }}
+                                </v-card-title>
 
-                            <v-btn
-                                icon
-                                @click.prevent="
-                                    isInFav(item.id)
-                                        ? deleteFromFavorites(item.id)
-                                        : addToFavorites(item.id)
-                                "
-                            >
-                                <v-icon :color="getHeartColor(item.id)">
-                                    mdi-heart
-                                </v-icon>
-                            </v-btn>
-
-                            <v-card-subtitle class="mt-2 pb-0">
-                                <b>Date:</b> {{ item.start_time.slice(0, 10)
-                                }}<br /><br />
-                                <b>From:</b> {{ item.start_time.slice(10, 16)
-                                }}<br />
-                                <b>To:</b> {{ item.end_time.slice(10, 16)
-                                }}<br /><br />
-                            </v-card-subtitle>
-
-                            <v-card-subtitle
-                                class="pt-0"
-                                v-if="item.description"
-                            >
-                                <b>Description:</b>
-                                {{
-                                    item.description.length >= 100
-                                        ? item.description.slice(0, 100) + '...'
-                                        : item.description
-                                }}
-                            </v-card-subtitle>
-
-                            <v-card-subtitle>
-                                <b>{{ item.comments.length }}</b> comment(s)
-                            </v-card-subtitle>
-
-                            <v-card-actions
-                                v-if="
-                                    item.description &&
-                                    item.description.length >= 100
-                                "
-                            >
                                 <v-btn
-                                    text
-                                    color="yellow darken-1"
-                                    @click.prevent="showMore(item.id)"
+                                    icon
+                                    @click.prevent="
+                                        isInFav(item.id)
+                                            ? deleteFromFavorites(item.id)
+                                            : addToFavorites(item.id)
+                                    "
                                 >
-                                    More
+                                    <v-icon :color="getHeartColor(item.id)">
+                                        mdi-heart
+                                    </v-icon>
                                 </v-btn>
-                            </v-card-actions>
 
-                            <v-expand-transition>
-                                <v-card
-                                    v-if="show.includes(item.id)"
-                                    class="overflow-y-auto v-card--reveal"
-                                    height="100%"
+                                <v-card-subtitle class="mt-2 pb-0">
+                                    <b>Date:</b>
+                                    {{ item.start_time.slice(0, 10)
+                                    }}<br /><br />
+                                    <b>From:</b>
+                                    {{ item.start_time.slice(10, 16) }}<br />
+                                    <b>To:</b> {{ item.end_time.slice(10, 16)
+                                    }}<br /><br />
+                                </v-card-subtitle>
+
+                                <v-card-subtitle
+                                    class="pt-0"
+                                    v-if="item.description"
                                 >
-                                    <v-card-subtitle class="mt-2">
-                                        <b>Description:</b>
-                                        {{ item.description }}
-                                    </v-card-subtitle>
+                                    <b>Description:</b>
+                                    {{
+                                        item.description.length >= 100
+                                            ? item.description.slice(0, 100) +
+                                              '...'
+                                            : item.description
+                                    }}
+                                </v-card-subtitle>
 
-                                    <v-card-actions>
-                                        <v-btn
-                                            text
-                                            color="yellow darken-1"
-                                            @click.prevent="hideMore(item.id)"
-                                        >
-                                            Close
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-expand-transition>
-                        </v-card>
-                    </v-col>
-                </v-row>
-            </v-container>
+                                <v-card-subtitle>
+                                    <b>{{ item.comments.length }}</b> comment(s)
+                                </v-card-subtitle>
+
+                                <v-card-actions
+                                    v-if="
+                                        item.description &&
+                                        item.description.length >= 100
+                                    "
+                                >
+                                    <v-btn
+                                        text
+                                        color="yellow darken-1"
+                                        @click.prevent="showMore(item.id)"
+                                    >
+                                        More
+                                    </v-btn>
+                                </v-card-actions>
+
+                                <v-expand-transition>
+                                    <v-card
+                                        v-if="show.includes(item.id)"
+                                        class="overflow-y-auto v-card--reveal"
+                                        height="100%"
+                                    >
+                                        <v-card-subtitle class="mt-2">
+                                            <b>Description:</b>
+                                            {{ item.description }}
+                                        </v-card-subtitle>
+
+                                        <v-card-actions>
+                                            <v-btn
+                                                text
+                                                color="yellow darken-1"
+                                                @click.prevent="
+                                                    hideMore(item.id)
+                                                "
+                                            >
+                                                Close
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-expand-transition>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-slide-x-transition>
             <v-layout
                 v-if="!loading && responseLength === 0"
                 class="align-center justify-center"
