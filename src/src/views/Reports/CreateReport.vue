@@ -60,6 +60,7 @@
                                     rules="required"
                                 >
                                     <v-time-picker
+                                        ref="start"
                                         v-model="timeStart"
                                         min="08:00"
                                         max="19:59"
@@ -67,6 +68,7 @@
                                         format="24hr"
                                         scrollable
                                         @input="startTimeMenu = false"
+                                        @click:minute="setStartOnHours"
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>
@@ -103,6 +105,7 @@
                                     rules="required"
                                 >
                                     <v-time-picker
+                                        ref="end"
                                         v-model="timeEnd"
                                         :min="getTime(1)"
                                         :max="getTime(60)"
@@ -110,6 +113,7 @@
                                         format="24hr"
                                         scrollable
                                         @input="endTimeMenu = false"
+                                        @click:minute="setEndOnHours"
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>
@@ -262,6 +266,16 @@ export default {
                     ? parseInt(clockTime[0]) + 1
                     : parseInt(clockTime[0])
             return hours.toString() + ':' + minutes.toString()
+        },
+        setStartOnHours() {
+            this.$nextTick(() => {
+                this.$refs.start.selectingHour = true
+            })
+        },
+        setEndOnHours() {
+            this.$nextTick(() => {
+                this.$refs.end.selectingHour = true
+            })
         },
     },
     created() {
