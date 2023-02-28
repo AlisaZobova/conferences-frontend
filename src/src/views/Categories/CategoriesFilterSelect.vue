@@ -1,9 +1,9 @@
 <template>
     <v-combobox
-        :disabled="$props.disabled || loading"
+        :disabled="disabled || loading"
         :loading="loading"
         class="pt-0"
-        :color="this.$props.color"
+        :color="color"
         :items="items"
         item-text="name"
         v-model="selected"

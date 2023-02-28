@@ -16,7 +16,7 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                        :disabled="$props.disabled"
+                        :disabled="disabled"
                         v-model="from"
                         label="From"
                         persistent-hint
@@ -43,7 +43,7 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                        :disabled="$props.disabled"
+                        :disabled="disabled"
                         class="mt-0"
                         v-model="to"
                         label="To"
@@ -61,7 +61,7 @@
                 ></v-date-picker>
             </v-menu>
             <v-range-slider
-                :disabled="$props.disabled"
+                :disabled="disabled"
                 @end="(value) => (this.reports = value)"
                 class="mt-4"
                 label="Reports"
@@ -73,13 +73,13 @@
             ></v-range-slider>
             <CategoriesFilterSelect
                 :clear="category.length === 0"
-                :disabled="$props.disabled"
+                :disabled="disabled"
                 @updateCategory="category = $event"
             />
         </v-card-text>
         <!--        <v-card-actions>-->
         <!--            <v-btn-->
-        <!--                :disabled="$props.disabled"-->
+        <!--                :disabled="disabled"-->
         <!--                text-->
         <!--                outlined-->
         <!--                color="primary"-->
@@ -90,7 +90,7 @@
         <!--        </v-card-actions>-->
         <v-card-actions class="d-block">
             <v-btn
-                :disabled="$props.disabled"
+                :disabled="disabled"
                 text
                 outlined
                 color="primary"

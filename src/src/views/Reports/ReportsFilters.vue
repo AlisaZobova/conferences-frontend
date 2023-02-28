@@ -16,7 +16,7 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                        :disabled="$props.disabled"
+                        :disabled="disabled"
                         v-model="from"
                         label="From"
                         persistent-hint
@@ -47,7 +47,7 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                        :disabled="$props.disabled"
+                        :disabled="disabled"
                         class="mt-0"
                         v-model="to"
                         label="To"
@@ -69,7 +69,7 @@
                 ></v-time-picker>
             </v-menu>
             <v-range-slider
-                :disabled="$props.disabled"
+                :disabled="disabled"
                 @end="(value) => (this.duration = value)"
                 class="mt-4"
                 color="teal"
@@ -84,13 +84,13 @@
             ></v-range-slider>
             <CategoriesFilterSelect
                 :clear="category.length === 0"
-                :disabled="$props.disabled"
+                :disabled="disabled"
                 color="teal"
                 @updateCategory="category = $event"
             />
         </v-card-text>
         <!--        <v-card-actions>-->
-        <!--            <v-btn text outlined color="teal" :disabled="$props.disabled" @click="applyFilters"-->
+        <!--            <v-btn text outlined color="teal" :disabled="disabled" @click="applyFilters"-->
         <!--                >Apply</v-btn-->
         <!--            >-->
         <!--        </v-card-actions>-->
@@ -99,7 +99,7 @@
                 text
                 outlined
                 color="teal"
-                :disabled="$props.disabled"
+                :disabled="disabled"
                 @click="resetFilters"
                 >Reset filters
             </v-btn>
