@@ -2,6 +2,7 @@
     <div class="mt-4">
         <v-layout>
             <ReportsFilters
+                class="mb-5"
                 v-if="openFilters"
                 :disabled="loading"
                 @updateFilters="filters = $event"
@@ -146,13 +147,6 @@
                         </v-card>
                     </v-col>
                 </v-row>
-                <div class="text-center pt-2">
-                    <v-pagination
-                        v-model="page"
-                        :length="pageCount"
-                        color="teal"
-                    ></v-pagination>
-                </div>
             </v-container>
             <v-layout
                 v-if="!loading && responseLength === 0"
@@ -163,6 +157,13 @@
                 </div>
             </v-layout>
         </v-layout>
+        <div class="text-center pt-2" v-if="!loading && responseLength > 0">
+            <v-pagination
+                v-model="page"
+                :length="pageCount"
+                color="teal"
+            ></v-pagination>
+        </div>
     </div>
 </template>
 

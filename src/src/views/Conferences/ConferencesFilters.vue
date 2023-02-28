@@ -245,5 +245,6 @@ export default {
 }
 .v-card.filters {
     width: 25%;
+    margin-bottom: 11px;
 }
 </style>
