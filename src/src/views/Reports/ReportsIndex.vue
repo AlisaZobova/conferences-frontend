@@ -30,7 +30,7 @@
                         >
                             <v-skeleton-loader
                                 class="mx-auto"
-                                type="card"
+                                type="image"
                             ></v-skeleton-loader>
                         </v-col>
                     </v-row>
@@ -297,5 +297,9 @@ export default {
 
 :deep(.v-skeleton-loader__button) {
     width: 11%;
+}
+
+:deep(.v-skeleton-loader__image) {
+    height: 252px;
 }
 </style>
