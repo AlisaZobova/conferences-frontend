@@ -199,7 +199,7 @@ export default {
         query: '',
         conferencesQuery: '',
         reportsQuery: '',
-        searchType: null,
+        searchType: '',
         menu: false,
     }),
     watch: {
