@@ -88,29 +88,55 @@
         <!--                >Apply</v-btn-->
         <!--            >-->
         <!--        </v-card-actions>-->
-        <v-card-actions>
+        <v-card-actions class="d-block">
             <v-btn
                 :disabled="$props.disabled"
                 text
                 outlined
                 color="primary"
-                class="reset"
+                class="filters-actions"
                 @click="resetFilters"
                 >Reset filters</v-btn
             >
+            <v-btn
+                v-if="isAdmin && !exportProcess"
+                text
+                outlined
+                class="filters-actions mt-2 ml-0"
+                color="yellow darken-1"
+                @click="exportConferences"
+                >Export conferences</v-btn
+            >
+            <a class="d-none" href="" download ref="download">Download</a>
+            <v-layout
+                class="mt-3 ml-0"
+                align-center
+                justify-center
+                v-if="exportProcess"
+            >
+                <v-progress-circular
+                    indeterminate
+                    color="primary"
+                ></v-progress-circular>
+            </v-layout>
         </v-card-actions>
     </v-card>
 </template>
 
 <script>
 import CategoriesFilterSelect from '@/views/Categories/CategoriesFilterSelect'
+import { mapActions } from 'vuex'
+import { exportMixin } from '@/mixins/exportMixin'
+
 export default {
     name: 'ConferencesFilters',
     components: { CategoriesFilterSelect },
+    mixins: [exportMixin],
     props: {
         disabled: Boolean,
     },
     methods: {
+        ...mapActions(['ExportConferences']),
         applyFilters() {
             this.setStrFilters()
             this.$emit('updateFilters', this.strFilters)
@@ -136,6 +162,20 @@ export default {
                 }
                 this.strFilters = this.strFilters.slice(0, -1)
             }
+        },
+        exportConferences() {
+            this.exportProcess = true
+            window.Echo.channel('exportDownload').listen(
+                'FinishedExport',
+                (e) => {
+                    this.$refs.download.href =
+                        process.env.VUE_APP_AXIOS_BASE_URL.slice(0, -4) + e.path
+                    window.Echo.leaveChannel('exportDownload')
+                    this.$refs.download.click()
+                    this.exportProcess = false
+                }
+            )
+            this.ExportConferences()
         },
     },
     data() {
@@ -200,7 +240,7 @@ export default {
 /*    width: 100%;*/
 /*}*/
 
-.v-btn.reset {
+.v-btn.filters-actions {
     width: 100%;
 }
 .v-card.filters {

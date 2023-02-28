@@ -52,6 +52,12 @@ const actions = {
     SetConferencesPage({ commit }, newValue) {
         commit('setPage', newValue)
     },
+    async ExportConferences() {
+        await axios.get('conferences/export')
+    },
+    async ExportConferenceListeners({state}) {
+        await axios.get('conferences/' + state.conference.id + '/export-listeners')
+    },
 }
 const mutations = {
     setConferences(state, conferences) {

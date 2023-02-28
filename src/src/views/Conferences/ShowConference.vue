@@ -50,6 +50,13 @@
                 />
             </GmapMap>
 
+            <v-progress-linear
+                v-if="exportProcess"
+                class="mt-2 mb-2"
+                indeterminate
+                color="primary"
+            ></v-progress-linear>
+
             <v-dialog v-model="dialogDelete" max-width="500px">
                 <v-card>
                     <v-card-title class="text-h5"
@@ -72,6 +79,21 @@
                 </v-card>
             </v-dialog>
             <div class="mt-2">
+                <v-btn
+                    v-if="isAdmin && !exportProcess"
+                    class="mr-1 mb-1 mt-1 white--text"
+                    depressed
+                    color="blue"
+                    @click="exportListeners"
+                >
+                    Export members
+                </v-btn>
+                <!--                <v-progress-circular-->
+                <!--                    v-if="exportProcess"-->
+                <!--                    class="ma-1"-->
+                <!--                    indeterminate-->
+                <!--                    color="primary"-->
+                <!--                ></v-progress-circular>-->
                 <v-btn
                     class="mr-1 mb-1 mt-1 white--text"
                     depressed
@@ -172,16 +194,18 @@
                 </div>
             </div>
         </div>
+        <a class="d-none" href="" download ref="download">Download</a>
     </v-app>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 import { buttonActionsMixin } from '@/mixins/buttonActionsMixin'
+import { exportMixin } from '@/mixins/exportMixin'
 
 export default {
     name: 'ShowConference',
-    mixins: [buttonActionsMixin],
+    mixins: [buttonActionsMixin, exportMixin],
     data() {
         return {
             loading: true,
@@ -212,7 +236,12 @@ export default {
         },
     },
     methods: {
-        ...mapActions(['GetConference', 'DeleteConference', 'DeleteReport']),
+        ...mapActions([
+            'GetConference',
+            'DeleteConference',
+            'DeleteReport',
+            'ExportConferenceListeners',
+        ]),
         deleteItem() {
             this.dialogDelete = true
         },
@@ -236,6 +265,20 @@ export default {
                 this.DeleteReport(report.id)
             }
             this.CancelParticipation(this.conference.id)
+        },
+        exportListeners() {
+            this.exportProcess = true
+            window.Echo.channel('exportDownload').listen(
+                'FinishedExport',
+                (e) => {
+                    this.$refs.download.href =
+                        process.env.VUE_APP_AXIOS_BASE_URL.slice(0, -4) + e.path
+                    window.Echo.leaveChannel('exportDownload')
+                    this.$refs.download.click()
+                    this.exportProcess = false
+                }
+            )
+            this.ExportConferenceListeners()
         },
     },
 
