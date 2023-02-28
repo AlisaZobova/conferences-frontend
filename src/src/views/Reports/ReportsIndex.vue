@@ -33,21 +33,19 @@
             </v-container>
             <v-container
                 v-if="!loading && responseLength > 0"
-                :class="openFilters ? 'with-filters d-inline-block' : ''"
+                :class="openFilters ? 'with-filters' : ''"
                 :fluid="!openFilters"
             >
-                <v-card class="text-end mb-2">
-                    <v-btn
-                        v-if="isAuthenticated"
-                        class="filter-btn"
-                        text
-                        color="grey"
-                        @click="openFilters = !openFilters"
-                    >
-                        <v-icon color="teal"> mdi-filter </v-icon>
-                        Filters
-                    </v-btn>
-                </v-card>
+                <v-btn
+                    v-if="isAuthenticated"
+                    class="filter-btn mb-2"
+                    text
+                    color="grey"
+                    @click="openFilters = !openFilters"
+                >
+                    <v-icon color="teal"> mdi-filter </v-icon>
+                    Filters
+                </v-btn>
                 <v-row dense>
                     <v-col
                         v-for="item in this.reports"
@@ -285,10 +283,10 @@ export default {
     max-width: 75%;
 }
 .filter-btn {
-    width: 100%;
+    width: auto;
 }
 
 :deep(.v-skeleton-loader__button) {
-    width: 100%;
+    width: 11%;
 }
 </style>
