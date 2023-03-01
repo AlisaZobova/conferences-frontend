@@ -64,6 +64,7 @@
                             :headers="headers"
                             :items="conferences"
                             :page="page"
+                            :options.sync="options"
                             :server-items-length="totalConferences"
                             :items-per-page="perPage"
                             hide-default-footer
@@ -326,6 +327,7 @@ export default {
             dialogDelete: false,
             loading: true,
             filters: '',
+            options: {},
             openFilters: false,
             headers: [
                 {
