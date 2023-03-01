@@ -26,7 +26,9 @@
                             v-for="i in 12"
                             :key="i"
                             style="flex-direction: column"
-                            cols="4"
+                            cols="12"
+                            sm="6"
+                            md="3"
                         >
                             <v-skeleton-loader
                                 class="mx-auto"
@@ -56,7 +58,9 @@
                             :key="item.id"
                             class="d-flex"
                             style="flex-direction: column"
-                            cols="4"
+                            cols="12"
+                            sm="6"
+                            md="3"
                         >
                             <v-card
                                 class="flex-grow-1"
@@ -284,10 +288,6 @@ export default {
     width: 100%;
 }
 
-:deep(.col) {
-    max-width: 25%;
-    margin-bottom: 1%;
-}
 .container.with-filters {
     max-width: 75%;
 }
@@ -296,7 +296,7 @@ export default {
 }
 
 :deep(.v-skeleton-loader__button) {
-    width: 11%;
+    width: 115px;
 }
 
 :deep(.v-skeleton-loader__image) {
