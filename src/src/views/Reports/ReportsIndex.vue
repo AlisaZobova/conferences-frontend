@@ -1,21 +1,16 @@
 <template>
     <div class="mt-4">
         <v-layout>
-            <v-slide-x-transition>
+            <v-navigation-drawer v-model="openFilters" absolute temporary>
                 <ReportsFilters
                     class="mb-5"
-                    v-if="openFilters"
                     :disabled="loading"
                     @updateFilters="filters = $event"
                     @applyFilters="getFilteredData"
                 />
-            </v-slide-x-transition>
+            </v-navigation-drawer>
             <v-slide-x-transition>
-                <v-container
-                    v-if="loading"
-                    :class="openFilters ? 'with-filters d-inline-block' : ''"
-                    :fluid="!openFilters"
-                >
+                <v-container v-if="loading" fluid>
                     <v-skeleton-loader
                         v-if="isAuthenticated"
                         type="button"
@@ -37,11 +32,7 @@
                         </v-col>
                     </v-row>
                 </v-container>
-                <v-container
-                    v-if="!loading && responseLength > 0"
-                    :class="openFilters ? 'with-filters' : ''"
-                    :fluid="!openFilters"
-                >
+                <v-container v-if="!loading && responseLength > 0" fluid>
                     <v-btn
                         v-if="isAuthenticated"
                         class="filter-btn mb-2"
@@ -288,9 +279,6 @@ export default {
     width: 100%;
 }
 
-.container.with-filters {
-    max-width: 75%;
-}
 .filter-btn {
     width: auto;
 }

@@ -1,5 +1,5 @@
 <template>
-    <v-card class="filters d-inline-block mt-3">
+    <div>
         <v-card-subtitle class="text-center text-h6 teal--text"
             >Choose filters</v-card-subtitle
         >
@@ -131,7 +131,7 @@
                 ></v-progress-circular>
             </v-layout>
         </v-card-actions>
-    </v-card>
+    </div>
 </template>
 
 <script>
@@ -257,9 +257,6 @@ export default {
 }
 :deep(.v-btn) {
     width: 100%;
-}
-.v-card.filters {
-    width: 25%;
 }
 
 :deep(.v-picker__title) {
