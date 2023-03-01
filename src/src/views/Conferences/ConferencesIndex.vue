@@ -84,7 +84,7 @@
                                     <v-layout class="justify-end">
                                         <v-btn
                                             v-if="isAuthenticated"
-                                            class="mr-2"
+                                            class="mr-2 hidden-sm-and-down"
                                             text
                                             color="grey"
                                             @click="openFilters = !openFilters"
@@ -94,6 +94,14 @@
                                             </v-icon>
                                             Filters
                                         </v-btn>
+                                        <v-icon
+                                            color="primary"
+                                            v-if="isAuthenticated"
+                                            class="mr-2 hidden-md-and-up"
+                                            @click="openFilters = !openFilters"
+                                        >
+                                            mdi-filter
+                                        </v-icon>
                                         <v-dialog
                                             v-if="
                                                 isAuthenticated &&
@@ -107,13 +115,23 @@
                                                 <v-btn
                                                     color="primary"
                                                     dark
-                                                    class="mb-2"
+                                                    class="mb-2 hidden-sm-and-down"
                                                     v-bind="attrs"
                                                     v-on="on"
                                                     @click="createItem"
                                                 >
                                                     New Conference
                                                 </v-btn>
+                                                <v-icon
+                                                    color="success"
+                                                    class="mb-2 mt-1 hidden-md-and-up"
+                                                    v-bind="attrs"
+                                                    v-on="on"
+                                                    @click="createItem"
+                                                    large
+                                                >
+                                                    mdi-plus
+                                                </v-icon>
                                             </template>
                                         </v-dialog>
                                         <v-dialog
