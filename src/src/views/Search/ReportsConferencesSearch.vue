@@ -6,12 +6,13 @@
             v-model="menu"
             :left="10"
             min-width="300"
+            transition="slide-x-reverse-transition"
         >
             <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                     :loading="loading"
                     :disabled="loading"
-                    class="search-input"
+                    class="search-input hidden-sm-and-down"
                     v-model="query"
                     v-bind="attrs"
                     v-on="on"
@@ -22,7 +23,24 @@
                         <v-icon v-bind="attrs" v-on="on">mdi-magnify</v-icon>
                     </template>
                 </v-text-field>
+                <v-icon v-bind="attrs" v-on="on" class="hidden-md-and-up"
+                    >mdi-magnify</v-icon
+                >
             </template>
+            <v-layout class="white">
+                <v-text-field
+                    :loading="loading"
+                    :disabled="loading"
+                    class="search-input hidden-md-and-up pl-4 pr-4"
+                    v-model="query"
+                    @input="menu = true"
+                    @change="searchWithTimeout"
+                >
+                    <template v-slot:prepend-inner>
+                        <v-icon>mdi-magnify</v-icon>
+                    </template>
+                </v-text-field>
+            </v-layout>
             <v-layout class="white">
                 <v-layout align-center justify-center v-if="loading">
                     <v-progress-circular
