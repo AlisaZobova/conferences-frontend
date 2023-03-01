@@ -164,7 +164,9 @@
                                                     <v-btn
                                                         color="blue darken-1"
                                                         text
-                                                        @click="dialogDelete=false"
+                                                        @click="
+                                                            dialogDelete = false
+                                                        "
                                                         >Cancel</v-btn
                                                     >
                                                     <v-btn
@@ -386,11 +388,11 @@ export default {
             this.loading = true
             this.getConferences()
         },
-      dialogDelete(newVal) {
-          if(!newVal){
-            this.selectedItem = null
-          }
-      }
+        dialogDelete(newVal) {
+            if (!newVal) {
+                this.selectedItem = null
+            }
+        },
     },
     methods: {
         ...mapActions(['GetConferences', 'DeleteConference', 'DeleteReport']),
@@ -416,11 +418,10 @@ export default {
             this.dialogDelete = true
         },
         deleteItemConfirm() {
-          this.loading = true
-            this.DeleteConference(this.selectedItem.id)
-                .then(() => {
-                  this.$router.go(0)
-                })
+            this.loading = true
+            this.DeleteConference(this.selectedItem.id).then(() => {
+                this.$router.go(0)
+            })
         },
         cancelParticipation(item) {
             if (this.isAnnouncer) {
