@@ -86,7 +86,7 @@
                                     <div class="text-end">
                                         <v-btn
                                             v-if="isAuthenticated"
-                                            class="mr-2 hidden-sm-and-down"
+                                            class="mr-2 mb-2 hidden-sm-and-down"
                                             text
                                             color="grey"
                                             @click="openFilters = !openFilters"
