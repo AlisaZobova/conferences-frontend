@@ -34,10 +34,9 @@ const actions = {
     },
 
     async DeleteConference({ commit, dispatch }, conferenceId) {
-        axios.delete('conferences/' + conferenceId).then(() => {
-            commit('setConference', null)
-            dispatch('GetUser')
-        })
+        await axios.delete('conferences/' + conferenceId)
+        commit('setConference', null)
+        dispatch('GetUser')
     },
     async UpdateConference({ commit }, { form, conferenceId }) {
         let response = await axios.patch('conferences/' + conferenceId, form)

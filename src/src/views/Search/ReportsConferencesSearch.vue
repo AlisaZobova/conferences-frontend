@@ -4,9 +4,9 @@
             offset-y
             :close-on-content-click="false"
             v-model="menu"
-            :left="10"
+            :left="false"
             min-width="300"
-            transition="slide-x-reverse-transition"
+            transition="slide-y-transition"
         >
             <template v-slot:activator="{ on, attrs }">
                 <v-text-field

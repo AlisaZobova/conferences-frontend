@@ -80,7 +80,6 @@
                             :headers="headers"
                             :items="conferences"
                             :page="page"
-                            :options.sync="options"
                             :server-items-length="totalConferences"
                             :items-per-page="perPage"
                             hide-default-footer
@@ -165,7 +164,7 @@
                                                     <v-btn
                                                         color="blue darken-1"
                                                         text
-                                                        @click="closeDelete"
+                                                        @click="dialogDelete=false"
                                                         >Cancel</v-btn
                                                     >
                                                     <v-btn
@@ -364,7 +363,6 @@ export default {
             dialogDelete: false,
             loading: true,
             filters: '',
-            options: {},
             openFilters: false,
             headers: [
                 {
@@ -384,13 +382,15 @@ export default {
         }
     },
     watch: {
-        dialogDelete(val) {
-            val || this.closeDelete()
-        },
         page() {
             this.loading = true
             this.getConferences()
         },
+      dialogDelete(newVal) {
+          if(!newVal){
+            this.selectedItem = null
+          }
+      }
     },
     methods: {
         ...mapActions(['GetConferences', 'DeleteConference', 'DeleteReport']),
@@ -415,14 +415,12 @@ export default {
             this.selectedItem = item
             this.dialogDelete = true
         },
-        async deleteItemConfirm() {
+        deleteItemConfirm() {
+          this.loading = true
             this.DeleteConference(this.selectedItem.id)
-                .then(() => this.closeDelete())
-                .then(() => this.$router.go(0))
-        },
-        closeDelete() {
-            this.selectedItem = null
-            this.dialogDelete = false
+                .then(() => {
+                  this.$router.go(0)
+                })
         },
         cancelParticipation(item) {
             if (this.isAnnouncer) {
