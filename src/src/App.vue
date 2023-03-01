@@ -39,10 +39,9 @@
                                 </router-link>
                             </v-list-item-title>
                         </v-list-item>
-                        <v-list-item>
+                        <v-list-item v-if="isAdmin">
                             <v-list-item-title>
                                 <router-link
-                                    v-if="isAdmin"
                                     :to="{ name: 'Categories' }"
                                     class="primary--text text-decoration-none"
                                 >
