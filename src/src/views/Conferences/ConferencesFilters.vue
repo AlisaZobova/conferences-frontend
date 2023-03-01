@@ -1,5 +1,5 @@
 <template>
-    <v-card class="filters d-inline-block mt-3">
+    <div>
         <v-card-subtitle class="text-center text-h6 primary--text"
             >Choose filters</v-card-subtitle
         >
@@ -120,7 +120,7 @@
                 ></v-progress-circular>
             </v-layout>
         </v-card-actions>
-    </v-card>
+    </div>
 </template>
 
 <script>
@@ -242,9 +242,5 @@ export default {
 
 .v-btn.filters-actions {
     width: 100%;
-}
-.v-card.filters {
-    width: 25%;
-    margin-bottom: 11px;
 }
 </style>

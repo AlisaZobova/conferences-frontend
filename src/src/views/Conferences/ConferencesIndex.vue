@@ -2,24 +2,16 @@
     <v-app>
         <div class="mt-2">
             <v-layout>
-                <v-slide-x-transition>
+                <v-navigation-drawer v-model="openFilters" absolute temporary>
                     <ConferencesFilters
                         :disabled="loading"
-                        v-if="isAuthenticated && openFilters"
+                        v-if="isAuthenticated"
                         @updateFilters="filters = $event"
                         @applyFilters="getFilteredData"
                     />
-                </v-slide-x-transition>
+                </v-navigation-drawer>
                 <v-slide-x-transition>
-                    <v-container
-                        v-if="loading"
-                        :class="
-                            isAuthenticated && openFilters
-                                ? 'with-filters d-inline-block'
-                                : ''
-                        "
-                        :fluid="!isAuthenticated || !openFilters"
-                    >
+                    <v-container v-if="loading" fluid>
                         <v-layout align-center class="table-heading-skeleton">
                             <v-skeleton-loader
                                 type="text"
@@ -28,33 +20,34 @@
                             ></v-skeleton-loader>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
-                            <div
-                                v-if="isAuthenticated"
-                                class="hidden-sm-and-down"
-                            >
-                                <v-skeleton-loader
-                                    type="button"
-                                    width="117"
-                                    class="full-btn d-inline-block mr-2"
-                                ></v-skeleton-loader>
-                                <v-skeleton-loader
-                                    type="button"
-                                    width="172"
-                                    class="full-btn d-inline-block"
-                                ></v-skeleton-loader>
-                            </div>
-                            <div
-                                v-if="isAuthenticated"
-                                class="hidden-md-and-up"
-                            >
-                                <v-skeleton-loader
-                                    type="avatar"
-                                    class="mr-4 d-inline-block"
-                                ></v-skeleton-loader>
-                                <v-skeleton-loader
-                                    type="avatar"
-                                    class="d-inline-block"
-                                ></v-skeleton-loader>
+                            <div v-if="isAuthenticated">
+                                <span class="hidden-sm-and-down">
+                                    <v-skeleton-loader
+                                        type="button"
+                                        width="117"
+                                        class="full-btn d-inline-block mr-2"
+                                    ></v-skeleton-loader>
+                                </span>
+                                <span class="hidden-md-and-up">
+                                    <v-skeleton-loader
+                                        type="avatar"
+                                        class="mr-4 d-inline-block"
+                                    ></v-skeleton-loader>
+                                </span>
+                                <span class="hidden-xs-only">
+                                    <v-skeleton-loader
+                                        type="button"
+                                        width="172"
+                                        class="full-btn d-inline-block"
+                                    ></v-skeleton-loader>
+                                </span>
+
+                                <span class="hidden-sm-and-up">
+                                    <v-skeleton-loader
+                                        type="avatar"
+                                        class="d-inline-block"
+                                    ></v-skeleton-loader>
+                                </span>
                             </div>
                         </v-layout>
                         <v-skeleton-loader
@@ -69,13 +62,7 @@
                             class="table-skeleton"
                         ></v-skeleton-loader>
                     </v-container>
-                    <v-container
-                        v-if="!loading && totalConferences > 0"
-                        :class="
-                            isAuthenticated && openFilters ? 'with-filters' : ''
-                        "
-                        :fluid="!isAuthenticated || !openFilters"
-                    >
+                    <v-container v-if="!loading && totalConferences > 0" fluid>
                         <v-data-table
                             :headers="headers"
                             :items="conferences"
@@ -96,7 +83,7 @@
                                         vertical
                                     ></v-divider>
                                     <v-spacer></v-spacer>
-                                    <v-layout class="justify-end">
+                                    <div class="text-end">
                                         <v-btn
                                             v-if="isAuthenticated"
                                             class="mr-2 hidden-sm-and-down"
@@ -110,7 +97,7 @@
                                             Filters
                                         </v-btn>
                                         <v-icon
-                                            color="primary"
+                                            color="grey darken-2"
                                             v-if="isAuthenticated"
                                             class="mr-4 hidden-md-and-up"
                                             @click="openFilters = !openFilters"
@@ -130,7 +117,7 @@
                                                 <v-btn
                                                     color="primary"
                                                     dark
-                                                    class="mb-2 hidden-sm-and-down"
+                                                    class="mb-2 hidden-xs-only"
                                                     v-bind="attrs"
                                                     v-on="on"
                                                     @click="createItem"
@@ -139,13 +126,12 @@
                                                 </v-btn>
                                                 <v-icon
                                                     color="success"
-                                                    class="mb-2 mt-1 hidden-md-and-up"
+                                                    class="hidden-sm-and-up"
                                                     v-bind="attrs"
                                                     v-on="on"
                                                     @click="createItem"
-                                                    large
                                                 >
-                                                    mdi-plus
+                                                    mdi-plus-thick
                                                 </v-icon>
                                             </template>
                                         </v-dialog>
@@ -181,7 +167,7 @@
                                                 </v-card-actions>
                                             </v-card>
                                         </v-dialog>
-                                    </v-layout>
+                                    </div>
                                 </v-toolbar>
                             </template>
                             <template v-slot:[`item.actions`]="{ item }">
@@ -450,10 +436,6 @@ export default {
 </script>
 
 <style scoped>
-/*.container.with-filters {*/
-/*    max-width: 75%;*/
-/*}*/
-
 :deep(.full-btn .v-skeleton-loader__button) {
     width: 100%;
 }
