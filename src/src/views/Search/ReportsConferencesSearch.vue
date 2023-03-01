@@ -1,6 +1,12 @@
 <template>
     <div class="text-center">
-        <v-menu offset-y :close-on-content-click="false" v-model="menu">
+        <v-menu
+            offset-y
+            :close-on-content-click="false"
+            v-model="menu"
+            :left="10"
+            min-width="300"
+        >
             <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                     :loading="loading"
@@ -17,7 +23,7 @@
                     </template>
                 </v-text-field>
             </template>
-            <v-layout class="search-layout white">
+            <v-layout class="white">
                 <v-layout align-center justify-center v-if="loading">
                     <v-progress-circular
                         indeterminate
@@ -65,7 +71,7 @@
                         <v-divider></v-divider>
                     </div>
                     <v-list
-                        :max-height="searchType === 'conferences' ? 500 : 250"
+                        :max-height="searchType === 'conferences' ? 400 : 200"
                         class="overflow-y-auto"
                         v-if="
                             !loading &&
@@ -110,7 +116,7 @@
                         <v-divider></v-divider>
                     </div>
                     <v-list
-                        :max-height="searchType === 'reports' ? 500 : 250"
+                        :max-height="searchType === 'reports' ? 400 : 200"
                         class="overflow-y-auto"
                         v-if="
                             !loading &&
@@ -223,7 +229,7 @@ export default {
 }
 
 .search-input {
-    min-width: 35px;
+    min-width: auto;
 }
 
 :deep(.search-input .v-input__slot) {
@@ -232,9 +238,6 @@ export default {
 
 :deep(.radio-type-select .v-label) {
     font-size: 14px;
-}
-.search-layout {
-    min-width: 300px;
 }
 
 .search-result {
