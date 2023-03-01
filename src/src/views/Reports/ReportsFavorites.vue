@@ -6,10 +6,11 @@
                 :key="item.id"
                 class="d-flex"
                 style="flex-direction: column"
-                cols="4"
+                cols="12"
+                sm="6"
+                md="3"
             >
                 <v-card
-                    max-width="344"
                     class="flex-grow-1"
                     :to="{
                         name: 'ShowReport',
