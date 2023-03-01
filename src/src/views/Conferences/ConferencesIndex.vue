@@ -283,7 +283,10 @@
                     </div>
                 </v-layout>
             </v-layout>
-            <div class="text-center pt-2" v-if="!loading && totalConferences > 0">
+            <div
+                class="text-center pt-2"
+                v-if="!loading && totalConferences > 0"
+            >
                 <v-pagination v-model="page" :length="pageCount"></v-pagination>
             </div>
         </div>

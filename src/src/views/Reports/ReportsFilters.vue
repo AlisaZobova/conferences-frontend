@@ -32,7 +32,10 @@
                     :max="to ? to : '19:59'"
                     format="24hr"
                     scrollable
-                    @input="timeFromMenu = false"
+                    @change="
+                        timeFromMenu = false
+                        applyFilters()
+                    "
                     @click:minute="setFromOnHours"
                 ></v-time-picker>
             </v-menu>
@@ -64,7 +67,10 @@
                     scrollable
                     :min="from ? from : '08:01'"
                     max="20:00"
-                    @input="timeToMenu = false"
+                    @change="
+                        timeToMenu = false
+                        applyFilters()
+                    "
                     @click:minute="setToOnHours"
                 ></v-time-picker>
             </v-menu>
@@ -213,7 +219,6 @@ export default {
             } else {
                 this.filters['from'] = this.from + ':00'
             }
-            this.applyFilters()
         },
         to(newValue) {
             this.to = newValue
@@ -222,7 +227,6 @@ export default {
             } else {
                 this.filters['to'] = this.to + ':00'
             }
-            this.applyFilters()
         },
         duration(newValue) {
             this.duration = newValue
