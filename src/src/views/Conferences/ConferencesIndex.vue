@@ -279,10 +279,18 @@
                                     <v-btn
                                         depressed
                                         color="red lighten-2"
-                                        class="mr-1 mb-1 mt-1 white--text"
+                                        class="mr-1 mb-1 mt-1 white--text hidden-xs-only"
                                         @click="cancelParticipation(item)"
                                     >
                                         Cancel participation
+                                    </v-btn>
+                                    <v-btn
+                                        depressed
+                                        color="red lighten-2"
+                                        class="mr-1 mb-1 mt-1 white--text hidden-sm-and-up"
+                                        @click="cancelParticipation(item)"
+                                    >
+                                        Leave
                                     </v-btn>
                                 </div>
                             </template>
