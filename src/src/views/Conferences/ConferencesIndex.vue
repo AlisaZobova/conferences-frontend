@@ -28,18 +28,34 @@
                             ></v-skeleton-loader>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
-                            <v-skeleton-loader
+                            <div
                                 v-if="isAuthenticated"
-                                type="button"
-                                width="117"
-                                class="full-btn d-inline-block mr-2"
-                            ></v-skeleton-loader>
-                            <v-skeleton-loader
+                                class="hidden-sm-and-down"
+                            >
+                                <v-skeleton-loader
+                                    type="button"
+                                    width="117"
+                                    class="full-btn d-inline-block mr-2"
+                                ></v-skeleton-loader>
+                                <v-skeleton-loader
+                                    type="button"
+                                    width="172"
+                                    class="full-btn d-inline-block"
+                                ></v-skeleton-loader>
+                            </div>
+                            <div
                                 v-if="isAuthenticated"
-                                type="button"
-                                width="172"
-                                class="full-btn d-inline-block"
-                            ></v-skeleton-loader>
+                                class="hidden-md-and-up"
+                            >
+                                <v-skeleton-loader
+                                    type="avatar"
+                                    class="mr-4 d-inline-block"
+                                ></v-skeleton-loader>
+                                <v-skeleton-loader
+                                    type="avatar"
+                                    class="d-inline-block"
+                                ></v-skeleton-loader>
+                            </div>
                         </v-layout>
                         <v-skeleton-loader
                             class="table-thead-skeleton"
@@ -97,7 +113,7 @@
                                         <v-icon
                                             color="primary"
                                             v-if="isAuthenticated"
-                                            class="mr-2 hidden-md-and-up"
+                                            class="mr-4 hidden-md-and-up"
                                             @click="openFilters = !openFilters"
                                         >
                                             mdi-filter
@@ -462,6 +478,11 @@ export default {
     margin-right: 13.3%;
     margin-top: 10px;
     height: 20px;
+}
+
+:deep(.v-skeleton-loader__avatar) {
+    height: 36px;
+    width: 36px;
 }
 
 .table-heading-skeleton {
