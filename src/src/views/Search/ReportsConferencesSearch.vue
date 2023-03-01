@@ -4,7 +4,6 @@
             offset-y
             :close-on-content-click="false"
             v-model="menu"
-            :left="false"
             min-width="300"
             transition="slide-y-transition"
         >
