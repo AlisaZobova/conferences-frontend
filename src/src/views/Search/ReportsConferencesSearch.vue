@@ -1,11 +1,17 @@
 <template>
     <div class="text-center">
-        <v-menu offset-y :close-on-content-click="false" v-model="menu">
+        <v-menu
+            offset-y
+            :close-on-content-click="false"
+            v-model="menu"
+            min-width="300"
+            transition="slide-y-transition"
+        >
             <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                     :loading="loading"
                     :disabled="loading"
-                    class="search-input"
+                    class="search-input hidden-sm-and-down"
                     v-model="query"
                     v-bind="attrs"
                     v-on="on"
@@ -16,8 +22,25 @@
                         <v-icon v-bind="attrs" v-on="on">mdi-magnify</v-icon>
                     </template>
                 </v-text-field>
+                <v-icon v-bind="attrs" v-on="on" class="hidden-md-and-up"
+                    >mdi-magnify</v-icon
+                >
             </template>
-            <v-layout class="search-layout white">
+            <v-layout class="white">
+                <v-text-field
+                    :loading="loading"
+                    :disabled="loading"
+                    class="search-input hidden-md-and-up pl-4 pr-4"
+                    v-model="query"
+                    @input="menu = true"
+                    @change="searchWithTimeout"
+                >
+                    <template v-slot:prepend-inner>
+                        <v-icon>mdi-magnify</v-icon>
+                    </template>
+                </v-text-field>
+            </v-layout>
+            <v-layout class="white">
                 <v-layout align-center justify-center v-if="loading">
                     <v-progress-circular
                         indeterminate
@@ -65,7 +88,7 @@
                         <v-divider></v-divider>
                     </div>
                     <v-list
-                        :max-height="searchType === 'conferences' ? 500 : 250"
+                        :max-height="searchType === 'conferences' ? 400 : 200"
                         class="overflow-y-auto"
                         v-if="
                             !loading &&
@@ -110,7 +133,7 @@
                         <v-divider></v-divider>
                     </div>
                     <v-list
-                        :max-height="searchType === 'reports' ? 500 : 250"
+                        :max-height="searchType === 'reports' ? 400 : 200"
                         class="overflow-y-auto"
                         v-if="
                             !loading &&
@@ -199,7 +222,7 @@ export default {
         query: '',
         conferencesQuery: '',
         reportsQuery: '',
-        searchType: null,
+        searchType: '',
         menu: false,
     }),
     watch: {
@@ -223,7 +246,7 @@ export default {
 }
 
 .search-input {
-    min-width: 35px;
+    min-width: auto;
 }
 
 :deep(.search-input .v-input__slot) {
@@ -232,9 +255,6 @@ export default {
 
 :deep(.radio-type-select .v-label) {
     font-size: 14px;
-}
-.search-layout {
-    min-width: 300px;
 }
 
 .search-result {

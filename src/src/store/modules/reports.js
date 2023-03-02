@@ -64,6 +64,12 @@ const actions = {
     SetReportsPage({ commit }, newValue) {
         commit('setPage', newValue)
     },
+    async ExportReports() {
+        await axios.get('reports/export')
+    },
+    async ExportReportComments({state}) {
+        await axios.get('reports/'+ state.report.id + '/export-comments')
+    },
 }
 const mutations = {
     setReports(state, reports) {

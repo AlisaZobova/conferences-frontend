@@ -4,6 +4,9 @@ import vuetify from './plugins/vuetify'
 import router from './router'
 import store from './store'
 import './js/ApiClient'
+import './js/pusherConnection'
+
+import * as VueGoogleMaps from 'vue2-google-maps'
 
 import VueTelInput from 'vue-tel-input'
 import 'vue-tel-input/dist/vue-tel-input.css'
@@ -17,8 +20,6 @@ Vue.use(TiptapVuetifyPlugin, {
 })
 
 Vue.use(VueTelInput)
-
-import * as VueGoogleMaps from 'vue2-google-maps'
 
 Vue.use(VueGoogleMaps, {
     load: {

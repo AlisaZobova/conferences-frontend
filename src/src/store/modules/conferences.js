@@ -34,10 +34,9 @@ const actions = {
     },
 
     async DeleteConference({ commit, dispatch }, conferenceId) {
-        axios.delete('conferences/' + conferenceId).then(() => {
-            commit('setConference', null)
-            dispatch('GetUser')
-        })
+        await axios.delete('conferences/' + conferenceId)
+        commit('setConference', null)
+        dispatch('GetUser')
     },
     async UpdateConference({ commit }, { form, conferenceId }) {
         let response = await axios.patch('conferences/' + conferenceId, form)
@@ -51,6 +50,12 @@ const actions = {
     },
     SetConferencesPage({ commit }, newValue) {
         commit('setPage', newValue)
+    },
+    async ExportConferences() {
+        await axios.get('conferences/export')
+    },
+    async ExportConferenceListeners({state}) {
+        await axios.get('conferences/' + state.conference.id + '/export-listeners')
     },
 }
 const mutations = {

@@ -1,21 +1,67 @@
 <template>
     <v-app>
         <v-app-bar app>
-            <span v-if="isLoggedIn">
-                <v-btn :to="{ name: 'Reports' }" class="mr-2 primary--text">
-                    Reports
+            <div class="hidden-sm-and-down">
+                <span v-if="isLoggedIn">
+                    <v-btn :to="{ name: 'Reports' }" class="mr-2 primary--text">
+                        Reports
+                    </v-btn>
+                    <v-btn
+                        v-if="isAdmin"
+                        :to="{ name: 'Categories' }"
+                        class="mr-2 primary--text"
+                    >
+                        Categories
+                    </v-btn>
+                </span>
+                <v-btn :to="{ name: 'Conferences' }" class="mr-2 primary--text">
+                    Home
                 </v-btn>
-                <v-btn
-                    v-if="isAdmin"
-                    :to="{ name: 'Categories' }"
-                    class="mr-2 primary--text"
-                >
-                    Categories
-                </v-btn>
-            </span>
-            <v-btn :to="{ name: 'Conferences' }" class="mr-2 primary--text">
-                Home
-            </v-btn>
+            </div>
+
+            <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-app-bar-nav-icon
+                        class="mr-2 hidden-md-and-up"
+                        v-bind="attrs"
+                        v-on="on"
+                    ></v-app-bar-nav-icon>
+                </template>
+                <v-list>
+                    <span v-if="isLoggedIn">
+                        <v-list-item>
+                            <v-list-item-title>
+                                <router-link
+                                    :to="{ name: 'Reports' }"
+                                    class="primary--text text-decoration-none"
+                                >
+                                    Reports
+                                </router-link>
+                            </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item v-if="isAdmin">
+                            <v-list-item-title>
+                                <router-link
+                                    :to="{ name: 'Categories' }"
+                                    class="primary--text text-decoration-none"
+                                >
+                                    Categories
+                                </router-link>
+                            </v-list-item-title>
+                        </v-list-item>
+                    </span>
+                    <v-list-item>
+                        <v-list-item-title>
+                            <router-link
+                                :to="{ name: 'Conferences' }"
+                                class="primary--text text-decoration-none"
+                            >
+                                Home
+                            </router-link>
+                        </v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
 
             <v-layout class="d-flex justify-end align-center">
                 <ReportsConferencesSearch
@@ -75,8 +121,6 @@
                 <router-view></router-view>
             </v-container>
         </v-main>
-
-        <v-footer app> </v-footer>
     </v-app>
 </template>
 <script>

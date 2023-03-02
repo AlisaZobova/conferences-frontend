@@ -1,5 +1,5 @@
 <template>
-    <v-card class="filters d-inline-block mt-3">
+    <div>
         <v-card-subtitle class="text-center text-h6 teal--text"
             >Choose filters</v-card-subtitle
         >
@@ -16,7 +16,7 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                        :disabled="$props.disabled"
+                        :disabled="disabled"
                         v-model="from"
                         label="From"
                         persistent-hint
@@ -26,12 +26,17 @@
                     ></v-text-field>
                 </template>
                 <v-time-picker
+                    ref="from"
                     v-model="from"
                     min="08:00"
                     :max="to ? to : '19:59'"
                     format="24hr"
                     scrollable
-                    @input="timeFromMenu = false"
+                    @change="
+                        timeFromMenu = false
+                        applyFilters()
+                    "
+                    @click:minute="setFromOnHours"
                 ></v-time-picker>
             </v-menu>
             <v-menu
@@ -45,7 +50,7 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                        :disabled="$props.disabled"
+                        :disabled="disabled"
                         class="mt-0"
                         v-model="to"
                         label="To"
@@ -56,16 +61,21 @@
                     ></v-text-field>
                 </template>
                 <v-time-picker
+                    ref="to"
                     v-model="to"
                     format="24hr"
                     scrollable
                     :min="from ? from : '08:01'"
                     max="20:00"
-                    @input="timeToMenu = false"
+                    @change="
+                        timeToMenu = false
+                        applyFilters()
+                    "
+                    @click:minute="setToOnHours"
                 ></v-time-picker>
             </v-menu>
             <v-range-slider
-                :disabled="$props.disabled"
+                :disabled="disabled"
                 @end="(value) => (this.duration = value)"
                 class="mt-4"
                 color="teal"
@@ -80,35 +90,61 @@
             ></v-range-slider>
             <CategoriesFilterSelect
                 :clear="category.length === 0"
-                :disabled="$props.disabled"
+                :disabled="disabled"
                 color="teal"
                 @updateCategory="category = $event"
             />
         </v-card-text>
         <!--        <v-card-actions>-->
-        <!--            <v-btn text outlined color="teal" :disabled="$props.disabled" @click="applyFilters"-->
+        <!--            <v-btn text outlined color="teal" :disabled="disabled" @click="applyFilters"-->
         <!--                >Apply</v-btn-->
         <!--            >-->
         <!--        </v-card-actions>-->
-        <v-card-actions>
+        <v-card-actions class="d-block">
             <v-btn
                 text
                 outlined
                 color="teal"
-                :disabled="$props.disabled"
+                :disabled="disabled"
                 @click="resetFilters"
-                >Reset filters</v-btn
+                >Reset filters
+            </v-btn>
+            <v-btn
+                v-if="isAdmin && !exportProcess"
+                text
+                outlined
+                class="mt-2 ml-0"
+                color="yellow darken-1"
+                @click="exportReports"
+                >Export reports
+            </v-btn>
+            <a class="d-none" href="" download ref="download">Download</a>
+            <v-layout
+                class="mt-3 ml-0"
+                align-center
+                justify-center
+                v-if="exportProcess"
             >
+                <v-progress-circular
+                    indeterminate
+                    color="teal"
+                ></v-progress-circular>
+            </v-layout>
         </v-card-actions>
-    </v-card>
+    </div>
 </template>
 
 <script>
 import CategoriesFilterSelect from '@/views/Categories/CategoriesFilterSelect'
+import { mapActions } from 'vuex'
+import { exportMixin } from '@/mixins/exportMixin'
+
 export default {
     name: 'ReportsFilters',
     components: { CategoriesFilterSelect },
+    mixins: [exportMixin],
     methods: {
+        ...mapActions(['ExportReports']),
         applyFilters() {
             this.setStrFilters()
             this.$emit('updateFilters', this.strFilters)
@@ -135,6 +171,30 @@ export default {
                 this.strFilters = this.strFilters.slice(0, -1)
             }
         },
+        setFromOnHours() {
+            this.$nextTick(() => {
+                this.$refs.from.selectingHour = true
+            })
+        },
+        setToOnHours() {
+            this.$nextTick(() => {
+                this.$refs.to.selectingHour = true
+            })
+        },
+        exportReports() {
+            this.exportProcess = true
+            window.Echo.channel('exportDownload').listen(
+                'FinishedExport',
+                (e) => {
+                    this.$refs.download.href =
+                        process.env.VUE_APP_AXIOS_BASE_URL.slice(0, -4) + e.path
+                    window.Echo.leaveChannel('exportDownload')
+                    this.$refs.download.click()
+                    this.exportProcess = false
+                }
+            )
+            this.ExportReports()
+        },
     },
     data() {
         return {
@@ -159,7 +219,6 @@ export default {
             } else {
                 this.filters['from'] = this.from + ':00'
             }
-            this.applyFilters()
         },
         to(newValue) {
             this.to = newValue
@@ -168,7 +227,6 @@ export default {
             } else {
                 this.filters['to'] = this.to + ':00'
             }
-            this.applyFilters()
         },
         duration(newValue) {
             this.duration = newValue
@@ -199,9 +257,6 @@ export default {
 }
 :deep(.v-btn) {
     width: 100%;
-}
-.v-card.filters {
-    width: 25%;
 }
 
 :deep(.v-picker__title) {
