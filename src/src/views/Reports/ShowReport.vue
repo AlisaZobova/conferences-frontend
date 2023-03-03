@@ -52,9 +52,11 @@
                     v-if="isListener && started && isJoined && online"
                 >
                     <b>Join link:</b>
-                    &nbsp;<a target="_blank" :href="report.join_url">{{
-                        report.join_url
-                    }}</a>
+                    &nbsp;<a
+                        target="_blank"
+                        :href="report.zoom_conference.join_url"
+                        >{{ report.zoom_conference.join_url }}</a
+                    >
                 </v-card-subtitle>
 
                 <v-card-subtitle v-if="isAnnouncer && startIn">
@@ -67,7 +69,7 @@
                         isAnnouncer && isCreator && !ended && !startIn && online
                     "
                 >
-                    <a target="_blank" :href="report.start_url">
+                    <a target="_blank" :href="report.zoom_conference.start_url">
                         Start zoom conference
                     </a>
                 </v-card-subtitle>
@@ -157,7 +159,10 @@ export default {
             return this.$store.getters.isJoined(this.report.conference_id)
         },
         online() {
-            return this.report.start_url && this.report.join_url
+            return (
+                this.report.zoom_conference.start_url &&
+                this.report.zoom_conference.join_url
+            )
         },
         startTime() {
             return new Date(Date.parse(this.report.start_time))
