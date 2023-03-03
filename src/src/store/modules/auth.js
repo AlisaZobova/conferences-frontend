@@ -9,6 +9,7 @@ const getters = {
     isAuthenticated: (state) => !!state.user,
     isAdmin: (state) => state.user.roles[0].name === 'Admin',
     isAnnouncer: (state) => state.user.roles[0].name === 'Announcer',
+    isListener: (state) => state.user.roles[0].name === 'Listener',
     isCreator: (state) => (conferenceId) => {
         conferenceId = parseInt(conferenceId)
         function isInConf(element) {

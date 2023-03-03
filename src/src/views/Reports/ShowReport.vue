@@ -9,6 +9,13 @@
         <div v-else>
             <v-breadcrumbs :items="items"></v-breadcrumbs>
             <v-card class="flex-grow-1">
+                <v-badge
+                    overlap
+                    :color="badge['color']"
+                    :content="badge['content']"
+                    class="ml-1"
+                >
+                </v-badge>
                 <v-card-title class="teal--text">
                     {{ report.topic }}
                 </v-card-title>
@@ -34,6 +41,35 @@
                         download
                         >{{ report.presentation }}</a
                     >
+                </v-card-subtitle>
+
+                <v-card-subtitle v-if="isListener && joinIn">
+                    <b>Will start in:</b>
+                    &nbsp;{{ joinIn }}
+                </v-card-subtitle>
+
+                <v-card-subtitle
+                    v-if="isListener && started && isJoined && online"
+                >
+                    <b>Join link:</b>
+                    &nbsp;<a target="_blank" :href="report.join_url">{{
+                        report.join_url
+                    }}</a>
+                </v-card-subtitle>
+
+                <v-card-subtitle v-if="isAnnouncer && startIn">
+                    <b>Will start in:</b>
+                    &nbsp;{{ startIn }}
+                </v-card-subtitle>
+
+                <v-card-subtitle
+                    v-if="
+                        isAnnouncer && isCreator && !ended && !startIn && online
+                    "
+                >
+                    <a target="_blank" :href="report.start_url">
+                        Start zoom conference
+                    </a>
                 </v-card-subtitle>
 
                 <v-card-actions v-if="isCreator">
@@ -111,6 +147,50 @@ export default {
                 this.$store.state.auth.user.id
             )
         },
+        isListener() {
+            return this.$store.getters.isListener
+        },
+        isAnnouncer() {
+            return this.$store.getters.isAnnouncer
+        },
+        isJoined() {
+            return this.$store.getters.isJoined(this.report.conference_id)
+        },
+        online() {
+            return this.report.start_url && this.report.join_url
+        },
+        startTime() {
+            return new Date(Date.parse(this.report.start_time))
+        },
+        endTime() {
+            return new Date(Date.parse(this.report.end_time))
+        },
+        joinIn() {
+            let seconds = Math.floor((this.startTime - this.nowTime) / 1000)
+            return this.getTimeDiff(seconds)
+        },
+        startIn() {
+            let seconds = Math.floor(
+                (this.startTime - this.nowTime - 600000) / 1000
+            )
+            return this.getTimeDiff(seconds)
+        },
+        started() {
+            return (
+                this.startTime.getTime() <= this.nowTime &&
+                this.nowTime < this.endTime.getTime()
+            )
+        },
+        ended() {
+            return this.nowTime >= this.endTime.getTime()
+        },
+        badge() {
+            return this.started
+                ? { color: 'success', content: 'Started' }
+                : this.ended
+                ? { color: 'error', content: 'Ended' }
+                : { color: 'primary', content: 'Waiting' }
+        },
     },
     components: { ReportComments },
     data: () => ({
@@ -128,6 +208,7 @@ export default {
             },
         ],
         color: '',
+        nowTime: Date.now(),
     }),
     methods: {
         ...mapActions([
@@ -189,6 +270,34 @@ export default {
             )
             this.ExportReportComments()
         },
+        updateNowTime() {
+            this.nowTime = Date.now()
+        },
+        getTimeDiff(seconds) {
+            if (seconds <= 0) {
+                return ''
+            }
+
+            let minutes = Math.floor(seconds / 60)
+            let hours = Math.floor(minutes / 60)
+            let days = Math.floor(hours / 24)
+
+            hours = hours - days * 24
+            minutes = minutes - days * 24 * 60 - hours * 60
+            seconds =
+                seconds - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60
+
+            return (
+                days +
+                ' days  ' +
+                hours +
+                ' hours ' +
+                minutes +
+                ' minutes ' +
+                seconds +
+                ' seconds'
+            )
+        },
     },
     created() {
         this.GetReport(this.$route.params.id).then(() => {
@@ -206,6 +315,7 @@ export default {
                 disabled: false,
             })
             this.setHeartColor(this.report.id)
+            setInterval(this.updateNowTime, 1000)
             this.loading = false
         })
     },
@@ -215,5 +325,9 @@ export default {
 <style scoped>
 :deep(.v-breadcrumbs) {
     padding-left: 4px;
+}
+
+.v-card__actions {
+    display: block;
 }
 </style>
