@@ -4,6 +4,7 @@ import { saveAs } from 'file-saver'
 const state = {
     searchedReports: [],
     reports: [],
+    meetings: [],
     report: null,
     page: 1,
 }
@@ -50,7 +51,7 @@ const actions = {
     },
     async DownloadFile({ state }, reportId) {
         axios
-            .get('/reports/' + reportId + '/download', {
+            .get('reports/' + reportId + '/download', {
                 responseType: 'blob',
             })
             .then((response) => {
@@ -70,6 +71,10 @@ const actions = {
     async ExportReportComments({state}) {
         await axios.get('reports/'+ state.report.id + '/export-comments')
     },
+    async GetMeetings({commit}) {
+        let response = await axios.get('meetings')
+        commit('setMeetings', response.data)
+    }
 }
 const mutations = {
     setReports(state, reports) {
@@ -84,6 +89,9 @@ const mutations = {
     setPage(state, page) {
         state.page = page
     },
+    setMeetings(state, meetings) {
+        state.meetings = meetings
+    }
 }
 
 export default {

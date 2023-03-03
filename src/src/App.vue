@@ -13,6 +13,13 @@
                     >
                         Categories
                     </v-btn>
+                  <v-btn
+                        v-if="isAdmin"
+                        :to="{ name: 'Meetings' }"
+                        class="mr-2 primary--text"
+                    >
+                        Meetings
+                    </v-btn>
                 </span>
                 <v-btn :to="{ name: 'Conferences' }" class="mr-2 primary--text">
                     Home
@@ -46,6 +53,16 @@
                                     class="primary--text text-decoration-none"
                                 >
                                     Categories
+                                </router-link>
+                            </v-list-item-title>
+                        </v-list-item>
+                      <v-list-item v-if="isAdmin">
+                            <v-list-item-title>
+                                <router-link
+                                    :to="{ name: 'Meetings' }"
+                                    class="primary--text text-decoration-none"
+                                >
+                                    Meetings
                                 </router-link>
                             </v-list-item-title>
                         </v-list-item>
