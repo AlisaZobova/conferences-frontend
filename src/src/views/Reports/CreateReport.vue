@@ -147,7 +147,16 @@
                                 show-full-path
                             >
                             </v-tree-select>
-
+                            <v-checkbox
+                                v-model="form.online"
+                                class="mb-3"
+                                label="Online"
+                            ></v-checkbox>
+                            <div v-if="form.online" class="mb-10 grey--text">
+                                *10 minutes before the start of the report,
+                                there will be a zoom meeting start link for the
+                                announcer on the report page
+                            </div>
                             <v-btn
                                 class="mr-4"
                                 type="submit"
@@ -201,6 +210,7 @@ export default {
             user_id: null,
             conference_id: null,
             category_id: null,
+            online: false,
         },
         startTimeMenu: false,
         endTimeMenu: false,
