@@ -63,7 +63,7 @@ const actions = {
             })
     },
     SetReportsPage({ commit }, newValue) {
-        commit('setPage', newValue)
+        commit('setReportsPage', newValue)
     },
     async ExportReports(context, filters) {
         await axios.get('reports/export' + filters)
@@ -86,7 +86,7 @@ const mutations = {
     setReport(state, report) {
         state.report = report
     },
-    setPage(state, page) {
+    setReportsPage(state, page) {
         state.page = page
     },
     setMeetings(state, meetings) {

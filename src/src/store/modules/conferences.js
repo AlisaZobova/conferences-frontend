@@ -49,7 +49,7 @@ const actions = {
         })
     },
     SetConferencesPage({ commit }, newValue) {
-        commit('setPage', newValue)
+        commit('setConferencesPage', newValue)
     },
     async ExportConferences(context, filters) {
         await axios.get('conferences/export' + filters)
@@ -68,7 +68,7 @@ const mutations = {
     setConference(state, conference) {
         state.conference = conference
     },
-    setPage(state, page) {
+    setConferencesPage(state, page) {
         state.page = page
     },
 }
