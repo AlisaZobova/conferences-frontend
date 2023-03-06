@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-main>
+        <v-main class="pt-4">
             <div v-if="loading" class="text-center">
                 <v-progress-circular
                     indeterminate
@@ -247,7 +247,15 @@ export default {
 </script>
 
 <style scoped>
-form {
-    width: 75%;
+@media (max-device-width: 600px) {
+    form {
+        width: 90%;
+    }
+}
+
+@media (min-device-width: 600px) {
+    form {
+        width: 75%;
+    }
 }
 </style>

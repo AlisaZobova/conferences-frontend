@@ -382,8 +382,16 @@ export default {
     font-size: 28px;
 }
 
-form {
-    width: 75%;
+@media (max-device-width: 600px) {
+    form {
+        width: 90%;
+    }
+}
+
+@media (min-device-width: 600px) {
+    form {
+        width: 75%;
+    }
 }
 
 :deep(.v-treeview) {

@@ -129,9 +129,18 @@ export default {
 </script>
 
 <style scoped>
-form {
-    width: 75%;
+@media (max-device-width: 600px) {
+    form {
+        width: 90%;
+    }
 }
+
+@media (min-device-width: 600px) {
+    form {
+        width: 75%;
+    }
+}
+
 :deep(.v-treeview) {
     width: 100%;
     height: 100%;
