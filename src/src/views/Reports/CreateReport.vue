@@ -67,7 +67,7 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @change="
+                                        @click:minute="
                                             startTimeMenu = false
                                             setStartOnHours()
                                         "
@@ -114,7 +114,7 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @change="
+                                        @click:minute="
                                             endTimeMenu = false
                                             setEndOnHours()
                                         "
@@ -158,8 +158,8 @@
                             ></v-checkbox>
                             <div v-if="form.online" class="mb-10 grey--text">
                                 *10 minutes before the start of the report,
-                                there will be a zoom meeting start link for the
-                                announcer on the report page
+                                there will be a zoom meeting start link on the
+                                report page
                             </div>
                             <v-btn
                                 class="mr-4"

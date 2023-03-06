@@ -67,7 +67,7 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @change="
+                                        @click:minute="
                                             startTimeMenu = false
                                             setStartOnHours()
                                         "
@@ -114,7 +114,7 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @change="
+                                        @click:minute="
                                             endTimeMenu = false
                                             setEndOnHours()
                                         "
@@ -151,33 +151,34 @@
                                     >{{ report.presentation }}</a
                                 >
                             </div>
-                            <v-text-field
-                                v-if="currentCategory"
-                                readonly
-                                label="Category"
-                                v-model="currentCategory.name"
-                            ></v-text-field>
-                            <p>
-                                Select category or
-                                <a
-                                    @click="
-                                        currentCategory = null
-                                        selected = []
-                                    "
-                                    >clean active category</a
-                                >:
-                            </p>
-                            <v-treeview
-                                activatable
-                                hoverable
-                                :active="selected"
-                                :items="category"
-                                @update:active="getActiveValue"
-                                class="mb-4"
-                            ></v-treeview>
-
+                            <div v-if="conference.category_id">
+                                <v-text-field
+                                    v-if="currentCategory"
+                                    readonly
+                                    label="Category"
+                                    v-model="currentCategory.name"
+                                ></v-text-field>
+                                <p>
+                                    Select category or
+                                    <a
+                                        @click="
+                                            currentCategory = null
+                                            selected = []
+                                        "
+                                        >clean active category</a
+                                    >:
+                                </p>
+                                <v-treeview
+                                    activatable
+                                    hoverable
+                                    :active="selected"
+                                    :items="category"
+                                    @update:active="getActiveValue"
+                                    class="mb-4"
+                                ></v-treeview>
+                            </div>
                             <v-btn
-                                class="mr-1"
+                                class="mr-1 mt-1"
                                 type="submit"
                                 color="primary"
                                 :disabled="invalid"
@@ -185,14 +186,14 @@
                                 Save
                             </v-btn>
                             <v-btn
-                                class="mr-1"
+                                class="mr-1 mt-1"
                                 color="error"
                                 @click.prevent="deleteReport(report.id)"
                             >
                                 Cancel participation
                             </v-btn>
                             <v-btn
-                                class="mr-1 white--text"
+                                class="mr-1 mt-1 white--text"
                                 depressed
                                 color="grey"
                                 @click="goBack"
