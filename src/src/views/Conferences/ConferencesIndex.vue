@@ -477,7 +477,7 @@ export default {
 </script>
 
 <style scoped>
-@media (max-device-width: 600px) {
+@media (max-width: 600px) {
     :deep(.v-skeleton-loader__heading) {
         width: 100%;
         display: block;
@@ -498,7 +498,7 @@ export default {
     }
 }
 
-@media (min-device-width: 600px) {
+@media (min-width: 600px) {
     :deep(.table-skeleton .v-skeleton-loader__button) {
         width: 96px;
         display: inline-block;
