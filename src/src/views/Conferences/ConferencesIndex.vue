@@ -50,17 +50,50 @@
                                 </span>
                             </div>
                         </v-layout>
-                        <v-skeleton-loader
-                            class="table-thead-skeleton"
-                            type="heading@3"
-                        ></v-skeleton-loader>
-                        <v-skeleton-loader type="divider"></v-skeleton-loader>
-                        <v-skeleton-loader
-                            v-for="n in 15"
-                            :key="n"
-                            type="table-cell@2, button@2, divider"
-                            class="table-skeleton"
-                        ></v-skeleton-loader>
+
+                        <div class="hidden-xs-only">
+                            <v-skeleton-loader
+                                class="table-thead-skeleton"
+                                type="heading@3"
+                            ></v-skeleton-loader>
+                            <v-skeleton-loader
+                                type="divider"
+                            ></v-skeleton-loader>
+                            <v-skeleton-loader
+                                v-for="n in 15"
+                                :key="n"
+                                type="table-cell@2, button@2, divider"
+                                class="table-skeleton"
+                            ></v-skeleton-loader>
+                        </div>
+
+                        <div class="hidden-sm-and-up" v-for="n in 5" :key="n">
+                            <v-layout
+                                justify-space-between
+                                align-center
+                                v-for="n in 2"
+                                :key="n"
+                            >
+                                <v-skeleton-loader type="heading" width="20%">
+                                </v-skeleton-loader>
+                                <v-skeleton-loader
+                                    type="table-cell"
+                                    width="45%"
+                                >
+                                </v-skeleton-loader>
+                            </v-layout>
+                            <v-layout justify-space-between align-center>
+                                <v-skeleton-loader type="heading" width="20%">
+                                </v-skeleton-loader>
+                                <v-skeleton-loader
+                                    type="button@2"
+                                    class="d-inline-flex"
+                                >
+                                </v-skeleton-loader>
+                            </v-layout>
+                            <v-skeleton-loader type="divider">
+                            </v-skeleton-loader>
+                        </div>
                     </v-container>
                     <v-container v-if="!loading && totalConferences > 0" fluid>
                         <v-data-table
@@ -444,29 +477,53 @@ export default {
 </script>
 
 <style scoped>
+@media (max-device-width: 600px) {
+    :deep(.v-skeleton-loader__heading) {
+        width: 100%;
+        display: block;
+        margin-top: 8px;
+        margin-bottom: 4px;
+    }
+
+    :deep(.v-skeleton-loader__table-cell) {
+        width: 100%;
+        display: flex;
+        margin-top: 4px;
+        height: 20px;
+    }
+
+    :deep(.v-skeleton-loader__button) {
+        margin-left: 4px;
+        margin-bottom: 4px;
+    }
+}
+
+@media (min-device-width: 600px) {
+    :deep(.table-skeleton .v-skeleton-loader__button) {
+        width: 96px;
+        display: inline-block;
+        margin-right: 4px;
+        margin-top: 6px;
+        height: 30px;
+    }
+
+    :deep(.v-skeleton-loader__heading) {
+        width: 10%;
+        display: inline-block;
+        margin-right: 15.3%;
+    }
+
+    :deep(.v-skeleton-loader__table-cell) {
+        width: 12%;
+        display: inline-block;
+        margin-right: 13.3%;
+        margin-top: 10px;
+        height: 20px;
+    }
+}
+
 :deep(.full-btn .v-skeleton-loader__button) {
     width: 100%;
-}
-
-:deep(.table-skeleton .v-skeleton-loader__button) {
-    width: 96px;
-    display: inline-block;
-    margin-right: 4px;
-    margin-top: 6px;
-    height: 30px;
-}
-
-:deep(.v-skeleton-loader__heading) {
-    width: 6%;
-    display: inline-block;
-    margin-right: 19.3%;
-}
-:deep(.v-skeleton-loader__table-cell) {
-    width: 12%;
-    display: inline-block;
-    margin-right: 13.3%;
-    margin-top: 10px;
-    height: 20px;
 }
 
 :deep(.v-skeleton-loader__avatar) {
@@ -477,6 +534,7 @@ export default {
 .table-heading-skeleton {
     height: 64px;
 }
+
 .table-thead-skeleton {
     padding-top: 10px;
     height: 48px;
