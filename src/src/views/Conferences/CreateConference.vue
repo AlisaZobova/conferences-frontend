@@ -204,8 +204,9 @@ export default {
                     if (this.category.length > 0) {
                         this.form.category_id = this.category[0].id
                     }
-                    this.CreateConference(this.form).catch(() => {})
-                    this.$router.push({ name: 'Conferences' }).catch(() => {})
+                    this.CreateConference(this.form).then(() =>
+                        this.$router.push({ name: 'Conferences' })
+                    )
                 }
             })
         },
