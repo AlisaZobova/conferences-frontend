@@ -67,8 +67,10 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @change="startTimeMenu = false"
-                                        @click:minute="setStartOnHours"
+                                        @change="
+                                            startTimeMenu = false
+                                            setStartOnHours()
+                                        "
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>
@@ -112,8 +114,10 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @change="endTimeMenu = false"
-                                        @click:minute="setEndOnHours"
+                                        @change="
+                                            endTimeMenu = false
+                                            setEndOnHours()
+                                        "
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>

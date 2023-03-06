@@ -70,8 +70,8 @@
                     @change="
                         timeToMenu = false
                         applyFilters()
+                        setToOnHours()
                     "
-                    @click:minute="setToOnHours"
                 ></v-time-picker>
             </v-menu>
             <v-range-slider
@@ -187,7 +187,7 @@ export default {
                 'FinishedExport',
                 (e) => {
                     this.$refs.download.href =
-                        process.env.VUE_APP_AXIOS_BASE_URL.slice(0, -4) + e.path
+                        process.env.VUE_APP_AXIOS_EXPORT_URL + e.path
                     window.Echo.leaveChannel('exportDownload')
                     this.$refs.download.click()
                     this.exportProcess = false
