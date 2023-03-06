@@ -54,8 +54,8 @@
                     <b>Join link:</b>
                     &nbsp;<a
                         target="_blank"
-                        :href="report.zoom_conference.join_url"
-                        >{{ report.zoom_conference.join_url }}</a
+                        :href="report.meeting.join_url"
+                        >{{ report.meeting.join_url }}</a
                     >
                 </v-card-subtitle>
 
@@ -69,7 +69,7 @@
                         isAnnouncer && isCreator && !ended && !startIn && online
                     "
                 >
-                    <a target="_blank" :href="report.zoom_conference.start_url">
+                    <a target="_blank" :href="report.meeting.start_url">
                         Start zoom conference
                     </a>
                 </v-card-subtitle>
@@ -160,8 +160,8 @@ export default {
         },
         online() {
             return (
-                this.report.zoom_conference.start_url &&
-                this.report.zoom_conference.join_url
+                this.report.meeting.start_url &&
+                this.report.meeting.join_url
             )
         },
         startTime() {
