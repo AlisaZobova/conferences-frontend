@@ -32,7 +32,7 @@
                         </v-col>
                     </v-row>
                 </v-container>
-                <v-container v-if="!loading && responseLength > 0" fluid>
+                <v-container v-if="!loading" fluid>
                     <v-btn
                         v-if="isAuthenticated"
                         class="filter-btn mb-2"
@@ -43,7 +43,7 @@
                         <v-icon color="teal"> mdi-filter </v-icon>
                         Filters
                     </v-btn>
-                    <v-row dense>
+                    <v-row dense v-if="responseLength > 0">
                         <v-col
                             v-for="item in this.reports"
                             :key="item.id"
@@ -149,16 +149,17 @@
                             </v-card>
                         </v-col>
                     </v-row>
+                    <v-layout
+                        v-if="responseLength === 0"
+                        class="align-center justify-center"
+                    >
+                        <div class="d-inline-block teal--text text-h6 pl-4">
+                            Unfortunately, there are no records matching your
+                            request.
+                        </div>
+                    </v-layout>
                 </v-container>
             </v-slide-x-transition>
-            <v-layout
-                v-if="!loading && responseLength === 0"
-                class="align-center justify-center"
-            >
-                <div class="d-inline-block teal--text text-h6 pl-4">
-                    Unfortunately, there are no records matching your request.
-                </div>
-            </v-layout>
         </v-layout>
         <div class="text-center pt-2" v-if="!loading && responseLength > 0">
             <v-pagination
