@@ -34,47 +34,27 @@
                         v-on="on"
                     ></v-app-bar-nav-icon>
                 </template>
-                <v-list>
+                <v-list class="primary--text hidden-md-and-up">
                     <span v-if="isLoggedIn">
-                        <v-list-item>
+                        <v-list-item :to="{ name: 'Reports' }">
                             <v-list-item-title>
-                                <router-link
-                                    :to="{ name: 'Reports' }"
-                                    class="primary--text text-decoration-none"
-                                >
                                     Reports
-                                </router-link>
                             </v-list-item-title>
                         </v-list-item>
-                        <v-list-item v-if="isAdmin">
+                        <v-list-item v-if="isAdmin" :to="{ name: 'Categories' }">
                             <v-list-item-title>
-                                <router-link
-                                    :to="{ name: 'Categories' }"
-                                    class="primary--text text-decoration-none"
-                                >
                                     Categories
-                                </router-link>
                             </v-list-item-title>
                         </v-list-item>
-                      <v-list-item v-if="isAdmin">
+                      <v-list-item v-if="isAdmin" :to="{ name: 'Meetings' }">
                             <v-list-item-title>
-                                <router-link
-                                    :to="{ name: 'Meetings' }"
-                                    class="primary--text text-decoration-none"
-                                >
                                     Meetings
-                                </router-link>
                             </v-list-item-title>
                         </v-list-item>
                     </span>
-                    <v-list-item>
+                    <v-list-item  :to="{ name: 'Conferences' }">
                         <v-list-item-title>
-                            <router-link
-                                :to="{ name: 'Conferences' }"
-                                class="primary--text text-decoration-none"
-                            >
                                 Home
-                            </router-link>
                         </v-list-item-title>
                     </v-list-item>
                 </v-list>
@@ -182,5 +162,9 @@ export default {
 <style scoped>
 .v-list-item {
     text-align: center;
+}
+
+.v-list {
+  padding: 0;
 }
 </style>
