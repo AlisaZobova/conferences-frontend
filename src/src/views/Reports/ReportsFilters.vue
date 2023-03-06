@@ -35,8 +35,8 @@
                     @change="
                         timeFromMenu = false
                         applyFilters()
+                        setFromOnHours()
                     "
-                    @click:minute="setFromOnHours"
                 ></v-time-picker>
             </v-menu>
             <v-menu
@@ -193,7 +193,9 @@ export default {
                     this.exportProcess = false
                 }
             )
-            this.ExportReports()
+            this.setStrFilters()
+            let exportFilters = '?' + this.strFilters.slice(1)
+            this.ExportReports(exportFilters)
         },
     },
     data() {

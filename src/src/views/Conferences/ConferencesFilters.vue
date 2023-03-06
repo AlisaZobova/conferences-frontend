@@ -175,7 +175,9 @@ export default {
                     this.exportProcess = false
                 }
             )
-            this.ExportConferences()
+            this.setStrFilters()
+            let exportFilters = '?' + this.strFilters.slice(1)
+            this.ExportConferences(exportFilters)
         },
     },
     data() {

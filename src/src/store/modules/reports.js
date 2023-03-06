@@ -65,8 +65,8 @@ const actions = {
     SetReportsPage({ commit }, newValue) {
         commit('setPage', newValue)
     },
-    async ExportReports() {
-        await axios.get('reports/export')
+    async ExportReports(context, filters) {
+        await axios.get('reports/export' + filters)
     },
     async ExportReportComments({state}) {
         await axios.get('reports/'+ state.report.id + '/export-comments')
