@@ -197,16 +197,16 @@ export default {
     }),
 
     methods: {
-        ...mapActions(['CreateConference', 'GetCountries', 'GetCategories']),
+        ...mapActions(['GetCountries', 'GetCategories']),
         async submit() {
             this.$refs.observer.validate().then((result) => {
                 if (result) {
                     if (this.category.length > 0) {
                         this.form.category_id = this.category[0].id
                     }
-                    this.CreateConference(this.form).then(() =>
-                        this.$router.push({ name: 'Conferences' })
-                    )
+                    this.$store
+                        .dispatch('CreateConference', this.form)
+                        .then(() => this.$router.push({ name: 'Conferences' }))
                 }
             })
         },
