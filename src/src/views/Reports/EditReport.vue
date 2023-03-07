@@ -300,10 +300,11 @@ export default {
                         reportId: this.report.id,
                     })
                         .then(() => this.$router.push({ name: 'Reports' }))
-                        .catch(
-                            (error) =>
-                                (this.apiErrors = error.response.data.errors)
-                        )
+                        .catch((error) => {
+                            if (error.response.data.errors) {
+                                this.apiErrors = error.response.data.errors
+                            }
+                        })
                 }
             })
         },
