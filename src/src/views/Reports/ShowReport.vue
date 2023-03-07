@@ -43,18 +43,17 @@
                     >
                 </v-card-subtitle>
 
-                <v-card-subtitle v-if="isListener && joinIn">
+                <v-card-subtitle v-if="canJoin && joinIn">
                     <b>Will start in:</b>
                     &nbsp;{{ joinIn }}
                 </v-card-subtitle>
 
                 <v-card-subtitle
-                    v-if="isListener && !ended && !joinIn && isJoined && online"
+                    v-if="canJoin && !ended && !joinIn && isJoined && online"
                 >
-                    <b>Join link:</b>
-                    &nbsp;<a target="_blank" :href="report.meeting.join_url">{{
-                        report.meeting.join_url
-                    }}</a>
+                    <a target="_blank" :href="report.meeting.join_url">
+                        Join zoom meeting
+                    </a>
                 </v-card-subtitle>
 
                 <v-card-subtitle v-if="isAnnouncer && isCreator && startIn">
@@ -68,7 +67,7 @@
                     "
                 >
                     <a target="_blank" :href="report.meeting.start_url">
-                        Start zoom conference
+                        Start zoom meeting
                     </a>
                 </v-card-subtitle>
 
@@ -157,7 +156,7 @@ export default {
             return this.$store.getters.isJoined(this.report.conference_id)
         },
         online() {
-            return this.report.meeting.start_url && this.report.meeting.join_url
+            return this.report.meeting
         },
         startTime() {
             return new Date(Date.parse(this.report.start_time))
@@ -190,6 +189,9 @@ export default {
                 : this.ended
                 ? { color: 'error', content: 'Ended' }
                 : { color: 'primary', content: 'Waiting' }
+        },
+        canJoin() {
+            return this.isListener || (this.isAnnouncer && !this.isCreator)
         },
     },
     components: { ReportComments },
