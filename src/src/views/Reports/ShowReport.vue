@@ -70,6 +70,27 @@
                         Start zoom meeting
                     </a>
                 </v-card-subtitle>
+                <v-snackbar
+                    v-model="cancelErrorSnackbar"
+                    timeout="10000"
+                    color="error"
+                    :text="true"
+                    right
+                    bottom
+                >
+                    {{ apiErrors.zoom }}
+
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                            color="error"
+                            text
+                            v-bind="attrs"
+                            @click="cancelErrorSnackbar = false"
+                        >
+                            Close
+                        </v-btn>
+                    </template>
+                </v-snackbar>
 
                 <v-card-actions v-if="isCreator">
                     <v-btn
@@ -198,6 +219,8 @@ export default {
     data: () => ({
         show: [],
         loading: true,
+        apiErrors: {},
+        cancelErrorSnackbar: false,
         items: [
             {
                 text: '',
@@ -227,9 +250,25 @@ export default {
             this.$router.push({ name: 'EditReport', params: { id: reportId } })
         },
         deleteReport(reportId) {
+            this.cancelErrorSnackbar = false
+            let conferenceId = this.report.conference_id
+            this.loading = true
+
             this.DeleteReport(reportId)
-            this.CancelParticipation(this.report.conference.id)
-            this.$router.push({ name: 'Conferences' })
+                .then(() => {
+                    this.CancelParticipation(conferenceId).then(() =>
+                        this.$router.push({ name: 'Conferences' })
+                    )
+                })
+                .catch((error) => {
+                    if (error.response.data.errors) {
+                        this.apiErrors = error.response.data.errors
+                    }
+                    if (error.response.data.errors.zoom) {
+                        this.cancelErrorSnackbar = true
+                    }
+                    this.loading = false
+                })
         },
         adminDeleteReport(reportId) {
             this.DeleteReport(reportId).catch(() => {})

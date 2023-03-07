@@ -78,6 +78,27 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
+            <v-snackbar
+                v-model="cancelErrorSnackbar"
+                timeout="10000"
+                color="error"
+                :text="true"
+                right
+                bottom
+            >
+                {{ apiErrors.zoom }}
+
+                <template v-slot:action="{ attrs }">
+                    <v-btn
+                        color="error"
+                        text
+                        v-bind="attrs"
+                        @click="cancelErrorSnackbar = false"
+                    >
+                        Close
+                    </v-btn>
+                </template>
+            </v-snackbar>
             <div class="mt-2">
                 <v-btn
                     v-if="isAdmin && !exportProcess"
@@ -212,6 +233,8 @@ export default {
             dialogDelete: false,
             categoryName: '',
             categoryPath: '',
+            apiErrors: {},
+            cancelErrorSnackbar: false,
             items: [
                 {
                     text: '',
@@ -258,13 +281,26 @@ export default {
             this.$router.go(-1)
         },
         cancelParticipation() {
+            this.cancelErrorSnackbar = false
             if (this.isAnnouncer) {
                 const report = this.conference.reports.filter(
                     (report) => report.conference_id === this.conference.id
                 )[0]
                 this.DeleteReport(report.id)
+                    .then(() => {
+                        this.CancelParticipation(this.conference.id)
+                    })
+                    .catch((error) => {
+                        if (error.response.data.errors) {
+                            this.apiErrors = error.response.data.errors
+                        }
+                        if (error.response.data.errors.zoom) {
+                            this.cancelErrorSnackbar = true
+                        }
+                    })
+            } else {
+                this.CancelParticipation(this.conference.id)
             }
-            this.CancelParticipation(this.conference.id)
         },
         exportListeners() {
             this.exportProcess = true

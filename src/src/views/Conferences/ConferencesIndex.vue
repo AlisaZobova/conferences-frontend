@@ -325,6 +325,29 @@
                                     >
                                         Leave
                                     </v-btn>
+                                    <v-snackbar
+                                        v-model="cancelErrorSnackbar"
+                                        timeout="10000"
+                                        color="error"
+                                        :text="true"
+                                        right
+                                        bottom
+                                    >
+                                        {{ apiErrors.zoom }}
+
+                                        <template v-slot:action="{ attrs }">
+                                            <v-btn
+                                                color="error"
+                                                text
+                                                v-bind="attrs"
+                                                @click="
+                                                    cancelErrorSnackbar = false
+                                                "
+                                            >
+                                                Close
+                                            </v-btn>
+                                        </template>
+                                    </v-snackbar>
                                 </div>
                             </template>
                             <template v-slot:no-data>
@@ -393,6 +416,8 @@ export default {
             loading: true,
             filters: '',
             openFilters: false,
+            apiErrors: {},
+            cancelErrorSnackbar: false,
             headers: [
                 {
                     text: 'Title',
@@ -451,13 +476,26 @@ export default {
             })
         },
         cancelParticipation(item) {
+            this.cancelErrorSnackbar = false
             if (this.isAnnouncer) {
                 const report = item.reports.filter(
                     (report) => report.conference_id === item.id
                 )[0]
                 this.DeleteReport(report.id)
+                    .then(() => {
+                        this.CancelParticipation(item.id)
+                    })
+                    .catch((error) => {
+                        if (error.response.data.errors) {
+                            this.apiErrors = error.response.data.errors
+                        }
+                        if (error.response.data.errors.zoom) {
+                            this.cancelErrorSnackbar = true
+                        }
+                    })
+            } else {
+                this.CancelParticipation(item.id)
             }
-            this.CancelParticipation(item.id)
         },
         getFilteredData() {
             this.loading = true
