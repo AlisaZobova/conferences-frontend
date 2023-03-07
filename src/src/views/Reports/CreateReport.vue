@@ -156,10 +156,20 @@
                                 class="mb-3"
                                 label="Online"
                             ></v-checkbox>
-                            <div v-if="form.online" class="mb-10 grey--text">
+                            <div
+                                v-if="form.online"
+                                :class="
+                                    apiErrors.zoom
+                                        ? 'mb-5 grey--text'
+                                        : 'mb-10 grey--text'
+                                "
+                            >
                                 *10 minutes before the start of the report,
                                 there will be a zoom meeting start link on the
                                 report page
+                            </div>
+                            <div v-if="apiErrors.zoom" class="mb-5 error--text">
+                                {{ apiErrors.zoom }}
                             </div>
                             <v-btn
                                 class="mr-4"
