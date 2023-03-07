@@ -296,13 +296,15 @@ export default {
     margin: 0;
 }
 
-@media (max-device-width: 600px) {
+@media (max-width: 600px) {
     form {
-        width: 90%;
+        width: 100%;
+        padding-left: 16px;
+        padding-right: 16px;
     }
 }
 
-@media (min-device-width: 600px) {
+@media (min-width: 600px) {
     form {
         width: 75%;
     }
