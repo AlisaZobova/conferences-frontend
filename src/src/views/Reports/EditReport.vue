@@ -195,13 +195,28 @@
                                     there will be a zoom meeting start link on
                                     the report page
                                 </div>
-                                <div
-                                    v-if="apiErrors.zoom"
-                                    class="mb-5 error--text"
-                                >
-                                    {{ apiErrors.zoom }}
-                                </div>
                             </div>
+                            <v-snackbar
+                                v-model="cancelErrorSnackbar"
+                                timeout="10000"
+                                color="error"
+                                :text="true"
+                                right
+                                bottom
+                            >
+                                {{ apiErrors.zoom }}
+
+                                <template v-slot:action="{ attrs }">
+                                    <v-btn
+                                        color="error"
+                                        text
+                                        v-bind="attrs"
+                                        @click="cancelErrorSnackbar = false"
+                                    >
+                                        Close
+                                    </v-btn>
+                                </template>
+                            </v-snackbar>
                             <v-btn
                                 class="mr-1 mt-1"
                                 type="submit"
@@ -276,6 +291,7 @@ export default {
         apiErrors: {},
         selected: [],
         currentCategory: null,
+        cancelErrorSnackbar: '',
     }),
 
     methods: {
@@ -289,6 +305,7 @@ export default {
             'GetCategories',
         ]),
         async submit() {
+            this.cancelErrorSnackbar = false
             this.$refs.observer.validate().then((result) => {
                 if (result) {
                     this.report.start_time =
@@ -335,6 +352,9 @@ export default {
                         .catch((error) => {
                             if (error.response.data.errors) {
                                 this.apiErrors = error.response.data.errors
+                            }
+                            if (error.response.data.errors.zoom) {
+                                this.cancelErrorSnackbar = true
                             }
                         })
                 }
