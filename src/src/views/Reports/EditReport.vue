@@ -1,5 +1,5 @@
 <template>
-    <v-main>
+    <v-main class="pt-4">
         <div v-if="loading" class="text-center">
             <v-progress-circular
                 indeterminate
@@ -177,6 +177,31 @@
                                     class="mb-4"
                                 ></v-treeview>
                             </div>
+                            <div v-if="!online">
+                                <v-checkbox
+                                    v-model="report.online"
+                                    class="mb-3"
+                                    label="Create zoom meeting"
+                                ></v-checkbox>
+                                <div
+                                    v-if="report.online"
+                                    :class="
+                                        apiErrors.zoom
+                                            ? 'mb-5 grey--text'
+                                            : 'mb-10 grey--text'
+                                    "
+                                >
+                                    *10 minutes before the start of the report,
+                                    there will be a zoom meeting start link on
+                                    the report page
+                                </div>
+                                <div
+                                    v-if="apiErrors.zoom"
+                                    class="mb-5 error--text"
+                                >
+                                    {{ apiErrors.zoom }}
+                                </div>
+                            </div>
                             <v-btn
                                 class="mr-1 mt-1"
                                 type="submit"
@@ -237,6 +262,9 @@ export default {
                 (category) => category.id === this.conference.category_id
             )
         },
+        online() {
+            return this.report.meeting
+        },
     },
     data: () => ({
         startTimeMenu: false,
@@ -282,6 +310,10 @@ export default {
 
                     const fd = new FormData()
                     fd.append('id', this.report.id)
+                    fd.append(
+                        'online',
+                        this.report.online ? this.report.online : 'false'
+                    )
                     fd.append('presentation', this.report.presentation)
                     fd.append('topic', this.report.topic)
                     fd.append('start_time', this.report.start_time)
