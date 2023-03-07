@@ -84,8 +84,8 @@
                     >
                 </span>
                 <v-menu offset-y v-if="isLoggedIn">
-                    <template v-slot:activator="{ on }">
-                        <v-btn class="primary--text" v-on="on">
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn class="primary--text" v-on="on" v-bind="attrs">
                             <v-icon aria-hidden="false"> mdi-account </v-icon
                             >&nbsp; Profile
                         </v-btn>
