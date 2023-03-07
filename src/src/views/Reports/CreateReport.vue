@@ -1,5 +1,5 @@
 <template>
-    <v-main>
+    <v-main class="pt-4">
         <div v-if="loading" class="text-center">
             <v-progress-circular
                 indeterminate
@@ -257,7 +257,9 @@ export default {
                         .then(() => this.JoinConference(this.$route.params.id))
                         .then(() => this.$router.push('/conferences'))
                         .catch((error) => {
-                            this.apiErrors = error.response.data.errors
+                            if (error.response.data.errors) {
+                                this.apiErrors = error.response.data.errors
+                            }
                             this.loading = false
                         })
                 }
