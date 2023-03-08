@@ -43,7 +43,7 @@
                     >
                 </v-card-subtitle>
 
-                <v-card-subtitle v-if="canJoin && joinIn">
+                <v-card-subtitle v-if="canJoin && joinIn && online">
                     <b>Will start in:</b>
                     &nbsp;{{ joinIn }}
                 </v-card-subtitle>
@@ -56,7 +56,7 @@
                     </a>
                 </v-card-subtitle>
 
-                <v-card-subtitle v-if="isAnnouncer && isCreator && startIn">
+                <v-card-subtitle v-if="isAnnouncer && isCreator && startIn && online">
                     <b>Will start in:</b>
                     &nbsp;{{ startIn }}
                 </v-card-subtitle>
