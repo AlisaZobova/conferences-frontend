@@ -13,13 +13,8 @@ import EditReport from '@/views/Reports/EditReport'
 import CreateReport from '@/views/Reports/CreateReport'
 import ForbiddenError from '@/views/Errors/ForbiddenError'
 import NotFoundError from '@/views/Errors/NotFoundError'
-import CategoriesIndex from '@/views/Categories/CategoriesIndex'
-import CreateCategory from '@/views/Categories/CreateCategory'
-import ShowCategory from '@/views/Categories/ShowCategory'
-import EditCategory from '@/views/Categories/EditCategory'
 import EditProfile from '@/views/Auth/EditProfile'
 import ReportsFavorites from '@/views/Reports/ReportsFavorites'
-import ReportsMeetings from '@/views/Meetings/ReportsMeetings'
 
 Vue.use(VueRouter)
 const routes = [
@@ -88,42 +83,6 @@ const routes = [
         },
     },
     {
-        path: '/categories',
-        name: 'Categories',
-        component: CategoriesIndex,
-        meta: {
-            requiresAuth: true,
-            requiresAdmin: true,
-        },
-    },
-    {
-        path: '/categories/create',
-        name: 'CreateCategory',
-        component: CreateCategory,
-        meta: {
-            requiresAuth: true,
-            requiresAdmin: true,
-        },
-    },
-    {
-        path: '/categories/:id',
-        name: 'ShowCategory',
-        component: ShowCategory,
-        meta: {
-            requiresAuth: true,
-            requiresAdmin: true,
-        },
-    },
-    {
-        path: '/categories/:id/edit',
-        name: 'EditCategory',
-        component: EditCategory,
-        meta: {
-            requiresAuth: true,
-            requiresAdmin: true,
-        },
-    },
-    {
         path: '/register',
         name: 'Register',
         component: AuthRegister,
@@ -140,15 +99,6 @@ const routes = [
         name: 'Profile',
         component: EditProfile,
         meta: { requiresAuth: true },
-    },
-    {
-        path: '/meetings',
-        name: 'Meetings',
-        component: ReportsMeetings,
-        meta: {
-            requiresAuth: true,
-            requiresAdmin: true,
-        },
     },
     {
         path: '/403',
@@ -195,9 +145,8 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresEditPermissions)) {
         if (
             store.getters.isAuthenticated &&
-            (store.getters.isAdmin ||
-                (store.getters.isCreator(to.params.id) &&
-                    store.getters.isAnnouncer))
+            store.getters.isCreator(to.params.id) &&
+            store.getters.isAnnouncer
         ) {
             next()
             return
@@ -210,10 +159,7 @@ router.beforeEach((to, from, next) => {
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresCreatePermissions)) {
-        if (
-            store.getters.isAuthenticated &&
-            (store.getters.isAdmin || store.getters.isAnnouncer)
-        ) {
+        if (store.getters.isAuthenticated && store.getters.isAnnouncer) {
             next()
             return
         }
@@ -246,18 +192,6 @@ router.beforeEach((to, from, next) => {
 router.beforeEach((to, from, next) => {
     if (to.matched.some((record) => record.meta.requiresPublishPermissions)) {
         if (store.getters.isAnnouncer) {
-            next()
-            return
-        }
-        next('/403')
-    } else {
-        next()
-    }
-})
-
-router.beforeEach((to, from, next) => {
-    if (to.matched.some((record) => record.meta.requiresAdmin)) {
-        if (store.getters.isAdmin) {
             next()
             return
         }

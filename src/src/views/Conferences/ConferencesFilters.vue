@@ -98,40 +98,16 @@
                 @click="resetFilters"
                 >Reset filters</v-btn
             >
-            <v-btn
-                v-if="isAdmin && !exportProcess"
-                text
-                outlined
-                class="filters-actions mt-2 ml-0"
-                color="yellow darken-1"
-                @click="exportConferences"
-                >Export conferences</v-btn
-            >
-            <a class="d-none" href="" download ref="download">Download</a>
-            <v-layout
-                class="mt-3 ml-0"
-                align-center
-                justify-center
-                v-if="exportProcess"
-            >
-                <v-progress-circular
-                    indeterminate
-                    color="primary"
-                ></v-progress-circular>
-            </v-layout>
         </v-card-actions>
     </div>
 </template>
 
 <script>
 import CategoriesFilterSelect from '@/views/Categories/CategoriesFilterSelect'
-import { mapActions } from 'vuex'
-import { exportMixin } from '@/mixins/exportMixin'
 
 export default {
     name: 'ConferencesFilters',
     components: { CategoriesFilterSelect },
-    mixins: [exportMixin],
     props: {
         disabled: Boolean,
     },
@@ -149,7 +125,6 @@ export default {
         },
     },
     methods: {
-        ...mapActions(['ExportConferences']),
         applyFilters() {
             this.$emit('updateFilters', this.strFilters)
             this.$emit('applyFilters')
@@ -162,21 +137,6 @@ export default {
             this.category = []
             this.$emit('updateFilters', this.strFilters)
             this.$emit('applyFilters')
-        },
-        exportConferences() {
-            this.exportProcess = true
-            window.Echo.channel('exportDownload').listen(
-                'FinishedExport',
-                (e) => {
-                    this.$refs.download.href =
-                        process.env.VUE_APP_AXIOS_EXPORT_URL + e.path
-                    window.Echo.leaveChannel('exportDownload')
-                    this.$refs.download.click()
-                    this.exportProcess = false
-                }
-            )
-            let exportFilters = '?' + this.strFilters.slice(1)
-            this.ExportConferences(exportFilters)
         },
     },
     data() {

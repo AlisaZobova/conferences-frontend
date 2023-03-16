@@ -15,18 +15,6 @@ const actions = {
         let response = await axios.get('categories/' + categoryId)
         commit('setCategory', response.data)
     },
-    async DeleteCategory({ commit }, categoryId) {
-        await axios.delete('categories/' + categoryId)
-        commit('setCategory', null)
-    },
-    async UpdateCategory({ commit }, { form, categoryId }) {
-        let response = await axios.patch('categories/' + categoryId, form)
-        commit('setCategory', response.data)
-    },
-    async CreateCategory({ commit }, form) {
-        let response = await axios.post('categories', form)
-        commit('setCategory', response.data)
-    },
 }
 const mutations = {
     setCategories(state, categories) {

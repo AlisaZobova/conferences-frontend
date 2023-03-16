@@ -109,40 +109,16 @@
                 @click="resetFilters"
                 >Reset filters
             </v-btn>
-            <v-btn
-                v-if="isAdmin && !exportProcess"
-                text
-                outlined
-                class="mt-2 ml-0"
-                color="yellow darken-1"
-                @click="exportReports"
-                >Export reports
-            </v-btn>
-            <a class="d-none" href="" download ref="download">Download</a>
-            <v-layout
-                class="mt-3 ml-0"
-                align-center
-                justify-center
-                v-if="exportProcess"
-            >
-                <v-progress-circular
-                    indeterminate
-                    color="teal"
-                ></v-progress-circular>
-            </v-layout>
         </v-card-actions>
     </div>
 </template>
 
 <script>
 import CategoriesFilterSelect from '@/views/Categories/CategoriesFilterSelect'
-import { mapActions } from 'vuex'
-import { exportMixin } from '@/mixins/exportMixin'
 
 export default {
     name: 'ReportsFilters',
     components: { CategoriesFilterSelect },
-    mixins: [exportMixin],
     computed: {
         strFilters() {
             if (Object.keys(this.filters).length === 0) {
@@ -157,7 +133,6 @@ export default {
         },
     },
     methods: {
-        ...mapActions(['ExportReports']),
         applyFilters() {
             this.$emit('updateFilters', this.strFilters)
             this.$emit('applyFilters')
@@ -181,21 +156,6 @@ export default {
             this.$nextTick(() => {
                 this.$refs.to.selectingHour = true
             })
-        },
-        exportReports() {
-            this.exportProcess = true
-            window.Echo.channel('exportDownload').listen(
-                'FinishedExport',
-                (e) => {
-                    this.$refs.download.href =
-                        process.env.VUE_APP_AXIOS_EXPORT_URL + e.path
-                    window.Echo.leaveChannel('exportDownload')
-                    this.$refs.download.click()
-                    this.exportProcess = false
-                }
-            )
-            let exportFilters = '?' + this.strFilters.slice(1)
-            this.ExportReports(exportFilters)
         },
     },
     data() {

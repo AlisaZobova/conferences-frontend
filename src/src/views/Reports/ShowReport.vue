@@ -120,45 +120,18 @@
                         <v-icon :color="color"> mdi-heart </v-icon>
                     </v-btn>
                 </v-card-actions>
-                <v-card-actions v-if="isAdmin">
-                    <v-btn
-                        text
-                        color="red"
-                        @click.prevent="adminDeleteReport(report.id)"
-                    >
-                        Delete
-                    </v-btn>
-                    <v-btn
-                        v-if="isAdmin"
-                        text
-                        color="primary"
-                        @click.prevent="exportComments"
-                        :disabled="exportProcess"
-                    >
-                        Export comments
-                    </v-btn>
-                </v-card-actions>
             </v-card>
-            <v-progress-linear
-                v-if="exportProcess"
-                class="mt-3"
-                indeterminate
-                color="teal"
-            ></v-progress-linear>
             <ReportComments />
         </div>
-        <a class="d-none" href="" download ref="download">Download</a>
     </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 import ReportComments from '@/views/Comments/ReportComments'
-import { exportMixin } from '@/mixins/exportMixin'
 
 export default {
     name: 'ShowReport',
-    mixins: [exportMixin],
     computed: {
         report() {
             return this.$store.state.reports.report
@@ -246,7 +219,6 @@ export default {
             'GetComments',
             'AddFavorite',
             'DeleteFavorite',
-            'ExportReportComments',
         ]),
         editReport(reportId) {
             this.$router.push({ name: 'EditReport', params: { id: reportId } })
@@ -272,10 +244,6 @@ export default {
                     this.loading = false
                 })
         },
-        adminDeleteReport(reportId) {
-            this.DeleteReport(reportId).catch(() => {})
-            this.$router.push({ name: 'Reports' })
-        },
         downloadFile() {
             this.DownloadFile(this.report.id)
         },
@@ -298,20 +266,6 @@ export default {
             } else {
                 this.color = 'grey'
             }
-        },
-        exportComments() {
-            this.exportProcess = true
-            window.Echo.channel('exportDownload').listen(
-                'FinishedExport',
-                (e) => {
-                    this.$refs.download.href =
-                        process.env.VUE_APP_AXIOS_EXPORT_URL + e.path
-                    window.Echo.leaveChannel('exportDownload')
-                    this.$refs.download.click()
-                    this.exportProcess = false
-                }
-            )
-            this.ExportReportComments()
         },
         updateNowTime() {
             this.nowTime = Date.now()

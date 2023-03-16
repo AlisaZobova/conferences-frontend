@@ -50,13 +50,6 @@
                 />
             </GmapMap>
 
-            <v-progress-linear
-                v-if="exportProcess"
-                class="mt-2 mb-2"
-                indeterminate
-                color="primary"
-            ></v-progress-linear>
-
             <v-dialog v-model="dialogDelete" max-width="500px">
                 <v-card>
                     <v-card-title class="text-h5"
@@ -101,21 +94,6 @@
             </v-snackbar>
             <div class="mt-2">
                 <v-btn
-                    v-if="isAdmin && !exportProcess"
-                    class="mr-1 mb-1 mt-1 white--text"
-                    depressed
-                    color="blue"
-                    @click="exportListeners"
-                >
-                    Export members
-                </v-btn>
-                <!--                <v-progress-circular-->
-                <!--                    v-if="exportProcess"-->
-                <!--                    class="ma-1"-->
-                <!--                    indeterminate-->
-                <!--                    color="primary"-->
-                <!--                ></v-progress-circular>-->
-                <v-btn
                     class="mr-1 mb-1 mt-1 white--text"
                     depressed
                     color="grey"
@@ -126,8 +104,8 @@
                 <v-btn
                     v-if="
                         isAuthenticated &&
-                        (isAdmin ||
-                            (isConferenceCreator(conference.id) && isAnnouncer))
+                        isConferenceCreator(conference.id) &&
+                        isAnnouncer
                     "
                     depressed
                     color="cyan darken-1"
@@ -139,8 +117,8 @@
                 <v-btn
                     v-if="
                         isAuthenticated &&
-                        (isAdmin ||
-                            (isConferenceCreator(conference.id) && isAnnouncer))
+                        isConferenceCreator(conference.id) &&
+                        isAnnouncer
                     "
                     depressed
                     color="error"
@@ -153,7 +131,6 @@
                     v-if="
                         isAuthenticated &&
                         !isConferenceJoined(conference.id) &&
-                        !isAdmin &&
                         (!isAnnouncer || conference.available)
                     "
                     depressed
@@ -171,11 +148,7 @@
                 </div>
                 <div
                     class="d-inline"
-                    v-if="
-                        isAuthenticated &&
-                        isConferenceJoined(conference.id) &&
-                        !isAdmin
-                    "
+                    v-if="isAuthenticated && isConferenceJoined(conference.id)"
                 >
                     <v-btn
                         depressed
@@ -215,18 +188,16 @@
                 </div>
             </div>
         </div>
-        <a class="d-none" href="" download ref="download">Download</a>
     </v-app>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 import { buttonActionsMixin } from '@/mixins/buttonActionsMixin'
-import { exportMixin } from '@/mixins/exportMixin'
 
 export default {
     name: 'ShowConference',
-    mixins: [buttonActionsMixin, exportMixin],
+    mixins: [buttonActionsMixin],
     data() {
         return {
             loading: true,
@@ -259,12 +230,7 @@ export default {
         },
     },
     methods: {
-        ...mapActions([
-            'GetConference',
-            'DeleteConference',
-            'DeleteReport',
-            'ExportConferenceListeners',
-        ]),
+        ...mapActions(['GetConference', 'DeleteConference', 'DeleteReport']),
         deleteItem() {
             this.dialogDelete = true
         },
@@ -301,20 +267,6 @@ export default {
             } else {
                 this.CancelParticipation(this.conference.id)
             }
-        },
-        exportListeners() {
-            this.exportProcess = true
-            window.Echo.channel('exportDownload').listen(
-                'FinishedExport',
-                (e) => {
-                    this.$refs.download.href =
-                        process.env.VUE_APP_AXIOS_EXPORT_URL + e.path
-                    window.Echo.leaveChannel('exportDownload')
-                    this.$refs.download.click()
-                    this.exportProcess = false
-                }
-            )
-            this.ExportConferenceListeners()
         },
     },
 

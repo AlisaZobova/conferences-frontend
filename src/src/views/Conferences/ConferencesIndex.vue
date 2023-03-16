@@ -143,8 +143,7 @@
                                         </v-icon>
                                         <v-dialog
                                             v-if="
-                                                isAuthenticated &&
-                                                (isAdmin || isAnnouncer)
+                                                isAuthenticated && isAnnouncer
                                             "
                                             max-width="500px"
                                         >
@@ -219,9 +218,8 @@
                                 <v-btn
                                     v-if="
                                         isAuthenticated &&
-                                        (isAdmin ||
-                                            (isConferenceCreator(item.id) &&
-                                                isAnnouncer))
+                                        isConferenceCreator(item.id) &&
+                                        isAnnouncer
                                     "
                                     depressed
                                     color="cyan darken-1"
@@ -233,9 +231,8 @@
                                 <v-btn
                                     v-if="
                                         isAuthenticated &&
-                                        (isAdmin ||
-                                            (isConferenceCreator(item.id) &&
-                                                isAnnouncer))
+                                        isConferenceCreator(item.id) &&
+                                        isAnnouncer
                                     "
                                     depressed
                                     color="error"
@@ -248,7 +245,6 @@
                                     v-if="
                                         isAuthenticated &&
                                         !isConferenceJoined(item.id) &&
-                                        !isAdmin &&
                                         (!isAnnouncer || item.available)
                                     "
                                     depressed
@@ -281,8 +277,7 @@
                                     class="d-inline"
                                     v-if="
                                         isAuthenticated &&
-                                        isConferenceJoined(item.id) &&
-                                        !isAdmin
+                                        isConferenceJoined(item.id)
                                     "
                                 >
                                     <v-btn
