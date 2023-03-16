@@ -214,7 +214,7 @@ export default {
         },
         searchWithTimeout() {
             this.loading = true
-            setTimeout(this.search, 2000)
+            this.searchTimeout = setTimeout(this.search, 2000)
         },
     },
     data: () => ({
@@ -224,6 +224,7 @@ export default {
         reportsQuery: '',
         searchType: '',
         menu: false,
+        searchTimeout: null,
     }),
     watch: {
         query(newValue) {
@@ -236,6 +237,9 @@ export default {
         this.SearchConferences(this.conferencesQuery)
             .then(() => this.SearchReports(this.reportsQuery))
             .then(() => (this.loading = false))
+    },
+    beforeDestroy() {
+        clearTimeout(this.searchTimeout)
     },
 }
 </script>

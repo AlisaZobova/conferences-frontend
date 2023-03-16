@@ -209,6 +209,7 @@ export default {
         ],
         color: '',
         nowTime: Date.now(),
+        timerInterval: null,
     }),
     methods: {
         ...mapActions([
@@ -308,9 +309,12 @@ export default {
                 disabled: false,
             })
             this.setHeartColor(this.report.id)
-            setInterval(this.updateNowTime, 1000)
+            this.timerInterval = setInterval(this.updateNowTime, 1000)
             this.loading = false
         })
+    },
+    beforeDestroy() {
+        clearInterval(this.timerInterval)
     },
 }
 </script>
