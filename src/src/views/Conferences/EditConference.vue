@@ -2,10 +2,7 @@
     <v-app>
         <v-main class="pt-4">
             <div v-if="loading" class="text-center">
-                <v-progress-circular
-                    indeterminate
-                    color="primary"
-                ></v-progress-circular>
+                <v-progress-circular indeterminate color="primary" />
             </div>
             <div v-else>
                 <template>
@@ -28,7 +25,7 @@
                                         :hint="titleInfoMsg"
                                         label="Title"
                                         required
-                                    ></v-text-field>
+                                    />
                                 </validation-provider>
                                 <v-menu
                                     ref="confDateMenu"
@@ -53,7 +50,7 @@
                                                 prepend-icon="mdi-calendar"
                                                 v-bind="attrs"
                                                 v-on="on"
-                                            ></v-text-field>
+                                            />
                                         </validation-provider>
                                     </template>
                                     <validation-provider
@@ -67,7 +64,7 @@
                                             :error-messages="errors"
                                             no-title
                                             @input="confDateMenu = false"
-                                        ></v-date-picker>
+                                        />
                                     </validation-provider>
                                 </v-menu>
                                 <validation-provider
@@ -80,7 +77,7 @@
                                         v-model="conference.latitude"
                                         :error-messages="errors"
                                         label="Latitude"
-                                    ></v-text-field>
+                                    />
                                 </validation-provider>
                                 <validation-provider
                                     v-slot="{ errors }"
@@ -92,7 +89,7 @@
                                         v-model="conference.longitude"
                                         :error-messages="errors"
                                         label="Longitude"
-                                    ></v-text-field>
+                                    />
                                 </validation-provider>
                                 <GmapMap
                                     :center="getCenter()"
@@ -132,7 +129,7 @@
                                         readonly
                                         label="Category"
                                         v-model="currentCategory.name"
-                                    ></v-text-field>
+                                    />
                                     <p>
                                         Select category or
                                         <a
@@ -150,7 +147,7 @@
                                         :items="rootCategories"
                                         @update:active="getActiveValue"
                                         class="mb-4"
-                                    ></v-treeview>
+                                    />
                                 </div>
                                 <v-btn
                                     class="mr-4"

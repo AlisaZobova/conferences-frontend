@@ -42,10 +42,7 @@
             </v-layout>
             <v-layout class="white">
                 <v-layout align-center justify-center v-if="loading">
-                    <v-progress-circular
-                        indeterminate
-                        color="primary"
-                    ></v-progress-circular>
+                    <v-progress-circular indeterminate color="primary" />
                 </v-layout>
                 <v-layout
                     align-center
@@ -85,7 +82,7 @@
                                 >Conferences</v-list-item-title
                             >
                         </v-list-item>
-                        <v-divider></v-divider>
+                        <v-divider />
                     </div>
                     <v-list
                         :max-height="searchType === 'conferences' ? 400 : 200"
@@ -116,7 +113,7 @@
                             conferences.length > 0 &&
                             reports.length > 0
                         "
-                    ></v-divider>
+                    />
                     <div
                         v-if="
                             !loading &&
@@ -130,7 +127,7 @@
                                 >Reports</v-list-item-title
                             >
                         </v-list-item>
-                        <v-divider></v-divider>
+                        <v-divider />
                     </div>
                     <v-list
                         :max-height="searchType === 'reports' ? 400 : 200"
@@ -157,7 +154,7 @@
                     <v-divider
                         v-if="!loading && reports.length > 0"
                         class="mb-4"
-                    ></v-divider>
+                    />
                 </div>
 
                 <v-divider class="mx-2" inset vertical></v-divider>
@@ -170,9 +167,9 @@
                             !loading ? search() : (this.searchType = value)
                     "
                 >
-                    <v-radio label="Conferences" value="conferences"></v-radio>
-                    <v-radio label="Reports" value="reports"></v-radio>
-                    <v-radio label="All" value=""></v-radio>
+                    <v-radio label="Conferences" value="conferences" />
+                    <v-radio label="Reports" value="reports" />
+                    <v-radio label="All" value="" />
                 </v-radio-group>
             </v-layout>
         </v-menu>

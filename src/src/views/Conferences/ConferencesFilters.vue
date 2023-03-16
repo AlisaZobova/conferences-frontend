@@ -4,7 +4,7 @@
             >Choose filters</v-card-subtitle
         >
         <v-card-text class="pb-0">
-            <v-divider></v-divider>
+            <v-divider />
             <v-menu
                 ref="dateFromMenu"
                 v-model="dateFromMenu"
@@ -23,14 +23,14 @@
                         prepend-icon="mdi-calendar"
                         v-bind="attrs"
                         v-on="on"
-                    ></v-text-field>
+                    />
                 </template>
                 <v-date-picker
                     v-model="from"
                     :max="to ? to : ''"
                     no-title
                     @input="dateFromMenu = false"
-                ></v-date-picker>
+                />
             </v-menu>
             <v-menu
                 ref="dateToMenu"
@@ -58,7 +58,7 @@
                     :min="from ? from : ''"
                     no-title
                     @input="dateToMenu = false"
-                ></v-date-picker>
+                />
             </v-menu>
             <v-range-slider
                 :disabled="disabled"
@@ -70,7 +70,7 @@
                 ticks
                 min="1"
                 ref="reports"
-            ></v-range-slider>
+            />
             <CategoriesFilterSelect
                 :clear="category.length === 0"
                 :disabled="disabled"

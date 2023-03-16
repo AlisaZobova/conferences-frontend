@@ -1,10 +1,7 @@
 <template>
     <v-main class="pt-4">
         <div v-if="loading" class="text-center">
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            ></v-progress-circular>
+            <v-progress-circular indeterminate color="primary" />
         </div>
         <div v-else>
             <validation-observer ref="observer" v-slot="{ invalid }">
@@ -32,7 +29,7 @@
                                     showError = false
                                     emailError = ''
                                 "
-                            ></v-text-field>
+                            />
                         </validation-provider>
                         <v-text-field
                             v-model="user.firstname"
@@ -40,14 +37,14 @@
                             label="Firstname"
                             class="mt-0"
                             :rules="[rules.required]"
-                        ></v-text-field>
+                        />
 
                         <v-text-field
                             v-model="user.lastname"
                             name="lastname"
                             label="Lastname"
                             :rules="[rules.required]"
-                        ></v-text-field>
+                        />
 
                         <v-menu
                             ref="birthdateMenu"
@@ -67,14 +64,14 @@
                                     v-bind="attrs"
                                     v-on="on"
                                     :rules="[rules.required]"
-                                ></v-text-field>
+                                />
                             </template>
                             <v-date-picker
                                 :max="nowDate"
                                 v-model="user.birthdate"
                                 no-title
                                 @input="birthdateMenu = false"
-                            ></v-date-picker>
+                            />
                         </v-menu>
                         <vue-tel-input
                             valid-characters-only
@@ -82,7 +79,7 @@
                             v-model="phone"
                             @validate="phoneValidate"
                             @input="setNumber"
-                        ></vue-tel-input>
+                        />
                         <v-text-field
                             class="phone-input"
                             flat
@@ -90,7 +87,7 @@
                             v-model="user.phone"
                             :rules="[rules.required, rules.phone]"
                             hidden
-                        ></v-text-field>
+                        />
                         <v-select
                             class="country-select"
                             v-model="user.country_id"
@@ -99,7 +96,7 @@
                             item-value="id"
                             label="Country"
                             :rules="[rules.required]"
-                        ></v-select>
+                        />
 
                         <v-text-field
                             v-model="password"
@@ -121,7 +118,7 @@
                             id="password"
                             label="Password"
                             required
-                        ></v-text-field>
+                        />
 
                         <v-text-field
                             v-model="password_confirmation"
@@ -141,7 +138,7 @@
                             id="password_confirmation"
                             label="Confirm password"
                             required
-                        ></v-text-field>
+                        />
 
                         <v-btn
                             :disabled="!isFormValid || invalid"

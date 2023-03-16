@@ -1,10 +1,7 @@
 <template>
     <v-main class="pt-4">
         <div v-if="loading" class="text-center">
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            ></v-progress-circular>
+            <v-progress-circular indeterminate color="primary" />
         </div>
         <div v-else>
             <template>
@@ -24,7 +21,7 @@
                                     v-model="report.topic"
                                     :error-messages="errors"
                                     label="Topic *"
-                                ></v-text-field>
+                                />
                             </validation-provider>
                             <v-menu
                                 ref="startTimeMenu"
@@ -51,7 +48,7 @@
                                             prepend-icon="mdi-timer"
                                             v-bind="attrs"
                                             v-on="on"
-                                        ></v-text-field>
+                                        />
                                     </validation-provider>
                                 </template>
                                 <validation-provider
@@ -71,7 +68,7 @@
                                             startTimeMenu = false
                                             setStartOnHours()
                                         "
-                                    ></v-time-picker>
+                                    />
                                 </validation-provider>
                             </v-menu>
                             <v-menu
@@ -98,7 +95,7 @@
                                             prepend-icon="mdi-timer"
                                             v-bind="attrs"
                                             v-on="on"
-                                        ></v-text-field>
+                                        />
                                     </validation-provider>
                                 </template>
                                 <validation-provider
@@ -118,14 +115,14 @@
                                             endTimeMenu = false
                                             setEndOnHours()
                                         "
-                                    ></v-time-picker>
+                                    />
                                 </validation-provider>
                             </v-menu>
                             <v-text-field
                                 type="text"
                                 v-model="report.description"
                                 label="Description"
-                            ></v-text-field>
+                            />
                             <validation-provider
                                 v-slot="{ errors, validate }"
                                 name="Presentation"
@@ -141,7 +138,7 @@
                                         validate
                                         presentation = true
                                     "
-                                ></v-file-input>
+                                />
                             </validation-provider>
                             <div v-if="!presentation">
                                 <a
@@ -157,7 +154,7 @@
                                     readonly
                                     label="Category"
                                     v-model="currentCategory.name"
-                                ></v-text-field>
+                                />
                                 <p>
                                     Select category or
                                     <a
@@ -175,14 +172,14 @@
                                     :items="category"
                                     @update:active="getActiveValue"
                                     class="mb-4"
-                                ></v-treeview>
+                                />
                             </div>
                             <div v-if="!online">
                                 <v-checkbox
                                     v-model="report.online"
                                     class="mb-3"
                                     label="Create zoom meeting"
-                                ></v-checkbox>
+                                />
                                 <div
                                     v-if="report.online"
                                     :class="

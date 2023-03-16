@@ -4,7 +4,7 @@
             >Choose filters</v-card-subtitle
         >
         <v-card-text class="pb-0">
-            <v-divider></v-divider>
+            <v-divider />
             <v-menu
                 ref="timeFromMenu"
                 v-model="timeFromMenu"
@@ -23,7 +23,7 @@
                         prepend-icon="mdi-timer"
                         v-bind="attrs"
                         v-on="on"
-                    ></v-text-field>
+                    />
                 </template>
                 <v-time-picker
                     ref="from"
@@ -37,7 +37,7 @@
                         applyFilters()
                         setFromOnHours()
                     "
-                ></v-time-picker>
+                />
             </v-menu>
             <v-menu
                 ref="timeToMenu"
@@ -58,7 +58,7 @@
                         prepend-icon="mdi-timer"
                         v-bind="attrs"
                         v-on="on"
-                    ></v-text-field>
+                    />
                 </template>
                 <v-time-picker
                     ref="to"
@@ -72,7 +72,7 @@
                         applyFilters()
                         setToOnHours()
                     "
-                ></v-time-picker>
+                />
             </v-menu>
             <v-range-slider
                 :disabled="disabled"
@@ -87,7 +87,7 @@
                 min="1"
                 max="60"
                 ref="duration"
-            ></v-range-slider>
+            />
             <CategoriesFilterSelect
                 :clear="category.length === 0"
                 :disabled="disabled"

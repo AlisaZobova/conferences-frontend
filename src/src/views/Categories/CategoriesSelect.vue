@@ -9,7 +9,7 @@
         multiple
     >
         <template v-slot:append-item>
-            <v-divider class="mt-2"></v-divider>
+            <v-divider class="mt-2" />
             <v-treeview
                 v-if="!allowSelectAll"
                 :items="rootCategories"
@@ -17,8 +17,7 @@
                 hoverable
                 :active="categoryArray"
                 @update:active="updateSelected"
-            >
-            </v-treeview>
+            />
             <v-treeview
                 v-if="allowSelectAll"
                 :items="rootCategories"
@@ -26,8 +25,7 @@
                 @input="updateSelected"
                 selectable
                 selection-type="independent"
-            >
-            </v-treeview>
+            />
         </template>
     </v-combobox>
 </template>

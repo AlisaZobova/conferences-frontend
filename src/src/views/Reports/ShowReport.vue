@@ -1,21 +1,17 @@
 <template>
     <main class="pt-2">
         <div v-if="loading" class="text-center mt-2">
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            ></v-progress-circular>
+            <v-progress-circular indeterminate color="primary" />
         </div>
         <div v-else>
-            <v-breadcrumbs :items="items"></v-breadcrumbs>
+            <v-breadcrumbs :items="items" />
             <v-card class="flex-grow-1">
                 <v-badge
                     overlap
                     :color="badge['color']"
                     :content="badge['content']"
                     class="ml-1"
-                >
-                </v-badge>
+                />
                 <v-card-title class="teal--text">
                     {{ report.topic }}
                 </v-card-title>

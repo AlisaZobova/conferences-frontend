@@ -1,10 +1,7 @@
 <template>
     <v-main class="pt-4">
         <div v-if="loading" class="text-center">
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            ></v-progress-circular>
+            <v-progress-circular indeterminate color="primary" />
         </div>
         <div v-else>
             <template>
@@ -24,7 +21,7 @@
                                     v-model="form.topic"
                                     :error-messages="errors"
                                     label="Topic *"
-                                ></v-text-field>
+                                />
                             </validation-provider>
                             <v-menu
                                 ref="startTimeMenu"
@@ -51,7 +48,7 @@
                                             prepend-icon="mdi-timer"
                                             v-bind="attrs"
                                             v-on="on"
-                                        ></v-text-field>
+                                        />
                                     </validation-provider>
                                 </template>
                                 <validation-provider
@@ -71,7 +68,7 @@
                                             startTimeMenu = false
                                             setStartOnHours()
                                         "
-                                    ></v-time-picker>
+                                    />
                                 </validation-provider>
                             </v-menu>
                             <v-menu
@@ -98,7 +95,7 @@
                                             prepend-icon="mdi-timer"
                                             v-bind="attrs"
                                             v-on="on"
-                                        ></v-text-field>
+                                        />
                                     </validation-provider>
                                 </template>
                                 <validation-provider
@@ -118,14 +115,14 @@
                                             endTimeMenu = false
                                             setEndOnHours()
                                         "
-                                    ></v-time-picker>
+                                    />
                                 </validation-provider>
                             </v-menu>
                             <v-text-field
                                 type="text"
                                 v-model="form.description"
                                 label="Description"
-                            ></v-text-field>
+                            />
                             <validation-provider
                                 v-slot="{ errors, validate }"
                                 name="Presentation"
@@ -138,7 +135,7 @@
                                     label="Presentation"
                                     id="presentation"
                                     @change="validate"
-                                ></v-file-input>
+                                />
                             </validation-provider>
                             <v-tree-select
                                 v-if="confCategory.length > 0"
@@ -149,13 +146,12 @@
                                 selection-type="independent"
                                 allow-select-parents
                                 show-full-path
-                            >
-                            </v-tree-select>
+                            />
                             <v-checkbox
                                 v-model="form.online"
                                 class="mb-3"
                                 label="Online"
-                            ></v-checkbox>
+                            />
                             <div
                                 v-if="form.online"
                                 :class="

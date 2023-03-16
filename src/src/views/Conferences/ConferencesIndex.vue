@@ -17,36 +17,36 @@
                                 type="text"
                                 width="112"
                                 class="d-inline-block"
-                            ></v-skeleton-loader>
+                            />
                             <v-divider class="mx-4" inset vertical></v-divider>
-                            <v-spacer></v-spacer>
+                            <v-spacer />
                             <div v-if="isAuthenticated">
                                 <span class="hidden-sm-and-down">
                                     <v-skeleton-loader
                                         type="button"
                                         width="117"
                                         class="full-btn d-inline-block mr-2"
-                                    ></v-skeleton-loader>
+                                    />
                                 </span>
                                 <span class="hidden-md-and-up">
                                     <v-skeleton-loader
                                         type="avatar"
                                         class="mr-4 d-inline-block"
-                                    ></v-skeleton-loader>
+                                    />
                                 </span>
                                 <span class="hidden-xs-only">
                                     <v-skeleton-loader
                                         type="button"
                                         width="172"
                                         class="full-btn d-inline-block"
-                                    ></v-skeleton-loader>
+                                    />
                                 </span>
 
                                 <span class="hidden-sm-and-up">
                                     <v-skeleton-loader
                                         type="avatar"
                                         class="d-inline-block"
-                                    ></v-skeleton-loader>
+                                    />
                                 </span>
                             </div>
                         </v-layout>
@@ -55,16 +55,14 @@
                             <v-skeleton-loader
                                 class="table-thead-skeleton"
                                 type="heading@3"
-                            ></v-skeleton-loader>
-                            <v-skeleton-loader
-                                type="divider"
-                            ></v-skeleton-loader>
+                            />
+                            <v-skeleton-loader type="divider" />
                             <v-skeleton-loader
                                 v-for="n in 15"
                                 :key="n"
                                 type="table-cell@2, button@2, divider"
                                 class="table-skeleton"
-                            ></v-skeleton-loader>
+                            />
                         </div>
 
                         <div class="hidden-sm-and-up" v-for="n in 5" :key="n">
@@ -74,13 +72,11 @@
                                 v-for="n in 2"
                                 :key="n"
                             >
-                                <v-skeleton-loader type="heading" width="20%">
-                                </v-skeleton-loader>
+                                <v-skeleton-loader type="heading" width="20%" />
                                 <v-skeleton-loader
                                     type="table-cell"
                                     width="45%"
-                                >
-                                </v-skeleton-loader>
+                                />
                             </v-layout>
                             <v-layout justify-space-between align-center>
                                 <v-skeleton-loader type="heading" width="20%">
@@ -88,11 +84,9 @@
                                 <v-skeleton-loader
                                     type="button@2"
                                     class="d-inline-flex"
-                                >
-                                </v-skeleton-loader>
+                                />
                             </v-layout>
-                            <v-skeleton-loader type="divider">
-                            </v-skeleton-loader>
+                            <v-skeleton-loader type="divider" />
                         </div>
                     </v-container>
                     <v-container v-if="!loading && totalConferences > 0" fluid>
@@ -114,12 +108,8 @@
                                     <v-toolbar-title
                                         >Conferences</v-toolbar-title
                                     >
-                                    <v-divider
-                                        class="mx-4"
-                                        inset
-                                        vertical
-                                    ></v-divider>
-                                    <v-spacer></v-spacer>
+                                    <v-divider class="mx-4" inset vertical />
+                                    <v-spacer />
                                     <div class="text-end">
                                         <v-btn
                                             v-if="isAuthenticated"
@@ -182,7 +172,7 @@
                                                     item?</v-card-title
                                                 >
                                                 <v-card-actions>
-                                                    <v-spacer></v-spacer>
+                                                    <v-spacer />
                                                     <v-btn
                                                         color="blue darken-1"
                                                         text
@@ -199,7 +189,7 @@
                                                         "
                                                         >OK</v-btn
                                                     >
-                                                    <v-spacer></v-spacer>
+                                                    <v-spacer />
                                                 </v-card-actions>
                                             </v-card>
                                         </v-dialog>
@@ -371,7 +361,7 @@
                 class="text-center pt-2"
                 v-if="!loading && totalConferences > 0"
             >
-                <v-pagination v-model="page" :length="pageCount"></v-pagination>
+                <v-pagination v-model="page" :length="pageCount" />
             </div>
         </v-main>
     </v-app>

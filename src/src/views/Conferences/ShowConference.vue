@@ -2,10 +2,7 @@
     <v-app>
         <v-main class="pt-2">
             <div v-if="loading" class="text-center mt-2">
-                <v-progress-circular
-                    indeterminate
-                    color="primary"
-                ></v-progress-circular>
+                <v-progress-circular indeterminate color="primary" />
             </div>
             <div v-else>
                 <v-breadcrumbs :items="items"></v-breadcrumbs>
@@ -58,7 +55,7 @@
                             conference?</v-card-title
                         >
                         <v-card-actions>
-                            <v-spacer></v-spacer>
+                            <v-spacer />
                             <v-btn
                                 color="blue darken-1"
                                 text
@@ -71,7 +68,7 @@
                                 @click="deleteItemConfirm"
                                 >OK</v-btn
                             >
-                            <v-spacer></v-spacer>
+                            <v-spacer />
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
