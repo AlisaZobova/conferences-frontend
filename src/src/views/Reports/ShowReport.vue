@@ -56,7 +56,9 @@
                     </a>
                 </v-card-subtitle>
 
-                <v-card-subtitle v-if="isAnnouncer && isCreator && startIn && online">
+                <v-card-subtitle
+                    v-if="isAnnouncer && isCreator && startIn && online"
+                >
                     <b>Will start in:</b>
                     &nbsp;{{ startIn }}
                 </v-card-subtitle>

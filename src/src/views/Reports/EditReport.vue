@@ -308,9 +308,11 @@ export default {
             this.cancelErrorSnackbar = false
             this.$refs.observer.validate().then((result) => {
                 if (result) {
-                  let confDate = new Date(this.conference.conf_date);
-                  let confYearMonthDay = `${confDate.getFullYear()}-${confDate.getMonth() + 1}-${confDate.getDate()}`
-                  this.report.start_time =
+                    let confDate = new Date(this.conference.conf_date)
+                    let confYearMonthDay = `${confDate.getFullYear()}-${
+                        confDate.getMonth() + 1
+                    }-${confDate.getDate()}`
+                    this.report.start_time =
                         confYearMonthDay + ' ' + this.timeStart + ':00'
                     this.report.end_time =
                         confYearMonthDay + ' ' + this.timeEnd + ':00'

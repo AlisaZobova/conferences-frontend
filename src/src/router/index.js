@@ -19,7 +19,7 @@ import ShowCategory from '@/views/Categories/ShowCategory'
 import EditCategory from '@/views/Categories/EditCategory'
 import EditProfile from '@/views/Auth/EditProfile'
 import ReportsFavorites from '@/views/Reports/ReportsFavorites'
-import ReportsMeetings from "@/views/Meetings/ReportsMeetings";
+import ReportsMeetings from '@/views/Meetings/ReportsMeetings'
 
 Vue.use(VueRouter)
 const routes = [
@@ -147,7 +147,7 @@ const routes = [
         component: ReportsMeetings,
         meta: {
             requiresAuth: true,
-            requiresAdmin: true
+            requiresAdmin: true,
         },
     },
     {

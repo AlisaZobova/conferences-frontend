@@ -6,7 +6,7 @@ import conferences from './modules/conferences'
 import countries from './modules/countries'
 import reports from '@/store/modules/reports'
 import comments from '@/store/modules/comments'
-import categories from "@/store/modules/categories";
+import categories from '@/store/modules/categories'
 
 Vue.use(Vuex)
 
@@ -17,7 +17,7 @@ export default new Vuex.Store({
         countries,
         reports,
         comments,
-        categories
+        categories,
     },
     plugins: [createPersistedState()],
 })
