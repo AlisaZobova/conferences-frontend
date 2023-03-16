@@ -267,10 +267,12 @@ export default {
             this.cancelErrorSnackbar = false
             this.$refs.observer.validate().then((result) => {
                 if (result) {
+                    let confDate = new Date(this.conference.conf_date);
+                    let confYearMonthDay = `${confDate.getFullYear()}-${confDate.getMonth() + 1}-${confDate.getDate()}`
                     this.form.start_time =
-                        this.conference.conf_date + ' ' + this.timeStart + ':00'
+                        confYearMonthDay + ' ' + this.timeStart + ':00'
                     this.form.end_time =
-                        this.conference.conf_date + ' ' + this.timeEnd + ':00'
+                        confYearMonthDay + ' ' + this.timeEnd + ':00'
                     this.form.user_id = this.user.id
                     this.form.conference_id = this.conference.id
                     if (this.reportCategory.length > 0) {

@@ -308,10 +308,12 @@ export default {
             this.cancelErrorSnackbar = false
             this.$refs.observer.validate().then((result) => {
                 if (result) {
-                    this.report.start_time =
-                        this.conference.conf_date + ' ' + this.timeStart + ':00'
+                  let confDate = new Date(this.conference.conf_date);
+                  let confYearMonthDay = `${confDate.getFullYear()}-${confDate.getMonth() + 1}-${confDate.getDate()}`
+                  this.report.start_time =
+                        confYearMonthDay + ' ' + this.timeStart + ':00'
                     this.report.end_time =
-                        this.conference.conf_date + ' ' + this.timeEnd + ':00'
+                        confYearMonthDay + ' ' + this.timeEnd + ':00'
                     const input = document.getElementById('presentation')
                     if (input.files[0]) {
                         this.report.presentation = input.files[0]

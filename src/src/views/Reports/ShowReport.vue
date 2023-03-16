@@ -23,8 +23,8 @@
                 <v-card-subtitle class="mt-2">
                     <b>Date:</b> {{ report.start_time.slice(0, 10)
                     }}<br /><br />
-                    <b>From:</b> {{ report.start_time.slice(10, 16) }}<br />
-                    <b>To:</b> {{ report.end_time.slice(10, 16) }}
+                    <b>From:</b> {{ report.start_time.slice(11, 16) }}<br />
+                    <b>To:</b> {{ report.end_time.slice(11, 16) }}
                 </v-card-subtitle>
 
                 <v-card-subtitle class="pt-0 pb-o" v-if="report.description">

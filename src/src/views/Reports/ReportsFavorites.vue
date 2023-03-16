@@ -40,8 +40,8 @@
                     <v-card-subtitle class="mt-2 pb-0">
                         <b>Date:</b> {{ item.start_time.slice(0, 10)
                         }}<br /><br />
-                        <b>From:</b> {{ item.start_time.slice(10, 16) }}<br />
-                        <b>To:</b> {{ item.end_time.slice(10, 16) }}<br /><br />
+                        <b>From:</b> {{ item.start_time.slice(11, 16) }}<br />
+                        <b>To:</b> {{ item.end_time.slice(11, 16) }}<br /><br />
                     </v-card-subtitle>
 
                     <v-card-subtitle class="pt-0" v-if="item.description">
