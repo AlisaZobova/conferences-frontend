@@ -9,7 +9,7 @@
         <div v-else>
             <validation-observer ref="observer" v-slot="{ invalid }">
                 <v-layout class="align-center justify-center mt-4">
-                    <v-form @submit.prevent="submit" v-model="isFormValid">
+                    <v-form @submit.prevent="submit" v-model="isFormValid" class="edit-form">
                         <validation-provider
                             v-slot="{ errors }"
                             name="Email"
@@ -162,7 +162,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import '@/js/validationRules'
+import '@/assets/js/validationRules'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 
 export default {
@@ -306,19 +306,5 @@ export default {
 .phone-input:deep(.v-text-field__details) {
     min-height: 0;
     margin: 0;
-}
-
-@media (max-width: 600px) {
-    form {
-        width: 100%;
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-}
-
-@media (min-width: 600px) {
-    form {
-        width: 75%;
-    }
 }
 </style>

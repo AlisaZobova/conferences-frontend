@@ -3,8 +3,9 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
 import store from './store'
-import './js/ApiClient'
-import './js/pusherConnection'
+import './assets/js/ApiClient'
+import './assets/js/pusherConnection'
+import './assets/css/main.css'
 
 import * as VueGoogleMaps from 'vue2-google-maps'
 

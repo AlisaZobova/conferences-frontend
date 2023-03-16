@@ -11,7 +11,7 @@
                 <template>
                     <validation-observer ref="observer">
                         <v-layout align-center justify-center>
-                            <form @submit.prevent="submit">
+                            <form @submit.prevent="submit" class="edit-form">
                                 <validation-provider
                                     v-slot="{ errors }"
                                     name="Title"
@@ -177,7 +177,7 @@
 </template>
 
 <script>
-import '@/js/validationRules'
+import '@/assets/js/validationRules'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { mapActions, mapGetters } from 'vuex'
 
@@ -297,20 +297,6 @@ export default {
 </script>
 
 <style scoped>
-@media (max-width: 600px) {
-    form {
-        width: 100%;
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-}
-
-@media (min-width: 600px) {
-    form {
-        width: 75%;
-    }
-}
-
 :deep(.v-treeview) {
     width: 100%;
     height: 100%;

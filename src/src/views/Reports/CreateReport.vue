@@ -10,7 +10,7 @@
             <template>
                 <validation-observer ref="observer" v-slot="{ invalid }">
                     <v-layout align-center justify-center>
-                        <form @submit.prevent="submit">
+                        <form @submit.prevent="submit" class="create-form">
                             <validation-provider
                                 v-slot="{ errors }"
                                 name="Topic"
@@ -215,7 +215,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import '@/js/validationRules'
+import '@/assets/js/validationRules'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 
 export default {
@@ -362,19 +362,5 @@ export default {
 :deep(.v-time-picker-title__time span) {
     height: 28px;
     font-size: 28px;
-}
-
-@media (max-width: 600px) {
-    form {
-        width: 100%;
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-}
-
-@media (min-width: 600px) {
-    form {
-        width: 75%;
-    }
 }
 </style>
