@@ -22,7 +22,7 @@
                     <tbody>
                         <tr>
                             <td>{{ conference.title }}</td>
-                            <td>{{ conference.conf_date }}</td>
+                            <td>{{ conference.conf_date.slice(0, 10) }}</td>
                             <td v-if="conference.country">
                                 {{ conference.country.name }}
                             </td>

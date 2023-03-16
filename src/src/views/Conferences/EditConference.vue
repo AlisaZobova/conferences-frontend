@@ -192,7 +192,9 @@ export default {
             return this.$store.state.countries.countries
         },
         conference() {
-            return this.$store.state.conferences.conference
+            let conference = this.$store.state.conferences.conference
+            conference['conf_date'] = conference['conf_date'].slice(0, 10)
+            return conference
         },
         isAuthenticated() {
             return this.$store.getters.isAuthenticated

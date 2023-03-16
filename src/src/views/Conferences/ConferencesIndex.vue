@@ -105,6 +105,10 @@
                             hide-default-footer
                             class="elevation-1"
                         >
+                            <template v-slot:[`item.conf_date`]="{ item }">
+                                {{ item.conf_date.slice(0, 10) }}
+                            </template>
+
                             <template v-slot:top>
                                 <v-toolbar flat>
                                     <v-toolbar-title
