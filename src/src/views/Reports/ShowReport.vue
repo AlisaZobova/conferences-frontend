@@ -155,10 +155,10 @@ export default {
             return this.report.meeting
         },
         startTime() {
-            return new Date(Date.parse(this.report.start_time))
+            return new Date(this.report.start_time)
         },
         endTime() {
-            return new Date(Date.parse(this.report.end_time))
+            return new Date(this.report.end_time)
         },
         joinIn() {
             let seconds = Math.floor((this.startTime - this.nowTime) / 1000)
@@ -284,16 +284,12 @@ export default {
             seconds =
                 seconds - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60
 
-            return (
-                days +
-                ' days  ' +
-                hours +
-                ' hours ' +
-                minutes +
-                ' minutes ' +
-                seconds +
-                ' seconds'
-            )
+            days = days > 0 ? days + ' days' : ''
+            hours = hours > 0 ? hours + ' hours' : ''
+            minutes = minutes > 0 ? minutes + ' minutes' : ''
+            seconds = seconds > 0 ? seconds + ' seconds' : ''
+
+            return days + ' ' + hours + ' ' + minutes + ' ' + seconds
         },
     },
     created() {
