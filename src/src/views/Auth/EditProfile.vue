@@ -9,7 +9,11 @@
         <div v-else>
             <validation-observer ref="observer" v-slot="{ invalid }">
                 <v-layout class="align-center justify-center mt-4">
-                    <v-form @submit.prevent="submit" v-model="isFormValid" class="edit-form">
+                    <v-form
+                        @submit.prevent="submit"
+                        v-model="isFormValid"
+                        class="edit-form"
+                    >
                         <validation-provider
                             v-slot="{ errors }"
                             name="Email"

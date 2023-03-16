@@ -67,14 +67,12 @@ const actions = {
             .then(() => dispatch('GetUser'))
     },
     async CancelParticipation({ dispatch }, conferenceId) {
-        return new Promise((resolve) => {
-            axios
-                .post('conferences/' + conferenceId + '/cancel')
-                .then((response) => {
-                    dispatch('GetUser')
-                    resolve(response)
-                })
-        })
+        return axios
+            .post('conferences/' + conferenceId + '/cancel')
+            .then((response) => {
+                dispatch('GetUser')
+                return response
+            })
     },
     async AddFavorite({ dispatch }, reportId) {
         await axios
