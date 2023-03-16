@@ -9,6 +9,13 @@
         <div v-else>
             <v-breadcrumbs :items="items"></v-breadcrumbs>
             <v-card class="flex-grow-1">
+                <v-badge
+                    overlap
+                    :color="badge['color']"
+                    :content="badge['content']"
+                    class="ml-1"
+                >
+                </v-badge>
                 <v-card-title class="teal--text">
                     {{ report.topic }}
                 </v-card-title>
@@ -35,6 +42,55 @@
                         >{{ report.presentation }}</a
                     >
                 </v-card-subtitle>
+
+                <v-card-subtitle v-if="canJoin && joinIn && online">
+                    <b>Will start in:</b>
+                    &nbsp;{{ joinIn }}
+                </v-card-subtitle>
+
+                <v-card-subtitle
+                    v-if="canJoin && !ended && !joinIn && isJoined && online"
+                >
+                    <a target="_blank" :href="report.meeting.join_url">
+                        Join zoom meeting
+                    </a>
+                </v-card-subtitle>
+
+                <v-card-subtitle v-if="isAnnouncer && isCreator && startIn && online">
+                    <b>Will start in:</b>
+                    &nbsp;{{ startIn }}
+                </v-card-subtitle>
+
+                <v-card-subtitle
+                    v-if="
+                        isAnnouncer && isCreator && !ended && !startIn && online
+                    "
+                >
+                    <a target="_blank" :href="report.meeting.start_url">
+                        Start zoom meeting
+                    </a>
+                </v-card-subtitle>
+                <v-snackbar
+                    v-model="cancelErrorSnackbar"
+                    timeout="10000"
+                    color="error"
+                    :text="true"
+                    right
+                    bottom
+                >
+                    {{ apiErrors.zoom }}
+
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                            color="error"
+                            text
+                            v-bind="attrs"
+                            @click="cancelErrorSnackbar = false"
+                        >
+                            Close
+                        </v-btn>
+                    </template>
+                </v-snackbar>
 
                 <v-card-actions v-if="isCreator">
                     <v-btn
@@ -111,11 +167,60 @@ export default {
                 this.$store.state.auth.user.id
             )
         },
+        isListener() {
+            return this.$store.getters.isListener
+        },
+        isAnnouncer() {
+            return this.$store.getters.isAnnouncer
+        },
+        isJoined() {
+            return this.$store.getters.isJoined(this.report.conference_id)
+        },
+        online() {
+            return this.report.meeting
+        },
+        startTime() {
+            return new Date(Date.parse(this.report.start_time))
+        },
+        endTime() {
+            return new Date(Date.parse(this.report.end_time))
+        },
+        joinIn() {
+            let seconds = Math.floor((this.startTime - this.nowTime) / 1000)
+            return this.getTimeDiff(seconds)
+        },
+        startIn() {
+            let seconds = Math.floor(
+                (this.startTime - this.nowTime - 600000) / 1000
+            )
+            return this.getTimeDiff(seconds)
+        },
+        started() {
+            return (
+                this.startTime.getTime() <= this.nowTime &&
+                this.nowTime < this.endTime.getTime()
+            )
+        },
+        ended() {
+            return this.nowTime >= this.endTime.getTime()
+        },
+        badge() {
+            return this.started
+                ? { color: 'success', content: 'Started' }
+                : this.ended
+                ? { color: 'error', content: 'Ended' }
+                : { color: 'primary', content: 'Waiting' }
+        },
+        canJoin() {
+            return this.isListener || (this.isAnnouncer && !this.isCreator)
+        },
     },
     components: { ReportComments },
     data: () => ({
         show: [],
         loading: true,
+        apiErrors: {},
+        cancelErrorSnackbar: false,
         items: [
             {
                 text: '',
@@ -128,6 +233,7 @@ export default {
             },
         ],
         color: '',
+        nowTime: Date.now(),
     }),
     methods: {
         ...mapActions([
@@ -144,9 +250,25 @@ export default {
             this.$router.push({ name: 'EditReport', params: { id: reportId } })
         },
         deleteReport(reportId) {
+            this.cancelErrorSnackbar = false
+            let conferenceId = this.report.conference_id
+            this.loading = true
+
             this.DeleteReport(reportId)
-            this.CancelParticipation(this.report.conference.id)
-            this.$router.push({ name: 'Conferences' })
+                .then(() => {
+                    this.CancelParticipation(conferenceId).then(() =>
+                        this.$router.push({ name: 'Conferences' })
+                    )
+                })
+                .catch((error) => {
+                    if (error.response.data.errors) {
+                        this.apiErrors = error.response.data.errors
+                    }
+                    if (error.response.data.errors.zoom) {
+                        this.cancelErrorSnackbar = true
+                    }
+                    this.loading = false
+                })
         },
         adminDeleteReport(reportId) {
             this.DeleteReport(reportId).catch(() => {})
@@ -181,13 +303,41 @@ export default {
                 'FinishedExport',
                 (e) => {
                     this.$refs.download.href =
-                        process.env.VUE_APP_AXIOS_BASE_URL.slice(0, -4) + e.path
+                        process.env.VUE_APP_AXIOS_EXPORT_URL + e.path
                     window.Echo.leaveChannel('exportDownload')
                     this.$refs.download.click()
                     this.exportProcess = false
                 }
             )
             this.ExportReportComments()
+        },
+        updateNowTime() {
+            this.nowTime = Date.now()
+        },
+        getTimeDiff(seconds) {
+            if (seconds <= 0) {
+                return ''
+            }
+
+            let minutes = Math.floor(seconds / 60)
+            let hours = Math.floor(minutes / 60)
+            let days = Math.floor(hours / 24)
+
+            hours = hours - days * 24
+            minutes = minutes - days * 24 * 60 - hours * 60
+            seconds =
+                seconds - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60
+
+            return (
+                days +
+                ' days  ' +
+                hours +
+                ' hours ' +
+                minutes +
+                ' minutes ' +
+                seconds +
+                ' seconds'
+            )
         },
     },
     created() {
@@ -206,6 +356,7 @@ export default {
                 disabled: false,
             })
             this.setHeartColor(this.report.id)
+            setInterval(this.updateNowTime, 1000)
             this.loading = false
         })
     },
@@ -215,5 +366,9 @@ export default {
 <style scoped>
 :deep(.v-breadcrumbs) {
     padding-left: 4px;
+}
+
+.v-card__actions {
+    display: block;
 }
 </style>

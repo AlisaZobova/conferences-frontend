@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-main>
+        <v-main class="pt-4">
             <div v-if="loading" class="text-center">
                 <v-progress-circular
                     indeterminate
@@ -197,15 +197,16 @@ export default {
     }),
 
     methods: {
-        ...mapActions(['CreateConference', 'GetCountries', 'GetCategories']),
+        ...mapActions(['GetCountries', 'GetCategories']),
         async submit() {
             this.$refs.observer.validate().then((result) => {
                 if (result) {
                     if (this.category.length > 0) {
                         this.form.category_id = this.category[0].id
                     }
-                    this.CreateConference(this.form).catch(() => {})
-                    this.$router.push({ name: 'Conferences' }).catch(() => {})
+                    this.$store
+                        .dispatch('CreateConference', this.form)
+                        .then(() => this.$router.push({ name: 'Conferences' }))
                 }
             })
         },
@@ -246,7 +247,17 @@ export default {
 </script>
 
 <style scoped>
-form {
-    width: 75%;
+@media (max-width: 600px) {
+    form {
+        width: 100%;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+@media (min-width: 600px) {
+    form {
+        width: 75%;
+    }
 }
 </style>

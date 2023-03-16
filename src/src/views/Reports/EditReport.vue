@@ -1,5 +1,5 @@
 <template>
-    <v-main>
+    <v-main class="pt-4">
         <div v-if="loading" class="text-center">
             <v-progress-circular
                 indeterminate
@@ -67,8 +67,10 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @change="startTimeMenu = false"
-                                        @click:minute="setStartOnHours"
+                                        @click:minute="
+                                            startTimeMenu = false
+                                            setStartOnHours()
+                                        "
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>
@@ -112,8 +114,10 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @change="endTimeMenu = false"
-                                        @click:minute="setEndOnHours"
+                                        @click:minute="
+                                            endTimeMenu = false
+                                            setEndOnHours()
+                                        "
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>
@@ -147,33 +151,74 @@
                                     >{{ report.presentation }}</a
                                 >
                             </div>
-                            <v-text-field
-                                v-if="currentCategory"
-                                readonly
-                                label="Category"
-                                v-model="currentCategory.name"
-                            ></v-text-field>
-                            <p>
-                                Select category or
-                                <a
-                                    @click="
-                                        currentCategory = null
-                                        selected = []
+                            <div v-if="conference.category_id">
+                                <v-text-field
+                                    v-if="currentCategory"
+                                    readonly
+                                    label="Category"
+                                    v-model="currentCategory.name"
+                                ></v-text-field>
+                                <p>
+                                    Select category or
+                                    <a
+                                        @click="
+                                            currentCategory = null
+                                            selected = []
+                                        "
+                                        >clean active category</a
+                                    >:
+                                </p>
+                                <v-treeview
+                                    activatable
+                                    hoverable
+                                    :active="selected"
+                                    :items="category"
+                                    @update:active="getActiveValue"
+                                    class="mb-4"
+                                ></v-treeview>
+                            </div>
+                            <div v-if="!online">
+                                <v-checkbox
+                                    v-model="report.online"
+                                    class="mb-3"
+                                    label="Create zoom meeting"
+                                ></v-checkbox>
+                                <div
+                                    v-if="report.online"
+                                    :class="
+                                        apiErrors.zoom
+                                            ? 'mb-5 grey--text'
+                                            : 'mb-10 grey--text'
                                     "
-                                    >clean active category</a
-                                >:
-                            </p>
-                            <v-treeview
-                                activatable
-                                hoverable
-                                :active="selected"
-                                :items="category"
-                                @update:active="getActiveValue"
-                                class="mb-4"
-                            ></v-treeview>
+                                >
+                                    *10 minutes before the start of the report,
+                                    there will be a zoom meeting start link on
+                                    the report page
+                                </div>
+                            </div>
+                            <v-snackbar
+                                v-model="cancelErrorSnackbar"
+                                timeout="10000"
+                                color="error"
+                                :text="true"
+                                right
+                                bottom
+                            >
+                                {{ apiErrors.zoom }}
 
+                                <template v-slot:action="{ attrs }">
+                                    <v-btn
+                                        color="error"
+                                        text
+                                        v-bind="attrs"
+                                        @click="cancelErrorSnackbar = false"
+                                    >
+                                        Close
+                                    </v-btn>
+                                </template>
+                            </v-snackbar>
                             <v-btn
-                                class="mr-1"
+                                class="mr-1 mt-1"
                                 type="submit"
                                 color="primary"
                                 :disabled="invalid"
@@ -181,14 +226,14 @@
                                 Save
                             </v-btn>
                             <v-btn
-                                class="mr-1"
+                                class="mr-1 mt-1"
                                 color="error"
                                 @click.prevent="deleteReport(report.id)"
                             >
                                 Cancel participation
                             </v-btn>
                             <v-btn
-                                class="mr-1 white--text"
+                                class="mr-1 mt-1 white--text"
                                 depressed
                                 color="grey"
                                 @click="goBack"
@@ -232,6 +277,9 @@ export default {
                 (category) => category.id === this.conference.category_id
             )
         },
+        online() {
+            return this.report.meeting
+        },
     },
     data: () => ({
         startTimeMenu: false,
@@ -243,6 +291,7 @@ export default {
         apiErrors: {},
         selected: [],
         currentCategory: null,
+        cancelErrorSnackbar: '',
     }),
 
     methods: {
@@ -256,6 +305,7 @@ export default {
             'GetCategories',
         ]),
         async submit() {
+            this.cancelErrorSnackbar = false
             this.$refs.observer.validate().then((result) => {
                 if (result) {
                     this.report.start_time =
@@ -277,6 +327,10 @@ export default {
 
                     const fd = new FormData()
                     fd.append('id', this.report.id)
+                    fd.append(
+                        'online',
+                        this.report.online ? this.report.online : 'false'
+                    )
                     fd.append('presentation', this.report.presentation)
                     fd.append('topic', this.report.topic)
                     fd.append('start_time', this.report.start_time)
@@ -295,10 +349,14 @@ export default {
                         reportId: this.report.id,
                     })
                         .then(() => this.$router.push({ name: 'Reports' }))
-                        .catch(
-                            (error) =>
-                                (this.apiErrors = error.response.data.errors)
-                        )
+                        .catch((error) => {
+                            if (error.response.data.errors) {
+                                this.apiErrors = error.response.data.errors
+                            }
+                            if (error.response.data.errors.zoom) {
+                                this.cancelErrorSnackbar = true
+                            }
+                        })
                 }
             })
         },
@@ -378,8 +436,18 @@ export default {
     font-size: 28px;
 }
 
-form {
-    width: 75%;
+@media (max-width: 600px) {
+    form {
+        width: 100%;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+@media (min-width: 600px) {
+    form {
+        width: 75%;
+    }
 }
 
 :deep(.v-treeview) {

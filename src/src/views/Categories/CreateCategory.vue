@@ -93,7 +93,17 @@ export default {
 </script>
 
 <style scoped>
-form {
-    width: 75%;
+@media (max-width: 600px) {
+    form {
+        width: 100%;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+@media (min-width: 600px) {
+    form {
+        width: 75%;
+    }
 }
 </style>

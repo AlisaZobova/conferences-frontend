@@ -4,6 +4,7 @@ import { saveAs } from 'file-saver'
 const state = {
     searchedReports: [],
     reports: [],
+    meetings: [],
     report: null,
     page: 1,
 }
@@ -29,16 +30,32 @@ const actions = {
         commit('setReport', response.data)
     },
     async DeleteReport({ commit }, reportId) {
-        await axios.delete('reports/' + reportId)
-        commit('setReport', null)
+        return new Promise((resolve, reject) => {
+            axios.delete('reports/' + reportId).then(
+                (response) => {
+                    commit('setReport', null)
+                    resolve(response)
+                },
+                (error) => reject(error)
+            )
+        })
     },
     async UpdateReport({ commit }, { form, reportId }) {
-        let response = await axios.post('reports/' + reportId, form, {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-        })
-        commit('setReport', response.data)
+        return new Promise((resolve, reject) =>
+            axios
+                .post('reports/' + reportId, form, {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                })
+                .then(
+                    (response) => {
+                        commit('setReport', response.data)
+                        resolve(response)
+                    },
+                    (error) => reject(error)
+                )
+        )
     },
     async CreateReport({ commit }, form) {
         let response = await axios.post('reports', form, {
@@ -50,7 +67,7 @@ const actions = {
     },
     async DownloadFile({ state }, reportId) {
         axios
-            .get('/reports/' + reportId + '/download', {
+            .get('reports/' + reportId + '/download', {
                 responseType: 'blob',
             })
             .then((response) => {
@@ -62,13 +79,17 @@ const actions = {
             })
     },
     SetReportsPage({ commit }, newValue) {
-        commit('setPage', newValue)
+        commit('setReportsPage', newValue)
     },
-    async ExportReports() {
-        await axios.get('reports/export')
+    async ExportReports(context, filters) {
+        await axios.get('reports/export' + filters)
     },
-    async ExportReportComments({state}) {
-        await axios.get('reports/'+ state.report.id + '/export-comments')
+    async ExportReportComments({ state }) {
+        await axios.get('reports/' + state.report.id + '/export-comments')
+    },
+    async GetMeetings({ commit }) {
+        let response = await axios.get('meetings')
+        commit('setMeetings', response.data)
     },
 }
 const mutations = {
@@ -81,8 +102,11 @@ const mutations = {
     setReport(state, report) {
         state.report = report
     },
-    setPage(state, page) {
+    setReportsPage(state, page) {
         state.page = page
+    },
+    setMeetings(state, meetings) {
+        state.meetings = meetings
     },
 }
 

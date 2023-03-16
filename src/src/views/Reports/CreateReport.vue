@@ -1,5 +1,5 @@
 <template>
-    <v-main>
+    <v-main class="pt-4">
         <div v-if="loading" class="text-center">
             <v-progress-circular
                 indeterminate
@@ -67,8 +67,10 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @change="startTimeMenu = false"
-                                        @click:minute="setStartOnHours"
+                                        @click:minute="
+                                            startTimeMenu = false
+                                            setStartOnHours()
+                                        "
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>
@@ -112,8 +114,10 @@
                                         :error-messages="errors"
                                         format="24hr"
                                         scrollable
-                                        @change="endTimeMenu = false"
-                                        @click:minute="setEndOnHours"
+                                        @click:minute="
+                                            endTimeMenu = false
+                                            setEndOnHours()
+                                        "
                                     ></v-time-picker>
                                 </validation-provider>
                             </v-menu>
@@ -147,7 +151,44 @@
                                 show-full-path
                             >
                             </v-tree-select>
+                            <v-checkbox
+                                v-model="form.online"
+                                class="mb-3"
+                                label="Online"
+                            ></v-checkbox>
+                            <div
+                                v-if="form.online"
+                                :class="
+                                    apiErrors.zoom
+                                        ? 'mb-5 grey--text'
+                                        : 'mb-10 grey--text'
+                                "
+                            >
+                                *10 minutes before the start of the report,
+                                there will be a zoom meeting start link on the
+                                report page
+                            </div>
+                            <v-snackbar
+                                v-model="cancelErrorSnackbar"
+                                timeout="10000"
+                                color="error"
+                                :text="true"
+                                right
+                                bottom
+                            >
+                                {{ apiErrors.zoom }}
 
+                                <template v-slot:action="{ attrs }">
+                                    <v-btn
+                                        color="error"
+                                        text
+                                        v-bind="attrs"
+                                        @click="cancelErrorSnackbar = false"
+                                    >
+                                        Close
+                                    </v-btn>
+                                </template>
+                            </v-snackbar>
                             <v-btn
                                 class="mr-4"
                                 type="submit"
@@ -201,7 +242,9 @@ export default {
             user_id: null,
             conference_id: null,
             category_id: null,
+            online: false,
         },
+        cancelErrorSnackbar: false,
         startTimeMenu: false,
         endTimeMenu: false,
         timeStart: '',
@@ -221,6 +264,7 @@ export default {
             'GetCategories',
         ]),
         async submit() {
+            this.cancelErrorSnackbar = false
             this.$refs.observer.validate().then((result) => {
                 if (result) {
                     this.form.start_time =
@@ -243,7 +287,12 @@ export default {
                         .then(() => this.JoinConference(this.$route.params.id))
                         .then(() => this.$router.push('/conferences'))
                         .catch((error) => {
-                            this.apiErrors = error.response.data.errors
+                            if (error.response.data.errors) {
+                                this.apiErrors = error.response.data.errors
+                            }
+                            if (error.response.data.errors.zoom) {
+                                this.cancelErrorSnackbar = true
+                            }
                             this.loading = false
                         })
                 }
@@ -311,7 +360,17 @@ export default {
     font-size: 28px;
 }
 
-form {
-    width: 75%;
+@media (max-width: 600px) {
+    form {
+        width: 100%;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+@media (min-width: 600px) {
+    form {
+        width: 75%;
+    }
 }
 </style>

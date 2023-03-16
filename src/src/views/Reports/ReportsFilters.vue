@@ -35,8 +35,8 @@
                     @change="
                         timeFromMenu = false
                         applyFilters()
+                        setFromOnHours()
                     "
-                    @click:minute="setFromOnHours"
                 ></v-time-picker>
             </v-menu>
             <v-menu
@@ -70,8 +70,8 @@
                     @change="
                         timeToMenu = false
                         applyFilters()
+                        setToOnHours()
                     "
-                    @click:minute="setToOnHours"
                 ></v-time-picker>
             </v-menu>
             <v-range-slider
@@ -143,10 +143,22 @@ export default {
     name: 'ReportsFilters',
     components: { CategoriesFilterSelect },
     mixins: [exportMixin],
+    computed: {
+        strFilters() {
+            if (Object.keys(this.filters).length === 0) {
+                return ''
+            } else {
+                let filters = '&'
+                for (const [key, value] of Object.entries(this.filters)) {
+                    filters = filters + key + '=' + value + '&'
+                }
+                return filters.slice(0, -1)
+            }
+        },
+    },
     methods: {
         ...mapActions(['ExportReports']),
         applyFilters() {
-            this.setStrFilters()
             this.$emit('updateFilters', this.strFilters)
             this.$emit('applyFilters')
         },
@@ -156,21 +168,10 @@ export default {
             this.to = ''
             this.duration = ''
             this.category = []
-            this.setStrFilters()
             this.$emit('updateFilters', this.strFilters)
             this.$emit('applyFilters')
         },
-        setStrFilters() {
-            if (Object.keys(this.filters).length === 0) {
-                this.strFilters = ''
-            } else {
-                this.strFilters = '&'
-                for (const [key, value] of Object.entries(this.filters)) {
-                    this.strFilters = this.strFilters + key + '=' + value + '&'
-                }
-                this.strFilters = this.strFilters.slice(0, -1)
-            }
-        },
+
         setFromOnHours() {
             this.$nextTick(() => {
                 this.$refs.from.selectingHour = true
@@ -187,13 +188,14 @@ export default {
                 'FinishedExport',
                 (e) => {
                     this.$refs.download.href =
-                        process.env.VUE_APP_AXIOS_BASE_URL.slice(0, -4) + e.path
+                        process.env.VUE_APP_AXIOS_EXPORT_URL + e.path
                     window.Echo.leaveChannel('exportDownload')
                     this.$refs.download.click()
                     this.exportProcess = false
                 }
             )
-            this.ExportReports()
+            let exportFilters = '?' + this.strFilters.slice(1)
+            this.ExportReports(exportFilters)
         },
     },
     data() {
@@ -205,7 +207,6 @@ export default {
             duration: '',
             category: [],
             filters: {},
-            strFilters: '',
         }
     },
     props: {
@@ -217,7 +218,7 @@ export default {
             if (!newValue) {
                 delete this.filters['from']
             } else {
-                this.filters['from'] = this.from + ':00'
+                this.$set(this.filters, 'from', this.from + ':00')
             }
         },
         to(newValue) {
@@ -225,7 +226,7 @@ export default {
             if (!newValue) {
                 delete this.filters['to']
             } else {
-                this.filters['to'] = this.to + ':00'
+                this.$set(this.filters, 'to', this.to + ':00')
             }
         },
         duration(newValue) {
@@ -234,7 +235,11 @@ export default {
                 delete this.filters['duration']
                 this.$refs.duration.value = [1, 1]
             } else {
-                this.filters['duration'] = `${newValue[0]}-${newValue[1]}`
+                this.$set(
+                    this.filters,
+                    'duration',
+                    `${newValue[0]}-${newValue[1]}`
+                )
             }
             this.applyFilters()
         },
@@ -243,7 +248,7 @@ export default {
             if (newValue.length === 0) {
                 delete this.filters['category']
             } else {
-                this.filters['category'] = this.category.toString()
+                this.$set(this.filters, 'category', this.category.toString())
             }
             this.applyFilters()
         },
