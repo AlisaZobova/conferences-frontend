@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-4">
+    <main class="pt-4">
         <v-layout>
             <v-navigation-drawer v-model="openFilters" absolute temporary>
                 <ReportsFilters
@@ -169,7 +169,7 @@
                 color="teal"
             ></v-pagination>
         </div>
-    </div>
+    </main>
 </template>
 
 <script>

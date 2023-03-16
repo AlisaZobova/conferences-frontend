@@ -1,6 +1,6 @@
 <template>
-    <div class="mt-2">
-        <div v-if="loading" class="text-center">
+    <main class="pt-2">
+        <div v-if="loading" class="text-center mt-2">
             <v-progress-circular
                 indeterminate
                 color="primary"
@@ -123,7 +123,7 @@
             </v-card>
             <ReportComments />
         </div>
-    </div>
+    </main>
 </template>
 
 <script>

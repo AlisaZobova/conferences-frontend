@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <div class="mt-2">
+        <v-main class="pt-2">
             <v-layout>
                 <v-navigation-drawer v-model="openFilters" absolute temporary>
                     <ConferencesFilters
@@ -373,7 +373,7 @@
             >
                 <v-pagination v-model="page" :length="pageCount"></v-pagination>
             </div>
-        </div>
+        </v-main>
     </v-app>
 </template>
 

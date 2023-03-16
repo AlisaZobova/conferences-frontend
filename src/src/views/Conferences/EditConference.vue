@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-main>
+        <v-main class="pt-4">
             <div v-if="loading" class="text-center">
                 <v-progress-circular
                     indeterminate
@@ -98,7 +98,7 @@
                                     :center="getCenter()"
                                     :zoom="10"
                                     map-type-id="terrain"
-                                    style="width: 100%; height: 500px"
+                                    style="width: 100%; height: 400px"
                                     @click="setLatLng($event.latLng)"
                                 >
                                     <GmapMarker
