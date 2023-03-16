@@ -166,7 +166,9 @@ export default {
             return this.$store.state.countries.countries
         },
         user() {
-            return this.$store.state.auth.user
+            let user = this.$store.state.auth.user
+            user['birthdate'] = user['birthdate'].slice(0, 10)
+            return user
         },
     },
     data() {

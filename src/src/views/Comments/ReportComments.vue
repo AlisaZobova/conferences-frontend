@@ -53,7 +53,17 @@
                                         <div
                                             class="d-inline-block blue-grey--text text-caption"
                                         >
-                                            {{ comment.publication_date }}
+                                            {{
+                                                comment.publication_date.slice(
+                                                    0,
+                                                    10
+                                                ) +
+                                                ' ' +
+                                                comment.publication_date.slice(
+                                                    11,
+                                                    19
+                                                )
+                                            }}
                                         </div>
                                         <v-btn
                                             text
