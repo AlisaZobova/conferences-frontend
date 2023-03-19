@@ -7,7 +7,6 @@ const state = {
 
 const getters = {
     isAuthenticated: (state) => !!state.user,
-    isAdmin: (state) => state.user.roles[0].name === 'Admin',
     isAnnouncer: (state) => state.user.roles[0].name === 'Announcer',
     isListener: (state) => state.user.roles[0].name === 'Listener',
     isCreator: (state) => (conferenceId) => {
@@ -68,14 +67,12 @@ const actions = {
             .then(() => dispatch('GetUser'))
     },
     async CancelParticipation({ dispatch }, conferenceId) {
-        return new Promise((resolve) => {
-            axios
-                .post('conferences/' + conferenceId + '/cancel')
-                .then((response) => {
-                    dispatch('GetUser')
-                    resolve(response)
-                })
-        })
+        return axios
+            .post('conferences/' + conferenceId + '/cancel')
+            .then((response) => {
+                dispatch('GetUser')
+                return response
+            })
     },
     async AddFavorite({ dispatch }, reportId) {
         await axios

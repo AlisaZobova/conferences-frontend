@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-4">
+    <main class="pt-4">
         <v-layout>
             <v-navigation-drawer v-model="openFilters" absolute temporary>
                 <ReportsFilters
@@ -15,7 +15,7 @@
                         v-if="isAuthenticated"
                         type="button"
                         class="mb-2"
-                    ></v-skeleton-loader>
+                    />
                     <v-row dense>
                         <v-col
                             v-for="i in 12"
@@ -25,10 +25,7 @@
                             sm="6"
                             md="3"
                         >
-                            <v-skeleton-loader
-                                class="mx-auto"
-                                type="image"
-                            ></v-skeleton-loader>
+                            <v-skeleton-loader class="mx-auto" type="image" />
                         </v-col>
                     </v-row>
                 </v-container>
@@ -85,9 +82,10 @@
                                     {{ item.start_time.slice(0, 10)
                                     }}<br /><br />
                                     <b>From:</b>
-                                    {{ item.start_time.slice(10, 16) }}<br />
-                                    <b>To:</b> {{ item.end_time.slice(10, 16)
+                                    {{ item.start_time.slice(11, 16) }}<br />
+                                    <b>To:</b> {{ item.end_time.slice(11, 16)
                                     }}<br /><br />
+                                    <br /><br />
                                 </v-card-subtitle>
 
                                 <v-card-subtitle
@@ -162,13 +160,9 @@
             </v-slide-x-transition>
         </v-layout>
         <div class="text-center pt-2" v-if="!loading && responseLength > 0">
-            <v-pagination
-                v-model="page"
-                :length="pageCount"
-                color="teal"
-            ></v-pagination>
+            <v-pagination v-model="page" :length="pageCount" color="teal" />
         </div>
-    </div>
+    </main>
 </template>
 
 <script>

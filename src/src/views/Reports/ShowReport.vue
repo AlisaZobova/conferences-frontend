@@ -1,21 +1,17 @@
 <template>
-    <div class="mt-2">
-        <div v-if="loading" class="text-center">
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            ></v-progress-circular>
+    <main class="pt-2">
+        <div v-if="loading" class="text-center mt-2">
+            <v-progress-circular indeterminate color="primary" />
         </div>
         <div v-else>
-            <v-breadcrumbs :items="items"></v-breadcrumbs>
+            <v-breadcrumbs :items="items" />
             <v-card class="flex-grow-1">
                 <v-badge
                     overlap
                     :color="badge['color']"
                     :content="badge['content']"
                     class="ml-1"
-                >
-                </v-badge>
+                />
                 <v-card-title class="teal--text">
                     {{ report.topic }}
                 </v-card-title>
@@ -23,8 +19,8 @@
                 <v-card-subtitle class="mt-2">
                     <b>Date:</b> {{ report.start_time.slice(0, 10)
                     }}<br /><br />
-                    <b>From:</b> {{ report.start_time.slice(10, 16) }}<br />
-                    <b>To:</b> {{ report.end_time.slice(10, 16) }}
+                    <b>From:</b> {{ report.start_time.slice(11, 16) }}<br />
+                    <b>To:</b> {{ report.end_time.slice(11, 16) }}
                 </v-card-subtitle>
 
                 <v-card-subtitle class="pt-0 pb-o" v-if="report.description">
@@ -56,7 +52,9 @@
                     </a>
                 </v-card-subtitle>
 
-                <v-card-subtitle v-if="isAnnouncer && isCreator && startIn && online">
+                <v-card-subtitle
+                    v-if="isAnnouncer && isCreator && startIn && online"
+                >
                     <b>Will start in:</b>
                     &nbsp;{{ startIn }}
                 </v-card-subtitle>
@@ -118,45 +116,18 @@
                         <v-icon :color="color"> mdi-heart </v-icon>
                     </v-btn>
                 </v-card-actions>
-                <v-card-actions v-if="isAdmin">
-                    <v-btn
-                        text
-                        color="red"
-                        @click.prevent="adminDeleteReport(report.id)"
-                    >
-                        Delete
-                    </v-btn>
-                    <v-btn
-                        v-if="isAdmin"
-                        text
-                        color="primary"
-                        @click.prevent="exportComments"
-                        :disabled="exportProcess"
-                    >
-                        Export comments
-                    </v-btn>
-                </v-card-actions>
             </v-card>
-            <v-progress-linear
-                v-if="exportProcess"
-                class="mt-3"
-                indeterminate
-                color="teal"
-            ></v-progress-linear>
             <ReportComments />
         </div>
-        <a class="d-none" href="" download ref="download">Download</a>
-    </div>
+    </main>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 import ReportComments from '@/views/Comments/ReportComments'
-import { exportMixin } from '@/mixins/exportMixin'
 
 export default {
     name: 'ShowReport',
-    mixins: [exportMixin],
     computed: {
         report() {
             return this.$store.state.reports.report
@@ -180,10 +151,10 @@ export default {
             return this.report.meeting
         },
         startTime() {
-            return new Date(Date.parse(this.report.start_time))
+            return new Date(this.report.start_time)
         },
         endTime() {
-            return new Date(Date.parse(this.report.end_time))
+            return new Date(this.report.end_time)
         },
         joinIn() {
             let seconds = Math.floor((this.startTime - this.nowTime) / 1000)
@@ -234,6 +205,7 @@ export default {
         ],
         color: '',
         nowTime: Date.now(),
+        timerInterval: null,
     }),
     methods: {
         ...mapActions([
@@ -244,7 +216,6 @@ export default {
             'GetComments',
             'AddFavorite',
             'DeleteFavorite',
-            'ExportReportComments',
         ]),
         editReport(reportId) {
             this.$router.push({ name: 'EditReport', params: { id: reportId } })
@@ -270,10 +241,6 @@ export default {
                     this.loading = false
                 })
         },
-        adminDeleteReport(reportId) {
-            this.DeleteReport(reportId).catch(() => {})
-            this.$router.push({ name: 'Reports' })
-        },
         downloadFile() {
             this.DownloadFile(this.report.id)
         },
@@ -297,20 +264,6 @@ export default {
                 this.color = 'grey'
             }
         },
-        exportComments() {
-            this.exportProcess = true
-            window.Echo.channel('exportDownload').listen(
-                'FinishedExport',
-                (e) => {
-                    this.$refs.download.href =
-                        process.env.VUE_APP_AXIOS_EXPORT_URL + e.path
-                    window.Echo.leaveChannel('exportDownload')
-                    this.$refs.download.click()
-                    this.exportProcess = false
-                }
-            )
-            this.ExportReportComments()
-        },
         updateNowTime() {
             this.nowTime = Date.now()
         },
@@ -328,16 +281,12 @@ export default {
             seconds =
                 seconds - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60
 
-            return (
-                days +
-                ' days  ' +
-                hours +
-                ' hours ' +
-                minutes +
-                ' minutes ' +
-                seconds +
-                ' seconds'
-            )
+            days = days > 0 ? days + ' days' : ''
+            hours = hours > 0 ? hours + ' hours' : ''
+            minutes = minutes > 0 ? minutes + ' minutes' : ''
+            seconds = seconds > 0 ? seconds + ' seconds' : ''
+
+            return days + ' ' + hours + ' ' + minutes + ' ' + seconds
         },
     },
     created() {
@@ -356,9 +305,12 @@ export default {
                 disabled: false,
             })
             this.setHeartColor(this.report.id)
-            setInterval(this.updateNowTime, 1000)
+            this.timerInterval = setInterval(this.updateNowTime, 1000)
             this.loading = false
         })
+    },
+    beforeDestroy() {
+        clearInterval(this.timerInterval)
     },
 }
 </script>

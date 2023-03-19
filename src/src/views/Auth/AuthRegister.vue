@@ -8,7 +8,7 @@
                             <v-stepper-step :complete="step > 1" step="1">
                             </v-stepper-step>
 
-                            <v-divider></v-divider>
+                            <v-divider />
 
                             <v-stepper-step :complete="step > 2" step="2">
                             </v-stepper-step>
@@ -25,7 +25,7 @@
                                             :items="types"
                                             label="Type"
                                             class="mt-0"
-                                        ></v-select>
+                                        />
 
                                         <v-text-field
                                             v-model="form.email"
@@ -38,7 +38,7 @@
                                                 showError = false
                                                 emailError = ''
                                             "
-                                        ></v-text-field>
+                                        />
 
                                         <v-text-field
                                             v-model="form.password"
@@ -63,7 +63,7 @@
                                             id="password"
                                             label="Password"
                                             required
-                                        ></v-text-field>
+                                        />
 
                                         <v-text-field
                                             v-model="form.password_confirmation"
@@ -92,7 +92,7 @@
                                             id="password_confirmation"
                                             label="Confirm password"
                                             required
-                                        ></v-text-field>
+                                        />
 
                                         <v-btn
                                             :disabled="!isFormValid"
@@ -126,14 +126,14 @@
                                             label="Firstname"
                                             class="mt-0"
                                             :rules="[rules.required]"
-                                        ></v-text-field>
+                                        />
 
                                         <v-text-field
                                             v-model="formAd.lastname"
                                             name="lastname"
                                             label="Lastname"
                                             :rules="[rules.required]"
-                                        ></v-text-field>
+                                        />
 
                                         <v-menu
                                             ref="birthdateMenu"
@@ -155,14 +155,14 @@
                                                     v-bind="attrs"
                                                     v-on="on"
                                                     :rules="[rules.required]"
-                                                ></v-text-field>
+                                                />
                                             </template>
                                             <v-date-picker
                                                 :max="nowDate"
                                                 v-model="formAd.birthdate"
                                                 no-title
                                                 @input="birthdateMenu = false"
-                                            ></v-date-picker>
+                                            />
                                         </v-menu>
                                         <vue-tel-input
                                             valid-characters-only
@@ -170,7 +170,7 @@
                                             v-model="phone"
                                             @validate="phoneValidate"
                                             @input="setNumber"
-                                        ></vue-tel-input>
+                                        />
                                         <v-text-field
                                             class="phone-input"
                                             flat
@@ -181,7 +181,7 @@
                                                 rules.phone,
                                             ]"
                                             hidden
-                                        ></v-text-field>
+                                        />
                                         <v-select
                                             class="country-select"
                                             v-model="formAd.country"
@@ -190,7 +190,7 @@
                                             item-value="id"
                                             label="Country"
                                             :rules="[rules.required]"
-                                        ></v-select>
+                                        />
 
                                         <p
                                             class="text-center"

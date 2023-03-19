@@ -13,15 +13,14 @@
         :menu-props="{ maxWidth: '278' }"
     >
         <template v-slot:append-item>
-            <v-divider class="mt-2"></v-divider>
+            <v-divider class="mt-2" />
             <v-treeview
                 :items="rootCategories"
                 v-model="category"
                 @input="updateSelected"
                 selectable
                 selection-type="independent"
-            >
-            </v-treeview>
+            />
         </template>
     </v-combobox>
 </template>

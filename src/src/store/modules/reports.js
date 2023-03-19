@@ -81,16 +81,6 @@ const actions = {
     SetReportsPage({ commit }, newValue) {
         commit('setReportsPage', newValue)
     },
-    async ExportReports(context, filters) {
-        await axios.get('reports/export' + filters)
-    },
-    async ExportReportComments({ state }) {
-        await axios.get('reports/' + state.report.id + '/export-comments')
-    },
-    async GetMeetings({ commit }) {
-        let response = await axios.get('meetings')
-        commit('setMeetings', response.data)
-    },
 }
 const mutations = {
     setReports(state, reports) {

@@ -1,158 +1,169 @@
 <template>
-    <div v-if="loading" class="text-center mt-4">
-        <v-progress-circular
-            indeterminate
-            color="primary"
-        ></v-progress-circular>
-    </div>
-    <div v-else>
-        <validation-observer ref="observer" v-slot="{ invalid }">
-            <v-layout class="align-center justify-center mt-4">
-                <v-form @submit.prevent="submit" v-model="isFormValid">
-                    <validation-provider
-                        v-slot="{ errors }"
-                        name="Email"
-                        rules="email"
+    <v-main class="pt-4">
+        <div v-if="loading" class="text-center">
+            <v-progress-circular indeterminate color="primary" />
+        </div>
+        <div v-else>
+            <validation-observer ref="observer" v-slot="{ invalid }">
+                <v-layout class="align-center justify-center mt-4">
+                    <v-form
+                        @submit.prevent="submit"
+                        v-model="isFormValid"
+                        class="edit-form"
                     >
-                        <v-text-field
-                            v-model="user.email"
-                            type="email"
-                            name="email"
-                            label="Email"
-                            :error-messages="
-                                errors.length > 0 ? errors : emailError
-                            "
-                            :rules="[rules.required]"
-                            @input="
-                                showError = false
-                                emailError = ''
-                            "
-                        ></v-text-field>
-                    </validation-provider>
-                    <v-text-field
-                        v-model="user.firstname"
-                        name="firstname"
-                        label="Firstname"
-                        class="mt-0"
-                        :rules="[rules.required]"
-                    ></v-text-field>
-
-                    <v-text-field
-                        v-model="user.lastname"
-                        name="lastname"
-                        label="Lastname"
-                        :rules="[rules.required]"
-                    ></v-text-field>
-
-                    <v-menu
-                        ref="birthdateMenu"
-                        v-model="birthdateMenu"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        max-width="290px"
-                        min-width="auto"
-                    >
-                        <template v-slot:activator="{ on, attrs }">
+                        <validation-provider
+                            v-slot="{ errors }"
+                            name="Email"
+                            rules="email"
+                        >
                             <v-text-field
-                                v-model="user.birthdate"
-                                label="Birthdate"
-                                persistent-hint
-                                prepend-icon="mdi-calendar"
-                                v-bind="attrs"
-                                v-on="on"
+                                v-model="user.email"
+                                type="email"
+                                name="email"
+                                label="Email"
+                                :error-messages="
+                                    errors.length > 0 ? errors : emailError
+                                "
                                 :rules="[rules.required]"
-                            ></v-text-field>
-                        </template>
-                        <v-date-picker
-                            :max="nowDate"
-                            v-model="user.birthdate"
-                            no-title
-                            @input="birthdateMenu = false"
-                        ></v-date-picker>
-                    </v-menu>
-                    <vue-tel-input
-                        valid-characters-only
-                        mode="international"
-                        v-model="phone"
-                        @validate="phoneValidate"
-                        @input="setNumber"
-                    ></vue-tel-input>
-                    <v-text-field
-                        class="phone-input"
-                        flat
-                        solo
-                        v-model="user.phone"
-                        :rules="[rules.required, rules.phone]"
-                        hidden
-                    ></v-text-field>
-                    <v-select
-                        class="country-select"
-                        v-model="user.country_id"
-                        :items="countries"
-                        item-text="name"
-                        item-value="id"
-                        label="Country"
-                        :rules="[rules.required]"
-                    ></v-select>
+                                @input="
+                                    showError = false
+                                    emailError = ''
+                                "
+                            />
+                        </validation-provider>
+                        <v-text-field
+                            v-model="user.firstname"
+                            name="firstname"
+                            label="Firstname"
+                            class="mt-0"
+                            :rules="[rules.required]"
+                        />
 
-                    <v-text-field
-                        v-model="password"
-                        :append-icon="
-                            isPasswordVisible ? 'mdi-eye' : 'mdi-eye-off'
-                        "
-                        :type="isPasswordVisible ? 'text' : 'password'"
-                        hint="At least 8 characters"
-                        :error-messages="passwordError"
-                        @input="
-                            isFormValid = true
-                            passwordError = ''
-                        "
-                        counter
-                        @click:append="isPasswordVisible = !isPasswordVisible"
-                        name="password"
-                        id="password"
-                        label="Password"
-                        required
-                    ></v-text-field>
+                        <v-text-field
+                            v-model="user.lastname"
+                            name="lastname"
+                            label="Lastname"
+                            :rules="[rules.required]"
+                        />
 
-                    <v-text-field
-                        v-model="password_confirmation"
-                        :append-icon="
-                            isConfirmationVisible ? 'mdi-eye' : 'mdi-eye-off'
-                        "
-                        :rules="[rules.match]"
-                        :type="isConfirmationVisible ? 'text' : 'password'"
-                        hint="At least 8 characters"
-                        class="input-group--focused mb-1"
-                        @click:append="
-                            isConfirmationVisible = !isConfirmationVisible
-                        "
-                        name="password_confirmation"
-                        id="password_confirmation"
-                        label="Confirm password"
-                        required
-                    ></v-text-field>
+                        <v-menu
+                            ref="birthdateMenu"
+                            v-model="birthdateMenu"
+                            :close-on-content-click="false"
+                            transition="scale-transition"
+                            offset-y
+                            max-width="290px"
+                            min-width="auto"
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                    v-model="user.birthdate"
+                                    label="Birthdate"
+                                    persistent-hint
+                                    prepend-icon="mdi-calendar"
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    :rules="[rules.required]"
+                                />
+                            </template>
+                            <v-date-picker
+                                :max="nowDate"
+                                v-model="user.birthdate"
+                                no-title
+                                @input="birthdateMenu = false"
+                            />
+                        </v-menu>
+                        <vue-tel-input
+                            valid-characters-only
+                            mode="international"
+                            v-model="phone"
+                            @validate="phoneValidate"
+                            @input="setNumber"
+                        />
+                        <v-text-field
+                            class="phone-input"
+                            flat
+                            solo
+                            v-model="user.phone"
+                            :rules="[rules.required, rules.phone]"
+                            hidden
+                        />
+                        <v-select
+                            class="country-select"
+                            v-model="user.country_id"
+                            :items="countries"
+                            item-text="name"
+                            item-value="id"
+                            label="Country"
+                            :rules="[rules.required]"
+                        />
 
-                    <v-btn
-                        :disabled="!isFormValid || invalid"
-                        type="submit"
-                        color="primary"
-                    >
-                        Save
-                    </v-btn>
-                    <v-btn outlined class="ml-2" color="grey" @click="goBack"
-                        >Back</v-btn
-                    >
-                </v-form>
-            </v-layout>
-        </validation-observer>
-    </div>
+                        <v-text-field
+                            v-model="password"
+                            :append-icon="
+                                isPasswordVisible ? 'mdi-eye' : 'mdi-eye-off'
+                            "
+                            :type="isPasswordVisible ? 'text' : 'password'"
+                            hint="At least 8 characters"
+                            :error-messages="passwordError"
+                            @input="
+                                isFormValid = true
+                                passwordError = ''
+                            "
+                            counter
+                            @click:append="
+                                isPasswordVisible = !isPasswordVisible
+                            "
+                            name="password"
+                            id="password"
+                            label="Password"
+                            required
+                        />
+
+                        <v-text-field
+                            v-model="password_confirmation"
+                            :append-icon="
+                                isConfirmationVisible
+                                    ? 'mdi-eye'
+                                    : 'mdi-eye-off'
+                            "
+                            :rules="[rules.match]"
+                            :type="isConfirmationVisible ? 'text' : 'password'"
+                            hint="At least 8 characters"
+                            class="input-group--focused mb-1"
+                            @click:append="
+                                isConfirmationVisible = !isConfirmationVisible
+                            "
+                            name="password_confirmation"
+                            id="password_confirmation"
+                            label="Confirm password"
+                            required
+                        />
+
+                        <v-btn
+                            :disabled="!isFormValid || invalid"
+                            type="submit"
+                            color="primary"
+                        >
+                            Save
+                        </v-btn>
+                        <v-btn
+                            outlined
+                            class="ml-2"
+                            color="grey"
+                            @click="goBack"
+                            >Back</v-btn
+                        >
+                    </v-form>
+                </v-layout>
+            </validation-observer>
+        </div>
+    </v-main>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import '@/js/validationRules'
+import '@/assets/js/validationRules'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 
 export default {
@@ -166,7 +177,9 @@ export default {
             return this.$store.state.countries.countries
         },
         user() {
-            return this.$store.state.auth.user
+            let user = this.$store.state.auth.user
+            user['birthdate'] = user['birthdate'].slice(0, 10)
+            return user
         },
     },
     data() {
@@ -294,19 +307,5 @@ export default {
 .phone-input:deep(.v-text-field__details) {
     min-height: 0;
     margin: 0;
-}
-
-@media (max-width: 600px) {
-    form {
-        width: 100%;
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-}
-
-@media (min-width: 600px) {
-    form {
-        width: 75%;
-    }
 }
 </style>

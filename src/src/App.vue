@@ -6,20 +6,6 @@
                     <v-btn :to="{ name: 'Reports' }" class="mr-2 primary--text">
                         Reports
                     </v-btn>
-                    <v-btn
-                        v-if="isAdmin"
-                        :to="{ name: 'Categories' }"
-                        class="mr-2 primary--text"
-                    >
-                        Categories
-                    </v-btn>
-                  <v-btn
-                        v-if="isAdmin"
-                        :to="{ name: 'Meetings' }"
-                        class="mr-2 primary--text"
-                    >
-                        Meetings
-                    </v-btn>
                 </span>
                 <v-btn :to="{ name: 'Conferences' }" class="mr-2 primary--text">
                     Home
@@ -37,25 +23,11 @@
                 <v-list class="primary--text hidden-md-and-up">
                     <span v-if="isLoggedIn">
                         <v-list-item :to="{ name: 'Reports' }">
-                            <v-list-item-title>
-                                    Reports
-                            </v-list-item-title>
-                        </v-list-item>
-                        <v-list-item v-if="isAdmin" :to="{ name: 'Categories' }">
-                            <v-list-item-title>
-                                    Categories
-                            </v-list-item-title>
-                        </v-list-item>
-                      <v-list-item v-if="isAdmin" :to="{ name: 'Meetings' }">
-                            <v-list-item-title>
-                                    Meetings
-                            </v-list-item-title>
+                            <v-list-item-title> Reports </v-list-item-title>
                         </v-list-item>
                     </span>
-                    <v-list-item  :to="{ name: 'Conferences' }">
-                        <v-list-item-title>
-                                Home
-                        </v-list-item-title>
+                    <v-list-item :to="{ name: 'Conferences' }">
+                        <v-list-item-title> Home </v-list-item-title>
                     </v-list-item>
                 </v-list>
             </v-menu>
@@ -131,9 +103,6 @@ export default {
         isLoggedIn() {
             return this.$store.getters.isAuthenticated
         },
-        isAdmin() {
-            return this.$store.getters.isAdmin
-        },
         iconColor() {
             return this.$store.state.auth.user.favorites.length > 0
                 ? 'red'
@@ -165,6 +134,6 @@ export default {
 }
 
 .v-list {
-  padding: 0;
+    padding: 0;
 }
 </style>

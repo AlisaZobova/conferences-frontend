@@ -43,24 +43,14 @@ const actions = {
         commit('setConference', response.data)
     },
     async CreateConference({ commit, dispatch }, form) {
-        return new Promise((resolve) =>
-            axios.post('conferences', form).then((response) => {
-                commit('setConference', response.data)
-                dispatch('GetUser')
-                resolve(response)
-            })
-        )
+        return axios.post('conferences', form).then((response) => {
+            commit('setConference', response.data)
+            dispatch('GetUser')
+            return response
+        })
     },
     SetConferencesPage({ commit }, newValue) {
         commit('setConferencesPage', newValue)
-    },
-    async ExportConferences(context, filters) {
-        await axios.get('conferences/export' + filters)
-    },
-    async ExportConferenceListeners({ state }) {
-        await axios.get(
-            'conferences/' + state.conference.id + '/export-listeners'
-        )
     },
 }
 const mutations = {

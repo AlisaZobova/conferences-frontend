@@ -6,12 +6,9 @@
                 {{ comments.length }}
             </p>
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <div v-if="loading" class="text-center pt-3 pb-3">
-            <v-progress-circular
-                indeterminate
-                color="primary"
-            ></v-progress-circular>
+            <v-progress-circular indeterminate color="primary" />
         </div>
         <div v-else>
             <v-list align-top dense>
@@ -53,7 +50,17 @@
                                         <div
                                             class="d-inline-block blue-grey--text text-caption"
                                         >
-                                            {{ comment.publication_date }}
+                                            {{
+                                                comment.publication_date.slice(
+                                                    0,
+                                                    10
+                                                ) +
+                                                ' ' +
+                                                comment.publication_date.slice(
+                                                    11,
+                                                    19
+                                                )
+                                            }}
                                         </div>
                                         <v-btn
                                             text
@@ -73,7 +80,7 @@
                                     v-if="index < comments.length - 1"
                                     :key="`${index}-divider`"
                                     class="mb-2"
-                                ></v-divider>
+                                />
                             </transition-group>
                         </v-lazy>
                     </v-responsive>

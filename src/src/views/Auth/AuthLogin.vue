@@ -15,7 +15,7 @@
                                     name="email"
                                     label="Email"
                                     required
-                                ></v-text-field>
+                                />
 
                                 <v-text-field
                                     v-model="form.password"
@@ -23,7 +23,7 @@
                                     name="password"
                                     label="Password"
                                     required
-                                ></v-text-field>
+                                />
 
                                 <p
                                     class="text-center"

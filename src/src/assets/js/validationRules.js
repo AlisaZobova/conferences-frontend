@@ -8,7 +8,7 @@ import {
     numeric,
     ext,
     size,
-    email
+    email,
 } from 'vee-validate/dist/rules'
 import { extend, setInteractionMode } from 'vee-validate'
 

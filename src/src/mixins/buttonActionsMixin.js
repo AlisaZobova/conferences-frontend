@@ -3,9 +3,6 @@ import { share } from '../../share.config'
 
 export const buttonActionsMixin = {
     computed: {
-        isAdmin() {
-            return this.$store.getters.isAdmin
-        },
         isAnnouncer() {
             return this.$store.getters.isAnnouncer
         },
