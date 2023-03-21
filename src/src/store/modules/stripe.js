@@ -9,11 +9,16 @@ const actions = {
     async subscribeUser({ commit, rootState }, data) {
         return axios
             .post('/subscription', data)
-            .then((response) => {
-                axios.get('user/' + rootState.auth.user.id).then((response) => {
-                    commit('setUser', response.data, { root: true })
-                })
-                return response
+            .then(() => {
+                return axios
+                    .get('user/' + rootState.auth.user.id)
+                    .then((response) => {
+                        commit('setUser', response.data, { root: true })
+                        return response
+                    })
+                    .catch((error) => {
+                        return Promise.reject(error)
+                    })
             })
             .catch((error) => {
                 return Promise.reject(error)
@@ -22,11 +27,16 @@ const actions = {
     async unsubscribeUser({ commit, rootState }) {
         return axios
             .post('/cancel-subscription')
-            .then((response) => {
-                axios.get('user/' + rootState.auth.user.id).then((response) => {
-                    commit('setUser', response.data, { root: true })
-                })
-                return response
+            .then(() => {
+                return axios
+                    .get('user/' + rootState.auth.user.id)
+                    .then((response) => {
+                        commit('setUser', response.data, { root: true })
+                        return response
+                    })
+                    .catch((error) => {
+                        return Promise.reject(error)
+                    })
             })
             .catch((error) => {
                 return Promise.reject(error)

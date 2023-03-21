@@ -3,7 +3,7 @@
         <div v-show="loading" class="text-center">
             <v-progress-circular indeterminate color="primary" />
         </div>
-        <div v-show="!loading">
+        <div v-show="!loading && plan.name !== currentPlan">
             <div class="mb-4"><b>Total:</b>&nbsp;{{ formatCurrency() }}</div>
             <v-divider />
             <v-slide-y-transition>
@@ -18,6 +18,7 @@
                 class="mt-4 mr-4"
                 outlined
                 color="success"
+                :disabled="paymentProcessing"
                 @click="changeCard = !changeCard"
             >
                 {{
@@ -34,6 +35,18 @@
                 :disabled="paymentProcessing"
                 v-text="paymentProcessing ? 'Processing' : 'Pay now'"
             />
+        </div>
+        <div
+            v-show="!loading && plan.name === currentPlan"
+            class="text-center mt-4"
+        >
+            <p>
+                Your plan has been successfully updated to {{ currentPlan }}!
+                Click the button below to go to the main page.
+            </p>
+            <v-btn outlined color="primary" :to="{ name: 'Conferences' }">
+                Go home
+            </v-btn>
         </div>
         <v-snackbar
             v-model="successSubscription"
@@ -91,6 +104,9 @@ export default {
         },
         card() {
             return this.$store.state.auth.user.pm_last_four
+        },
+        currentPlan() {
+            return this.$store.state.auth.user.active_subscription.name
         },
     },
     data() {
