@@ -29,7 +29,14 @@ export const buttonActionsMixin = {
                     params: { id: conferenceId },
                 })
             } else {
-                this.JoinConference(conferenceId)
+                this.JoinConference(conferenceId).catch((error) => {
+                    if (
+                        error.response.data.errors &&
+                        error.response.data.errors.plan
+                    ) {
+                        this.$router.push({ name: 'Plans' })
+                    }
+                })
             }
         },
         isConferenceCreator(conferenceId) {

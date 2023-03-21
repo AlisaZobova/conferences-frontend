@@ -27,7 +27,7 @@
             Payment was successful. You've been upgraded to a new plan!
             <template v-slot:action="{ attrs }">
                 <v-btn
-                    color="error"
+                    color="grey"
                     text
                     v-bind="attrs"
                     @click="successSubscription = false"

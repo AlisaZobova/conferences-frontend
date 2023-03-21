@@ -283,8 +283,8 @@ export default {
                         this.form.presentation = input.files[0]
                     }
                     this.loading = true
-                    this.CreateReport(this.form)
-                        .then(() => this.JoinConference(this.$route.params.id))
+                    this.JoinConference(this.$route.params.id)
+                        .then(() => this.CreateReport(this.form))
                         .then(() => this.$router.push('/conferences'))
                         .catch((error) => {
                             if (error.response.data.errors) {
@@ -292,6 +292,12 @@ export default {
                             }
                             if (error.response.data.errors.zoom) {
                                 this.cancelErrorSnackbar = true
+                            }
+                            if (
+                                error.response.data.errors &&
+                                error.response.data.errors.plan
+                            ) {
+                                this.$router.push({ name: 'Plans' })
                             }
                             this.loading = false
                         })

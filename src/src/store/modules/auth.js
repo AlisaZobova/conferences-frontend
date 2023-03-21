@@ -62,9 +62,15 @@ const actions = {
         })
     },
     async JoinConference({ dispatch }, conferenceId) {
-        axios
+        return axios
             .post('conferences/' + conferenceId + '/join')
-            .then(() => dispatch('GetUser'))
+            .then((response) => {
+                dispatch('GetUser')
+                return response
+            })
+            .catch((error) => {
+                return Promise.reject(error)
+            })
     },
     async CancelParticipation({ dispatch }, conferenceId) {
         return axios

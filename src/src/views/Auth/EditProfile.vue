@@ -11,6 +11,42 @@
                         v-model="isFormValid"
                         class="edit-form"
                     >
+                        <div
+                            class="grey d-flex justify-space-between align-center lighten-4 text-center pa-4 mb-4"
+                        >
+                            <div>
+                                <div class="mb-4">
+                                    <b>Current plan:</b>&nbsp;{{
+                                        user.subscriptions.slice(1)[0].name
+                                    }}
+                                </div>
+                                <div v-if="user.credits !== 'unlimited'">
+                                    <b>Available credits:</b>&nbsp;
+                                    {{ user.credits }}
+                                </div>
+                            </div>
+                            <div>
+                                <v-btn
+                                    outlined
+                                    color="primary"
+                                    v-if="
+                                        user.subscriptions.slice(1)[0].name ===
+                                        'Free'
+                                    "
+                                    :to="{ name: 'Plans' }"
+                                >
+                                    Upgrade subscription
+                                </v-btn>
+                                <v-btn
+                                    v-else
+                                    outlined
+                                    color="error"
+                                    @click="unsubscribe"
+                                >
+                                    Cancel subscription
+                                </v-btn>
+                            </div>
+                        </div>
                         <validation-provider
                             v-slot="{ errors }"
                             name="Email"
@@ -211,7 +247,12 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['UpdateProfile', 'GetCountries', 'GetUser']),
+        ...mapActions([
+            'UpdateProfile',
+            'GetCountries',
+            'GetUser',
+            'unsubscribeUser',
+        ]),
         async submit() {
             if (this.password.length > 0 && this.password.length < 8) {
                 this.isFormValid = false
@@ -241,6 +282,9 @@ export default {
         },
         async setNumber() {
             this.user.phone = this.phone
+        },
+        async unsubscribe() {
+            this.unsubscribeUser()
         },
         goBack() {
             this.$router.go(-1)

@@ -19,6 +19,19 @@ const actions = {
                 return Promise.reject(error)
             })
     },
+    async unsubscribeUser({ commit, rootState }) {
+        return axios
+            .post('/cancel-subscription')
+            .then((response) => {
+                axios.get('user/' + rootState.auth.user.id).then((response) => {
+                    commit('setUser', response.data, { root: true })
+                })
+                return response
+            })
+            .catch((error) => {
+                return Promise.reject(error)
+            })
+    },
     getPlan({ commit }, planId) {
         return axios
             .get('/plans/' + planId)
