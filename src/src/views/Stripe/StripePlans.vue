@@ -70,7 +70,7 @@ export default {
             return this.$store.state.stripe.plans
         },
         currentPlan() {
-            return this.$store.state.auth.user.subscriptions.slice(1)[0].name
+            return this.$store.state.auth.user.active_subscription.name
         },
     },
     data() {

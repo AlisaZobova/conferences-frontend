@@ -34,7 +34,10 @@ export const buttonActionsMixin = {
                         error.response.data.errors &&
                         error.response.data.errors.plan
                     ) {
-                        this.$router.push({ name: 'Plans' })
+                        this.$router.push(
+                            { name: 'Plans' },
+                            () => (this.$root.planErrorSnackbar = true)
+                        )
                     }
                 })
             }

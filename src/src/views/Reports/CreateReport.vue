@@ -285,7 +285,7 @@ export default {
                     this.loading = true
                     this.JoinConference(this.$route.params.id)
                         .then(() => this.CreateReport(this.form))
-                        .then(() => this.$router.push('/conferences'))
+                        .then(() => this.$router.push({ name: 'Conferences' }))
                         .catch((error) => {
                             if (error.response.data.errors) {
                                 this.apiErrors = error.response.data.errors
@@ -297,7 +297,10 @@ export default {
                                 error.response.data.errors &&
                                 error.response.data.errors.plan
                             ) {
-                                this.$router.push({ name: 'Plans' })
+                                this.$router.push(
+                                    { name: 'Plans' },
+                                    () => (this.$root.planErrorSnackbar = true)
+                                )
                             }
                             this.loading = false
                         })
