@@ -12,12 +12,12 @@
                         class="edit-form"
                     >
                         <div
-                            class="grey d-flex justify-space-between align-center lighten-4 text-center pa-4 mb-4"
+                            class="grey d-flex justify-space-between align-center lighten-4 pa-4 mb-4"
                         >
                             <div>
                                 <div class="mb-4">
                                     <b>Current plan:</b>&nbsp;{{
-                                        user.subscriptions.slice(1)[0].name
+                                        user.active_subscription.name
                                     }}
                                 </div>
                                 <div v-if="user.credits !== 'unlimited'">
@@ -30,8 +30,7 @@
                                     outlined
                                     color="primary"
                                     v-if="
-                                        user.subscriptions.slice(1)[0].name ===
-                                        'Free'
+                                        user.active_subscription.name === 'Free'
                                     "
                                     :to="{ name: 'Plans' }"
                                 >
@@ -40,10 +39,15 @@
                                 <v-btn
                                     v-else
                                     outlined
+                                    :disabled="unsubscribeProcessing"
                                     color="error"
                                     @click="unsubscribe"
                                 >
-                                    Cancel subscription
+                                    {{
+                                        unsubscribeProcessing
+                                            ? 'Processing'
+                                            : 'Cancel subscription'
+                                    }}
                                 </v-btn>
                             </div>
                         </div>
@@ -194,6 +198,46 @@
                 </v-layout>
             </validation-observer>
         </div>
+        <v-snackbar
+            v-model="successSnackbar"
+            timeout="10000"
+            color="success"
+            :text="true"
+            right
+            bottom
+        >
+            You have successfully unsubscribed!
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    color="grey"
+                    text
+                    v-bind="attrs"
+                    @click="successSnackbar = false"
+                >
+                    Close
+                </v-btn>
+            </template>
+        </v-snackbar>
+        <v-snackbar
+            v-model="errorSnackbar"
+            timeout="5000"
+            color="error"
+            :text="true"
+            right
+            bottom
+        >
+            An error occurred while unsubscribing. Please try again later.
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    color="error"
+                    text
+                    v-bind="attrs"
+                    @click="errorSnackbar = false"
+                >
+                    Close
+                </v-btn>
+            </template>
+        </v-snackbar>
     </v-main>
 </template>
 
@@ -244,6 +288,9 @@ export default {
             showError: false,
             emailError: '',
             showErrorCountry: false,
+            successSnackbar: false,
+            errorSnackbar: false,
+            unsubscribeProcessing: false,
         }
     },
     methods: {
@@ -284,7 +331,16 @@ export default {
             this.user.phone = this.phone
         },
         async unsubscribe() {
+            this.unsubscribeProcessing = true
             this.unsubscribeUser()
+                .then(() => {
+                    this.successSnackbar = true
+                    this.unsubscribeProcessing = false
+                })
+                .catch(() => {
+                    this.errorSnackbar = true
+                    this.unsubscribeProcessing = false
+                })
         },
         goBack() {
             this.$router.go(-1)
