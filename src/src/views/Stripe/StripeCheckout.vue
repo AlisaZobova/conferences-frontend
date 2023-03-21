@@ -6,7 +6,26 @@
         <div v-show="!loading">
             <div class="mb-4"><b>Total:</b>&nbsp;{{ formatCurrency() }}</div>
             <v-divider />
-            <div id="card-element" class="pa-8 mt-4 grey lighten-4"></div>
+            <v-slide-y-transition>
+                <div
+                    v-show="changeCard"
+                    id="card-element"
+                    class="pa-8 mt-4 grey lighten-4"
+                />
+            </v-slide-y-transition>
+            <v-btn
+                v-if="card"
+                class="mt-4 mr-4"
+                outlined
+                color="success"
+                @click="changeCard = !changeCard"
+            >
+                {{
+                    changeCard
+                        ? 'Use an existing card **** **** **** ' + card
+                        : 'Add new card'
+                }}
+            </v-btn>
             <v-btn
                 outlined
                 color="primary"
@@ -14,7 +33,7 @@
                 class="mt-4"
                 :disabled="paymentProcessing"
                 v-text="paymentProcessing ? 'Processing' : 'Pay now'"
-            ></v-btn>
+            />
         </div>
         <v-snackbar
             v-model="successSubscription"
@@ -70,6 +89,9 @@ export default {
         plan() {
             return this.$store.state.stripe.plan
         },
+        card() {
+            return this.$store.state.auth.user.pm_last_four
+        },
     },
     data() {
         return {
@@ -79,23 +101,18 @@ export default {
             paymentProcessing: false,
             successSubscription: false,
             errorSubscription: false,
+            changeCard: true,
         }
     },
     methods: {
         ...mapActions(['subscribeUser', 'getPlan']),
 
         async processPayment() {
-            this.paymentProcessing = true
+            if (!this.changeCard) {
+                this.paymentProcessing = true
 
-            const { paymentMethod, error } =
-                await this.stripe.createPaymentMethod('card', this.cardElement)
-
-            if (error) {
-                this.paymentProcessing = false
-                alert(error)
-            } else {
                 this.subscribeUser({
-                    paymentMethodId: paymentMethod.id,
+                    paymentMethodId: null,
                     plan: this.plan,
                 })
                     .then(() => {
@@ -106,6 +123,28 @@ export default {
                         this.paymentProcessing = false
                         this.errorSubscription = true
                     })
+            } else {
+                const { paymentMethod, error } =
+                    await this.stripe.createPaymentMethod(
+                        'card',
+                        this.cardElement
+                    )
+
+                if (!error) {
+                    this.paymentProcessing = true
+                    this.subscribeUser({
+                        paymentMethodId: paymentMethod.id,
+                        plan: this.plan,
+                    })
+                        .then(() => {
+                            this.paymentProcessing = false
+                            this.successSubscription = true
+                        })
+                        .catch(() => {
+                            this.paymentProcessing = false
+                            this.errorSubscription = true
+                        })
+                }
             }
         },
         formatCurrency() {
