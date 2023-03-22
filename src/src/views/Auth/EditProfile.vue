@@ -20,7 +20,10 @@
                                         user.active_subscription.name
                                     }}
                                 </div>
-                                <div class="mt-4" v-if="user.credits !== 'unlimited'">
+                                <div
+                                    class="mt-4"
+                                    v-if="user.credits !== 'unlimited'"
+                                >
                                     <b>Available credits:</b>&nbsp;
                                     {{ user.credits }}
                                 </div>

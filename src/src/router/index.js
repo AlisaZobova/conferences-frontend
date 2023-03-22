@@ -15,8 +15,8 @@ import ForbiddenError from '@/views/Errors/ForbiddenError'
 import NotFoundError from '@/views/Errors/NotFoundError'
 import EditProfile from '@/views/Auth/EditProfile'
 import ReportsFavorites from '@/views/Reports/ReportsFavorites'
-import StripeCheckout from "@/views/Stripe/StripeCheckout";
-import StripePlans from "@/views/Stripe/StripePlans";
+import StripeCheckout from '@/views/Stripe/StripeCheckout'
+import StripePlans from '@/views/Stripe/StripePlans'
 
 Vue.use(VueRouter)
 const routes = [
