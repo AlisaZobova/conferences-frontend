@@ -385,9 +385,11 @@ export default {
         deleteReport(reportId) {
             this.loading = true
             let conferenceId = this.report.conference_id
-            this.DeleteReport(reportId)
-                .then(() => this.CancelParticipation(conferenceId))
-                .then(() => this.$router.push({ name: 'Conferences' }))
+            this.DeleteReport(reportId).then(() =>
+                this.CancelParticipation(conferenceId).then(() =>
+                    this.$router.push({ name: 'Conferences' })
+                )
+            )
         },
         getActiveValue(value) {
             this.selected = value

@@ -258,6 +258,7 @@ export default {
             'GetConference',
             'GetCategory',
             'GetCategories',
+            'CancelParticipation',
         ]),
         async submit() {
             this.cancelErrorSnackbar = false
@@ -287,6 +288,7 @@ export default {
                         .then(() => this.CreateReport(this.form))
                         .then(() => this.$router.push({ name: 'Conferences' }))
                         .catch((error) => {
+                            this.CancelParticipation(this.$route.params.id)
                             if (error.response.data.errors) {
                                 this.apiErrors = error.response.data.errors
                             }

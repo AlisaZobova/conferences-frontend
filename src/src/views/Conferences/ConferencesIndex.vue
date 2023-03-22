@@ -466,24 +466,29 @@ export default {
         },
         cancelParticipation(item) {
             this.cancelErrorSnackbar = false
+            this.loading = true
             if (this.isAnnouncer) {
                 const report = item.reports.filter(
                     (report) => report.conference_id === item.id
                 )[0]
-                this.DeleteReport(report.id)
+                this.CancelParticipation(item.id)
                     .then(() => {
-                        this.CancelParticipation(item.id)
+                        this.DeleteReport(report.id).catch((error) => {
+                            if (error.response.data.errors) {
+                                this.apiErrors = error.response.data.errors
+                            }
+                            if (error.response.data.errors.zoom) {
+                                this.cancelErrorSnackbar = true
+                            }
+                        })
                     })
-                    .catch((error) => {
-                        if (error.response.data.errors) {
-                            this.apiErrors = error.response.data.errors
-                        }
-                        if (error.response.data.errors.zoom) {
-                            this.cancelErrorSnackbar = true
-                        }
+                    .finally(() => {
+                        this.loading = false
                     })
             } else {
-                this.CancelParticipation(item.id)
+                this.CancelParticipation(item.id).finally(() => {
+                    this.loading = false
+                })
             }
         },
         getFilteredData() {
