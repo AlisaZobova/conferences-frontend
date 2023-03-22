@@ -15,12 +15,12 @@
                             class="grey d-flex justify-space-between align-center lighten-4 pa-4 mb-4"
                         >
                             <div>
-                                <div class="mb-4">
+                                <div>
                                     <b>Current plan:</b>&nbsp;{{
                                         user.active_subscription.name
                                     }}
                                 </div>
-                                <div v-if="user.credits !== 'unlimited'">
+                                <div class="mt-4" v-if="user.credits !== 'unlimited'">
                                     <b>Available credits:</b>&nbsp;
                                     {{ user.credits }}
                                 </div>
