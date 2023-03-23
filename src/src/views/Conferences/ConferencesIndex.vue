@@ -4,14 +4,14 @@
             <v-layout>
                 <v-navigation-drawer v-model="openFilters" absolute temporary>
                     <ConferencesFilters
-                        :disabled="loading"
+                        :disabled="loading || processing"
                         v-if="isAuthenticated"
                         @updateFilters="filters = $event"
                         @applyFilters="getFilteredData"
                     />
                 </v-navigation-drawer>
                 <v-slide-x-transition>
-                    <v-container v-if="loading" fluid>
+                    <v-container v-if="loading || processing" fluid>
                         <v-layout align-center class="table-heading-skeleton">
                             <v-skeleton-loader
                                 type="text"
@@ -91,7 +91,10 @@
                             <v-skeleton-loader type="divider" />
                         </div>
                     </v-container>
-                    <v-container v-if="!loading && totalConferences > 0" fluid>
+                    <v-container
+                        v-if="!loading && !processing && totalConferences > 0"
+                        fluid
+                    >
                         <v-data-table
                             :headers="headers"
                             :items="conferences"
@@ -350,7 +353,7 @@
                     </v-container>
                 </v-slide-x-transition>
                 <v-layout
-                    v-if="!loading && totalConferences === 0"
+                    v-if="!loading && !processing && totalConferences === 0"
                     class="align-center justify-center"
                 >
                     <div class="d-inline-block teal--text text-h6 pl-4">
@@ -361,7 +364,7 @@
             </v-layout>
             <div
                 class="text-center pt-2"
-                v-if="!loading && totalConferences > 0"
+                v-if="!loading && !processing && totalConferences > 0"
             >
                 <v-pagination v-model="page" :length="pageCount" />
             </div>
