@@ -96,8 +96,8 @@
                     right
                     bottom
                 >
-                    You have reached your plan join limit this month. Choose a
-                    different plan to have a higher limit.
+                    You have reached your {{ currentPlan }} plan join limit this
+                    month. Choose a different plan to have a higher limit.
 
                     <template v-slot:action="{ attrs }">
                         <v-btn
@@ -133,6 +133,11 @@ export default {
         favCount() {
             let favoritesCount = this.$store.state.auth.user.favorites.length
             return favoritesCount > 99 ? '99+' : favoritesCount
+        },
+        currentPlan() {
+            return this.$store.state.auth.user
+                ? this.$store.state.auth.user.active_subscription.name
+                : null
         },
     },
     methods: {
