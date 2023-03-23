@@ -95,7 +95,7 @@
                                         />
 
                                         <v-btn
-                                            :disabled="!isFormValid"
+                                            :disabled="!isFormValid || loading"
                                             color="primary"
                                             type="submit"
                                         >
@@ -207,7 +207,9 @@
                                         <!--                      Back-->
                                         <!--                    </v-btn>-->
                                         <v-btn
-                                            :disabled="!isFormAdValid"
+                                            :disabled="
+                                                !isFormAdValid || loading
+                                            "
                                             type="submit"
                                             color="primary"
                                         >
@@ -271,11 +273,13 @@ export default {
             showError: false,
             emailError: '',
             showErrorCountry: false,
+            loading: false,
         }
     },
     methods: {
         ...mapActions(['Register', 'RegisterAdditional', 'GetCountries']),
         async submit() {
+            this.loading = true
             this.Register(this.form)
                 .then(() => {
                     this.step = 2
@@ -285,14 +289,17 @@ export default {
                     this.showError = true
                     this.emailError = 'Email already exists'
                 })
+                .finally(() => (this.loading = false))
         },
         async submitAd() {
             try {
+                this.loading = true
                 await this.RegisterAdditional(this.formAd)
                 await this.$router.push({ name: 'Conferences' })
                 this.showError = false
             } catch (error) {
                 this.showError = true
+                this.loading = false
             }
         },
         async getCountries() {
