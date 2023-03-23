@@ -8,34 +8,33 @@
                 <b>Total:</b>&nbsp;{{ !loading ? formatCurrency() : '' }}
             </div>
             <v-divider />
-            <v-slide-y-transition>
-                <div
-                    v-show="changeCard"
-                    id="card-element"
-                    class="pa-8 mt-4 grey lighten-4"
-                />
-            </v-slide-y-transition>
-            <v-btn
-                v-if="card"
-                class="mt-4 mr-4"
-                outlined
-                color="success"
-                :disabled="paymentProcessing"
-                @click="changeCard = !changeCard"
-            >
-                {{
-                    changeCard
-                        ? 'Use an existing card **** **** **** ' + card
-                        : 'Add new card'
-                }}
-            </v-btn>
+            <div
+                v-show="changeCard"
+                id="card-element"
+                class="pa-8 mt-4 grey lighten-4"
+            />
+            <div v-show="!changeCard" class="mt-4 grey lighten-4 card-number">
+                **** **** **** {{ card }}
+            </div>
+            <v-slide-x-transition>
+                <v-btn
+                    v-if="card"
+                    class="mt-4 mr-4"
+                    outlined
+                    color="success"
+                    :disabled="paymentProcessing"
+                    @click="changeCard = !changeCard"
+                >
+                    {{ changeCard ? 'Use an existing card' : 'Use new card' }}
+                </v-btn>
+            </v-slide-x-transition>
             <v-btn
                 outlined
                 color="primary"
                 @click="processPayment"
                 class="mt-4"
                 :disabled="paymentProcessing"
-                v-text="paymentProcessing ? 'Processing' : 'Pay now'"
+                v-text="paymentProcessing ? 'Processing' : 'Confirm and Pay'"
             />
         </div>
         <div
@@ -188,4 +187,10 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.card-number {
+    font-size: 14px;
+    padding: 30px 32px;
+    color: grey;
+}
+</style>
