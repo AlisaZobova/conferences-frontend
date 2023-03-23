@@ -4,7 +4,9 @@
             <v-progress-circular indeterminate color="primary" />
         </div>
         <div v-show="!loading && plan.name !== currentPlan">
-            <div class="mb-4"><b>Total:</b>&nbsp;{{ formatCurrency() }}</div>
+            <div class="mb-4">
+                <b>Total:</b>&nbsp;{{ !loading ? formatCurrency() : '' }}
+            </div>
             <v-divider />
             <v-slide-y-transition>
                 <div
