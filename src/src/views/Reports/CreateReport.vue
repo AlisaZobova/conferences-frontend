@@ -258,7 +258,7 @@ export default {
             'GetConference',
             'GetCategory',
             'GetCategories',
-            'CancelParticipation',
+            'DeleteReport',
         ]),
         async submit() {
             this.cancelErrorSnackbar = false
@@ -284,26 +284,40 @@ export default {
                         this.form.presentation = input.files[0]
                     }
                     this.loading = true
-                    this.JoinConference(this.$route.params.id)
-                        .then(() => this.CreateReport(this.form))
-                        .then(() => this.$router.push({ name: 'Conferences' }))
+
+                    this.CreateReport(this.form)
+                        .then((response) => {
+                            this.JoinConference(this.$route.params.id)
+                                .then(() =>
+                                    this.$router.push({ name: 'Conferences' })
+                                )
+                                .catch((error) => {
+                                    if (
+                                        error.response.data.errors &&
+                                        error.response.data.errors.plan
+                                    ) {
+                                        this.DeleteReport(
+                                            response.data.id
+                                        ).then(() => {
+                                            this.$router.push(
+                                                { name: 'Plans' },
+                                                () =>
+                                                    (this.$root.planErrorSnackbar = true)
+                                            )
+                                        })
+                                    } else {
+                                        this.loading = false
+                                    }
+                                })
+                        })
                         .catch((error) => {
-                            this.CancelParticipation(this.$route.params.id)
                             if (error.response.data.errors) {
                                 this.apiErrors = error.response.data.errors
                             }
                             if (error.response.data.errors.zoom) {
                                 this.cancelErrorSnackbar = true
                             }
-                            if (
-                                error.response.data.errors &&
-                                error.response.data.errors.plan
-                            ) {
-                                this.$router.push(
-                                    { name: 'Plans' },
-                                    () => (this.$root.planErrorSnackbar = true)
-                                )
-                            }
+
                             this.loading = false
                         })
                 }
