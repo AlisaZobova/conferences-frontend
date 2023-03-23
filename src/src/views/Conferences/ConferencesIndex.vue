@@ -34,19 +34,21 @@
                                         class="mr-4 d-inline-block"
                                     />
                                 </span>
-                                <span class="hidden-xs-only">
-                                    <v-skeleton-loader
-                                        type="button"
-                                        width="172"
-                                        class="full-btn d-inline-block"
-                                    />
-                                </span>
+                                <span v-if="isAnnouncer">
+                                    <span class="hidden-xs-only">
+                                        <v-skeleton-loader
+                                            type="button"
+                                            width="172"
+                                            class="full-btn d-inline-block"
+                                        />
+                                    </span>
 
-                                <span class="hidden-sm-and-up">
-                                    <v-skeleton-loader
-                                        type="avatar"
-                                        class="d-inline-block"
-                                    />
+                                    <span class="hidden-sm-and-up">
+                                        <v-skeleton-loader
+                                            type="avatar"
+                                            class="d-inline-block"
+                                        />
+                                    </span>
                                 </span>
                             </div>
                         </v-layout>
