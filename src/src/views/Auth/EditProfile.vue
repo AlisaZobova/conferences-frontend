@@ -12,7 +12,7 @@
                         class="edit-form"
                     >
                         <div
-                            class="grey d-flex justify-space-between align-center lighten-4 pa-4 mb-4"
+                            class="grey justify-space-between align-center lighten-4 pa-4 mb-4 subscription-info"
                         >
                             <div>
                                 <div>
@@ -30,6 +30,7 @@
                             </div>
                             <div>
                                 <v-btn
+                                    class="upgrade-btn"
                                     outlined
                                     color="primary"
                                     v-if="
@@ -40,6 +41,7 @@
                                     Upgrade subscription
                                 </v-btn>
                                 <v-btn
+                                    class="cancel-btn"
                                     v-else
                                     outlined
                                     :disabled="unsubscribeProcessing"
@@ -410,5 +412,18 @@ export default {
 .phone-input:deep(.v-text-field__details) {
     min-height: 0;
     margin: 0;
+}
+
+@media (max-width: 600px) {
+    .cancel-btn,
+    .upgrade-btn {
+        margin-top: 16px;
+    }
+}
+
+@media (min-width: 600px) {
+    .subscription-info {
+        display: flex;
+    }
 }
 </style>
