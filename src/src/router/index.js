@@ -103,7 +103,7 @@ const routes = [
         meta: { requiresAuth: true },
     },
     {
-        path: '/:id/checkout',
+        path: '/plans/:id/checkout',
         name: 'Checkout',
         component: StripeCheckout,
         meta: { requiresAuth: true },
