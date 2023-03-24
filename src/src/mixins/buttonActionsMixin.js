@@ -62,5 +62,14 @@ export const buttonActionsMixin = {
         getShareText() {
             return share.text
         },
+        isConfNew(item) {
+            let nowDate = new Date()
+            let year = nowDate.getFullYear()
+            let month = nowDate.getMonth() + 1
+            month = month > 9 ? month : '0' + month
+            let day = nowDate.getDate()
+            nowDate = year + '-' + month + '-' + day
+            return item.conf_date.slice(0, 10) >= nowDate
+        },
     },
 }
