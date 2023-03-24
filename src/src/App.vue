@@ -88,6 +88,28 @@
         <v-main>
             <v-container fluid>
                 <router-view></router-view>
+                <v-snackbar
+                    v-model="$root.planErrorSnackbar"
+                    timeout="10000"
+                    color="error"
+                    :text="true"
+                    right
+                    bottom
+                >
+                    You have reached your {{ currentPlan }} plan join limit this
+                    month. Choose a different plan to have a higher limit.
+
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                            color="error"
+                            text
+                            v-bind="attrs"
+                            @click="$root.planErrorSnackbar = false"
+                        >
+                            Close
+                        </v-btn>
+                    </template>
+                </v-snackbar>
             </v-container>
         </v-main>
     </v-app>
@@ -111,6 +133,11 @@ export default {
         favCount() {
             let favoritesCount = this.$store.state.auth.user.favorites.length
             return favoritesCount > 99 ? '99+' : favoritesCount
+        },
+        currentPlan() {
+            return this.$store.state.auth.user
+                ? this.$store.state.auth.user.active_subscription.name
+                : null
         },
     },
     methods: {

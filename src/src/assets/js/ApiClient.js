@@ -13,17 +13,18 @@ axios.interceptors.response.use(
     },
     async function (error) {
         if (error.response) {
-            if (
-                error.response.status === 401 ||
-                error.response.status === 403
-            ) {
+            if (error.response.status === 401) {
                 setCSRFToken()
                 store.state.auth.user = null
                 return router.push({ name: 'Login' })
+            } else if (error.response.status === 403) {
+                setCSRFToken()
+                store.dispatch('LogOut').then(() => {
+                    return router.push({ name: 'Login' })
+                })
+            } else if (error.response.status === 404) {
+                return router.push({ name: 'Not Found' }).catch(() => {})
             }
-        }
-        if (error.response.status === 404) {
-            return router.push({ name: 'Not Found' }).catch(() => {})
         }
         return Promise.reject(error)
     }

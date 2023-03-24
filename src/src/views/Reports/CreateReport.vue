@@ -258,6 +258,7 @@ export default {
             'GetConference',
             'GetCategory',
             'GetCategories',
+            'DeleteReport',
         ]),
         async submit() {
             this.cancelErrorSnackbar = false
@@ -283,15 +284,39 @@ export default {
                         this.form.presentation = input.files[0]
                     }
                     this.loading = true
+
                     this.CreateReport(this.form)
-                        .then(() => this.JoinConference(this.$route.params.id))
-                        .then(() => this.$router.push('/conferences'))
+                        .then((response) => {
+                            this.JoinConference(this.$route.params.id)
+                                .then(() =>
+                                    this.$router.push({ name: 'Conferences' })
+                                )
+                                .catch((error) => {
+                                    if (
+                                        error.response.data.errors &&
+                                        error.response.data.errors.plan
+                                    ) {
+                                        this.DeleteReport(
+                                            response.data.id
+                                        ).then(() => {
+                                            this.$router.push(
+                                                { name: 'Plans' },
+                                                () =>
+                                                    (this.$root.planErrorSnackbar = true)
+                                            )
+                                        })
+                                    } else {
+                                        this.loading = false
+                                    }
+                                })
+                        })
                         .catch((error) => {
                             if (error.response.data.errors) {
                                 this.apiErrors = error.response.data.errors
-                            }
-                            if (error.response.data.errors.zoom) {
-                                this.cancelErrorSnackbar = true
+
+                                if (error.response.data.errors.zoom) {
+                                    this.cancelErrorSnackbar = true
+                                }
                             }
                             this.loading = false
                         })

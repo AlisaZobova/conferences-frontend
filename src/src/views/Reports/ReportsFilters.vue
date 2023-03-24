@@ -92,7 +92,7 @@
                 :clear="category.length === 0"
                 :disabled="disabled"
                 color="teal"
-                @updateCategory="category = $event"
+                @updateCategory="$set(category, 0, $event)"
             />
         </v-card-text>
         <!--        <v-card-actions>-->
@@ -205,10 +205,11 @@ export default {
         },
         category(newValue) {
             this.category = newValue
-            if (newValue.length === 0) {
+
+            this.$set(this.filters, 'category', this.category.toString())
+
+            if (!this.filters['category']) {
                 delete this.filters['category']
-            } else {
-                this.$set(this.filters, 'category', this.category.toString())
             }
             this.applyFilters()
         },

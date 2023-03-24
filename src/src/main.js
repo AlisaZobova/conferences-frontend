@@ -31,6 +31,11 @@ Vue.use(VueGoogleMaps, {
 Vue.config.productionTip = false
 
 new Vue({
+    data() {
+        return {
+            planErrorSnackbar: false,
+        }
+    },
     vuetify,
     router,
     store,

@@ -137,6 +137,7 @@
                         depressed
                         class="mr-1 mb-1 mt-1"
                         color="warning"
+                        :disabled="processing"
                         @click="joinConference(conference.id)"
                     >
                         Join
@@ -185,6 +186,7 @@
                             depressed
                             color="red lighten-2"
                             class="mr-1 mb-1 mt-1 white--text"
+                            :disabled="processing"
                             @click="cancelParticipation()"
                         >
                             Cancel participation
@@ -253,24 +255,29 @@ export default {
         },
         cancelParticipation() {
             this.cancelErrorSnackbar = false
+            this.processing = true
             if (this.isAnnouncer) {
                 const report = this.conference.reports.filter(
                     (report) => report.conference_id === this.conference.id
                 )[0]
-                this.DeleteReport(report.id)
+                this.CancelParticipation(this.conference.id)
                     .then(() => {
-                        this.CancelParticipation(this.conference.id)
+                        this.DeleteReport(report.id).catch((error) => {
+                            if (error.response.data.errors) {
+                                this.apiErrors = error.response.data.errors
+                            }
+                            if (error.response.data.errors.zoom) {
+                                this.cancelErrorSnackbar = true
+                            }
+                        })
                     })
-                    .catch((error) => {
-                        if (error.response.data.errors) {
-                            this.apiErrors = error.response.data.errors
-                        }
-                        if (error.response.data.errors.zoom) {
-                            this.cancelErrorSnackbar = true
-                        }
+                    .finally(() => {
+                        this.processing = false
                     })
             } else {
-                this.CancelParticipation(this.conference.id)
+                this.CancelParticipation(this.conference.id).finally(() => {
+                    this.processing = false
+                })
             }
         },
     },

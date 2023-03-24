@@ -40,9 +40,15 @@ const actions = {
         commit('setUser', response.data)
     },
     async GetUser({ commit, state }) {
-        axios.get('user/' + state.user.id).then((response) => {
-            commit('setUser', response.data)
-        })
+        return axios
+            .get('user/' + state.user.id)
+            .then((response) => {
+                commit('setUser', response.data)
+                return response
+            })
+            .catch((error) => {
+                return Promise.reject(error)
+            })
     },
     async LogIn({ commit }, User) {
         let response = await axios.post('login', User)
@@ -62,16 +68,35 @@ const actions = {
         })
     },
     async JoinConference({ dispatch }, conferenceId) {
-        axios
+        return axios
             .post('conferences/' + conferenceId + '/join')
-            .then(() => dispatch('GetUser'))
+            .then(() => {
+                return dispatch('GetUser')
+                    .then((response) => {
+                        return response
+                    })
+                    .catch((error) => {
+                        return Promise.reject(error)
+                    })
+            })
+            .catch((error) => {
+                return Promise.reject(error)
+            })
     },
     async CancelParticipation({ dispatch }, conferenceId) {
         return axios
             .post('conferences/' + conferenceId + '/cancel')
-            .then((response) => {
-                dispatch('GetUser')
-                return response
+            .then(() => {
+                return dispatch('GetUser')
+                    .then((response) => {
+                        return response
+                    })
+                    .catch((error) => {
+                        return Promise.reject(error)
+                    })
+            })
+            .catch((error) => {
+                return Promise.reject(error)
             })
     },
     async AddFavorite({ dispatch }, reportId) {

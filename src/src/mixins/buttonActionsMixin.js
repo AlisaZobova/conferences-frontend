@@ -2,6 +2,11 @@ import { mapActions } from 'vuex'
 import { share } from '../../share.config'
 
 export const buttonActionsMixin = {
+    data() {
+        return {
+            processing: false,
+        }
+    },
     computed: {
         isAnnouncer() {
             return this.$store.getters.isAnnouncer
@@ -29,7 +34,20 @@ export const buttonActionsMixin = {
                     params: { id: conferenceId },
                 })
             } else {
+                this.processing = true
                 this.JoinConference(conferenceId)
+                    .catch((error) => {
+                        if (
+                            error.response.data.errors &&
+                            error.response.data.errors.plan
+                        ) {
+                            this.$router.push(
+                                { name: 'Plans' },
+                                () => (this.$root.planErrorSnackbar = true)
+                            )
+                        }
+                    })
+                    .finally(() => (this.processing = false))
             }
         },
         isConferenceCreator(conferenceId) {

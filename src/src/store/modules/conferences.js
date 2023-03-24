@@ -27,11 +27,6 @@ const actions = {
         let response = await axios.get('conferences/' + conferenceId)
         commit('setConference', response.data)
     },
-    async GetUser({ commit, rootState }) {
-        axios.get('user/' + rootState.auth.user.id).then((response) => {
-            commit('setUser', response.data, { root: true })
-        })
-    },
 
     async DeleteConference({ commit, dispatch }, conferenceId) {
         await axios.delete('conferences/' + conferenceId)

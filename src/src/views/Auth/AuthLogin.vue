@@ -38,7 +38,11 @@
                                             >Register</router-link
                                         >
                                     </a>
-                                    <v-btn type="submit" color="primary">
+                                    <v-btn
+                                        :disabled="loading"
+                                        type="submit"
+                                        color="primary"
+                                    >
                                         Login
                                     </v-btn>
                                 </v-container>
@@ -64,11 +68,13 @@ export default {
                 password: '',
             },
             showError: false,
+            loading: false,
         }
     },
     methods: {
         ...mapActions(['LogIn']),
         async submit() {
+            this.loading = true
             const User = new FormData()
             User.append('email', this.form.email)
             User.append('password', this.form.password)
@@ -78,6 +84,7 @@ export default {
                 this.showError = false
             } catch (error) {
                 this.showError = true
+                this.loading = false
             }
         },
     },

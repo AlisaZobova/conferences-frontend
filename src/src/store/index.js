@@ -7,6 +7,7 @@ import countries from './modules/countries'
 import reports from '@/store/modules/reports'
 import comments from '@/store/modules/comments'
 import categories from '@/store/modules/categories'
+import stripe from '@/store/modules/stripe'
 
 Vue.use(Vuex)
 
@@ -18,6 +19,7 @@ export default new Vuex.Store({
         reports,
         comments,
         categories,
+        stripe,
     },
     plugins: [createPersistedState()],
 })

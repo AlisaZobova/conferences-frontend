@@ -11,6 +11,51 @@
                         v-model="isFormValid"
                         class="edit-form"
                     >
+                        <div
+                            class="grey justify-space-between align-center lighten-4 pa-4 mb-4 subscription-info"
+                        >
+                            <div>
+                                <div>
+                                    <b>Current plan:</b>&nbsp;{{
+                                        user.active_subscription.name
+                                    }}
+                                </div>
+                                <div
+                                    class="mt-4"
+                                    v-if="user.credits !== 'unlimited'"
+                                >
+                                    <b>Available credits:</b>&nbsp;
+                                    {{ user.credits }}
+                                </div>
+                            </div>
+                            <div>
+                                <v-btn
+                                    class="upgrade-btn"
+                                    outlined
+                                    color="primary"
+                                    v-if="
+                                        user.active_subscription.name === 'Free'
+                                    "
+                                    :to="{ name: 'Plans' }"
+                                >
+                                    Upgrade subscription
+                                </v-btn>
+                                <v-btn
+                                    class="cancel-btn"
+                                    v-else
+                                    outlined
+                                    :disabled="unsubscribeProcessing"
+                                    color="error"
+                                    @click="unsubscribe"
+                                >
+                                    {{
+                                        unsubscribeProcessing
+                                            ? 'Processing'
+                                            : 'Cancel subscription'
+                                    }}
+                                </v-btn>
+                            </div>
+                        </div>
                         <validation-provider
                             v-slot="{ errors }"
                             name="Email"
@@ -158,6 +203,46 @@
                 </v-layout>
             </validation-observer>
         </div>
+        <v-snackbar
+            v-model="successSnackbar"
+            timeout="10000"
+            color="success"
+            :text="true"
+            right
+            bottom
+        >
+            You have successfully unsubscribed!
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    color="grey"
+                    text
+                    v-bind="attrs"
+                    @click="successSnackbar = false"
+                >
+                    Close
+                </v-btn>
+            </template>
+        </v-snackbar>
+        <v-snackbar
+            v-model="errorSnackbar"
+            timeout="5000"
+            color="error"
+            :text="true"
+            right
+            bottom
+        >
+            An error occurred while unsubscribing. Please try again later.
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    color="error"
+                    text
+                    v-bind="attrs"
+                    @click="errorSnackbar = false"
+                >
+                    Close
+                </v-btn>
+            </template>
+        </v-snackbar>
     </v-main>
 </template>
 
@@ -208,10 +293,18 @@ export default {
             showError: false,
             emailError: '',
             showErrorCountry: false,
+            successSnackbar: false,
+            errorSnackbar: false,
+            unsubscribeProcessing: false,
         }
     },
     methods: {
-        ...mapActions(['UpdateProfile', 'GetCountries', 'GetUser']),
+        ...mapActions([
+            'UpdateProfile',
+            'GetCountries',
+            'GetUser',
+            'unsubscribeUser',
+        ]),
         async submit() {
             if (this.password.length > 0 && this.password.length < 8) {
                 this.isFormValid = false
@@ -241,6 +334,18 @@ export default {
         },
         async setNumber() {
             this.user.phone = this.phone
+        },
+        async unsubscribe() {
+            this.unsubscribeProcessing = true
+            this.unsubscribeUser()
+                .then(() => {
+                    this.successSnackbar = true
+                    this.unsubscribeProcessing = false
+                })
+                .catch(() => {
+                    this.errorSnackbar = true
+                    this.unsubscribeProcessing = false
+                })
         },
         goBack() {
             this.$router.go(-1)
@@ -307,5 +412,18 @@ export default {
 .phone-input:deep(.v-text-field__details) {
     min-height: 0;
     margin: 0;
+}
+
+@media (max-width: 600px) {
+    .cancel-btn,
+    .upgrade-btn {
+        margin-top: 16px;
+    }
+}
+
+@media (min-width: 600px) {
+    .subscription-info {
+        display: flex;
+    }
 }
 </style>

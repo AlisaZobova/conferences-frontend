@@ -58,12 +58,19 @@ const actions = {
         )
     },
     async CreateReport({ commit }, form) {
-        let response = await axios.post('reports', form, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        })
-        commit('setReport', response.data)
+        return axios
+            .post('reports', form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            .then((response) => {
+                commit('setReport', response.data)
+                return response
+            })
+            .catch((error) => {
+                return Promise.reject(error)
+            })
     },
     async DownloadFile({ state }, reportId) {
         axios

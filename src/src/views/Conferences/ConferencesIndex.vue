@@ -4,14 +4,14 @@
             <v-layout>
                 <v-navigation-drawer v-model="openFilters" absolute temporary>
                     <ConferencesFilters
-                        :disabled="loading"
+                        :disabled="loading || processing"
                         v-if="isAuthenticated"
                         @updateFilters="filters = $event"
                         @applyFilters="getFilteredData"
                     />
                 </v-navigation-drawer>
                 <v-slide-x-transition>
-                    <v-container v-if="loading" fluid>
+                    <v-container v-if="loading || processing" fluid>
                         <v-layout align-center class="table-heading-skeleton">
                             <v-skeleton-loader
                                 type="text"
@@ -34,19 +34,21 @@
                                         class="mr-4 d-inline-block"
                                     />
                                 </span>
-                                <span class="hidden-xs-only">
-                                    <v-skeleton-loader
-                                        type="button"
-                                        width="172"
-                                        class="full-btn d-inline-block"
-                                    />
-                                </span>
+                                <span v-if="isAnnouncer">
+                                    <span class="hidden-xs-only">
+                                        <v-skeleton-loader
+                                            type="button"
+                                            width="172"
+                                            class="full-btn d-inline-block"
+                                        />
+                                    </span>
 
-                                <span class="hidden-sm-and-up">
-                                    <v-skeleton-loader
-                                        type="avatar"
-                                        class="d-inline-block"
-                                    />
+                                    <span class="hidden-sm-and-up">
+                                        <v-skeleton-loader
+                                            type="avatar"
+                                            class="d-inline-block"
+                                        />
+                                    </span>
                                 </span>
                             </div>
                         </v-layout>
@@ -89,7 +91,10 @@
                             <v-skeleton-loader type="divider" />
                         </div>
                     </v-container>
-                    <v-container v-if="!loading && totalConferences > 0" fluid>
+                    <v-container
+                        v-if="!loading && !processing && totalConferences > 0"
+                        fluid
+                    >
                         <v-data-table
                             :headers="headers"
                             :items="conferences"
@@ -348,7 +353,7 @@
                     </v-container>
                 </v-slide-x-transition>
                 <v-layout
-                    v-if="!loading && totalConferences === 0"
+                    v-if="!loading && !processing && totalConferences === 0"
                     class="align-center justify-center"
                 >
                     <div class="d-inline-block teal--text text-h6 pl-4">
@@ -359,7 +364,7 @@
             </v-layout>
             <div
                 class="text-center pt-2"
-                v-if="!loading && totalConferences > 0"
+                v-if="!loading && !processing && totalConferences > 0"
             >
                 <v-pagination v-model="page" :length="pageCount" />
             </div>
@@ -466,24 +471,29 @@ export default {
         },
         cancelParticipation(item) {
             this.cancelErrorSnackbar = false
+            this.loading = true
             if (this.isAnnouncer) {
                 const report = item.reports.filter(
                     (report) => report.conference_id === item.id
                 )[0]
-                this.DeleteReport(report.id)
+                this.CancelParticipation(item.id)
                     .then(() => {
-                        this.CancelParticipation(item.id)
+                        this.DeleteReport(report.id).catch((error) => {
+                            if (error.response.data.errors) {
+                                this.apiErrors = error.response.data.errors
+                            }
+                            if (error.response.data.errors.zoom) {
+                                this.cancelErrorSnackbar = true
+                            }
+                        })
                     })
-                    .catch((error) => {
-                        if (error.response.data.errors) {
-                            this.apiErrors = error.response.data.errors
-                        }
-                        if (error.response.data.errors.zoom) {
-                            this.cancelErrorSnackbar = true
-                        }
+                    .finally(() => {
+                        this.loading = false
                     })
             } else {
-                this.CancelParticipation(item.id)
+                this.CancelParticipation(item.id).finally(() => {
+                    this.loading = false
+                })
             }
         },
         getFilteredData() {

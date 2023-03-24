@@ -15,6 +15,8 @@ import ForbiddenError from '@/views/Errors/ForbiddenError'
 import NotFoundError from '@/views/Errors/NotFoundError'
 import EditProfile from '@/views/Auth/EditProfile'
 import ReportsFavorites from '@/views/Reports/ReportsFavorites'
+import StripeCheckout from '@/views/Stripe/StripeCheckout'
+import StripePlans from '@/views/Stripe/StripePlans'
 
 Vue.use(VueRouter)
 const routes = [
@@ -98,6 +100,18 @@ const routes = [
         path: '/profile',
         name: 'Profile',
         component: EditProfile,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/plans/:id/checkout',
+        name: 'Checkout',
+        component: StripeCheckout,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/plans',
+        name: 'Plans',
+        component: StripePlans,
         meta: { requiresAuth: true },
     },
     {
