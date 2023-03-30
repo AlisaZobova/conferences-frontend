@@ -21,7 +21,12 @@ const actions = {
                     })
             })
             .catch((error) => {
-                return Promise.reject(error)
+                return axios
+                    .get('user/' + rootState.auth.user.id)
+                    .then((response) => {
+                        commit('setUser', response.data, { root: true })
+                        return Promise.reject(error)
+                    })
             })
     },
     async unsubscribeUser({ commit, rootState }) {
