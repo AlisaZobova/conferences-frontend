@@ -14,6 +14,9 @@ export const buttonActionsMixin = {
         isAuthenticated() {
             return this.$store.getters.isAuthenticated
         },
+        user() {
+            return this.$store.state.auth.user
+        },
     },
     methods: {
         ...mapActions([
@@ -29,10 +32,17 @@ export const buttonActionsMixin = {
         },
         joinConference(conferenceId) {
             if (this.isAnnouncer) {
-                this.$router.push({
-                    name: 'CreateReport',
-                    params: { id: conferenceId },
-                })
+                if (this.user.credits === 0) {
+                    this.$router.push(
+                        { name: 'Plans' },
+                        () => (this.$root.planErrorSnackbar = true)
+                    )
+                } else {
+                    this.$router.push({
+                        name: 'CreateReport',
+                        params: { id: conferenceId },
+                    })
+                }
             } else {
                 this.processing = true
                 this.JoinConference(conferenceId)
