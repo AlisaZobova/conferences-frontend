@@ -55,7 +55,7 @@
                         >mdi-heart</v-icon
                     >
                 </span>
-                <v-menu offset-y v-if="isLoggedIn">
+                <v-menu class="profile" offset-y v-if="isLoggedIn">
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn class="primary--text" v-on="on" v-bind="attrs">
                             <v-icon aria-hidden="false"> mdi-account </v-icon
@@ -162,5 +162,15 @@ export default {
 
 .v-list {
     padding: 0;
+}
+
+:deep(.profile .v-menu) {
+    min-width: 130px;
+    top: 50px;
+    right: 16px;
+}
+
+:deep(.profile .v-menu__content) {
+    position: fixed;
 }
 </style>
