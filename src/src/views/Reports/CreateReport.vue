@@ -286,29 +286,12 @@ export default {
                     this.loading = true
 
                     this.CreateReport(this.form)
-                        .then((response) => {
+                        .then(() => {
                             this.JoinConference(this.$route.params.id)
                                 .then(() =>
                                     this.$router.push({ name: 'Conferences' })
                                 )
-                                .catch((error) => {
-                                    if (
-                                        error.response.data.errors &&
-                                        error.response.data.errors.plan
-                                    ) {
-                                        this.DeleteReport(
-                                            response.data.id
-                                        ).then(() => {
-                                            this.$router.push(
-                                                { name: 'Plans' },
-                                                () =>
-                                                    (this.$root.planErrorSnackbar = true)
-                                            )
-                                        })
-                                    } else {
-                                        this.loading = false
-                                    }
-                                })
+                                .finally(() => (this.loading = false))
                         })
                         .catch((error) => {
                             if (error.response.data.errors) {

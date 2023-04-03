@@ -240,7 +240,8 @@
                                     v-if="
                                         isAuthenticated &&
                                         !isConferenceJoined(item.id) &&
-                                        (!isAnnouncer || item.available)
+                                        (!isAnnouncer || item.available) &&
+                                        isConfNew(item)
                                     "
                                     depressed
                                     class="mr-1 mb-1 mt-1"

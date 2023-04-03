@@ -14,6 +14,9 @@ export const buttonActionsMixin = {
         isAuthenticated() {
             return this.$store.getters.isAuthenticated
         },
+        user() {
+            return this.$store.state.auth.user
+        },
     },
     methods: {
         ...mapActions([
@@ -29,10 +32,17 @@ export const buttonActionsMixin = {
         },
         joinConference(conferenceId) {
             if (this.isAnnouncer) {
-                this.$router.push({
-                    name: 'CreateReport',
-                    params: { id: conferenceId },
-                })
+                if (this.user.credits === 0) {
+                    this.$router.push(
+                        { name: 'Plans' },
+                        () => (this.$root.planErrorSnackbar = true)
+                    )
+                } else {
+                    this.$router.push({
+                        name: 'CreateReport',
+                        params: { id: conferenceId },
+                    })
+                }
             } else {
                 this.processing = true
                 this.JoinConference(conferenceId)
@@ -61,6 +71,15 @@ export const buttonActionsMixin = {
         },
         getShareText() {
             return share.text
+        },
+        isConfNew(item) {
+            let nowDate = new Date()
+            let year = nowDate.getFullYear()
+            let month = nowDate.getMonth() + 1
+            month = month > 9 ? month : '0' + month
+            let day = nowDate.getDate()
+            nowDate = year + '-' + month + '-' + day
+            return item.conf_date.slice(0, 10) >= nowDate
         },
     },
 }

@@ -71,14 +71,14 @@
         </v-snackbar>
         <v-snackbar
             v-model="errorSubscription"
-            timeout="5000"
+            timeout="10000"
             color="error"
             :text="true"
             right
             bottom
         >
-            An error occurred while updating the subscription. Please try again
-            later.
+            An error occurred while updating the subscription.
+            {{ errorMessage }} Please try again later.
             <template v-slot:action="{ attrs }">
                 <v-btn
                     color="error"
@@ -119,6 +119,7 @@ export default {
             successSubscription: false,
             errorSubscription: false,
             changeCard: true,
+            errorMessage: '',
         }
     },
     methods: {
@@ -136,8 +137,9 @@ export default {
                         this.paymentProcessing = false
                         this.successSubscription = true
                     })
-                    .catch(() => {
+                    .catch((error) => {
                         this.paymentProcessing = false
+                        this.errorMessage = error.response.data.message
                         this.errorSubscription = true
                     })
             } else {
@@ -157,8 +159,9 @@ export default {
                             this.paymentProcessing = false
                             this.successSubscription = true
                         })
-                        .catch(() => {
+                        .catch((error) => {
                             this.paymentProcessing = false
+                            this.errorMessage = error.response.data.message
                             this.errorSubscription = true
                         })
                 }
