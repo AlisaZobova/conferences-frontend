@@ -234,9 +234,10 @@ export default {
                 .catch((error) => {
                     if (error.response.data.errors) {
                         this.apiErrors = error.response.data.errors
-                    }
-                    if (error.response.data.errors.zoom) {
-                        this.cancelErrorSnackbar = true
+
+                        if (error.response.data.errors.zoom) {
+                            this.cancelErrorSnackbar = true
+                        }
                     }
                     this.loading = false
                 })

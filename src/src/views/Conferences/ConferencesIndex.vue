@@ -403,6 +403,9 @@ export default {
                 return this.$store.dispatch('SetConferencesPage', newValue)
             },
         },
+        user() {
+            return this.$store.state.auth.user
+        },
     },
     data() {
         return {
@@ -475,16 +478,19 @@ export default {
             this.loading = true
             if (this.isAnnouncer) {
                 const report = item.reports.filter(
-                    (report) => report.conference_id === item.id
+                    (report) =>
+                        report.conference_id === item.id &&
+                        report.user_id === this.user.id
                 )[0]
                 this.CancelParticipation(item.id)
                     .then(() => {
                         this.DeleteReport(report.id).catch((error) => {
                             if (error.response.data.errors) {
                                 this.apiErrors = error.response.data.errors
-                            }
-                            if (error.response.data.errors.zoom) {
-                                this.cancelErrorSnackbar = true
+
+                                if (error.response.data.errors.zoom) {
+                                    this.cancelErrorSnackbar = true
+                                }
                             }
                         })
                     })

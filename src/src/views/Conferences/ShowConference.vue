@@ -231,6 +231,9 @@ export default {
         conference() {
             return this.$store.state.conferences.conference
         },
+        user() {
+            return this.$store.state.auth.user
+        },
     },
     watch: {
         dialogDelete(val) {
@@ -259,16 +262,19 @@ export default {
             this.processing = true
             if (this.isAnnouncer) {
                 const report = this.conference.reports.filter(
-                    (report) => report.conference_id === this.conference.id
+                    (report) =>
+                        report.conference_id === this.conference.id &&
+                        report.user_id === this.user.id
                 )[0]
                 this.CancelParticipation(this.conference.id)
                     .then(() => {
                         this.DeleteReport(report.id).catch((error) => {
                             if (error.response.data.errors) {
                                 this.apiErrors = error.response.data.errors
-                            }
-                            if (error.response.data.errors.zoom) {
-                                this.cancelErrorSnackbar = true
+
+                                if (error.response.data.errors.zoom) {
+                                    this.cancelErrorSnackbar = true
+                                }
                             }
                         })
                     })
